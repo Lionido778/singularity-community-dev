@@ -7,6 +7,11 @@
         <version>1.0.0</version>
     </parent>
 
+    <!--
+        singularity-community-dev-service-api
+        接口工程，集中管理所有服务的controller中的接口，为了更好的统一管理微服务
+    -->
+
     <artifactId>singularity-community-dev-service-api</artifactId>
     <packaging>jar</packaging>
 
@@ -37,6 +42,23 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
+
+        <!-- swagger2 配置 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>${swagger-bootstrap-ui.version}</version>
         </dependency>
 
         <dependency>

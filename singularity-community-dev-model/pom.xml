@@ -18,6 +18,7 @@
     </properties>
 
     <dependencies>
+        <!--依赖子模块common-->
         <dependency>
             <groupId>cn.codeprobe</groupId>
             <artifactId>singularity-community-dev-common</artifactId>

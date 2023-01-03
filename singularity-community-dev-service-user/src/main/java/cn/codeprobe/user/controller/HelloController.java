@@ -18,10 +18,10 @@ public class HelloController implements HelloControllerApi {
         logger.warn("warn:" + "hello");
         logger.error("error:" + "hello");
 
-//        return JSONResult.ok();
+        return JSONResult.ok();
 //        return JSONResult.error();
 //        return JSONResult.errorMsg("自定义错误消息");
-        return JSONResult.errorTicket();
+//        return JSONResult.errorTicket();
     }
 
 }
