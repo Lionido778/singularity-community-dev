@@ -2,7 +2,6 @@ package cn.codeprobe.utils;
 
 import cn.codeprobe.utils.extend.AliyunResource;
 import com.aliyun.tea.TeaException;
-import jdk.nashorn.internal.ir.annotations.Reference;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

@@ -27,8 +27,8 @@ public class UserGenerator {
 				callback, warnings);
 		myBatisGenerator.generate(null);
 
-	} 
-	
+	}
+
 	public static void main(String[] args) throws Exception {
 		try {
 			UserGenerator generatorSqlmap = new UserGenerator();

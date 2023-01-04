@@ -1,6 +1,6 @@
-package cn.codeprobe.user.controller;
+package cn.codeprobe.test.controller;
 
-import cn.codeprobe.api.controller.user.HelloControllerApi;
+import cn.codeprobe.api.controller.test.HelloControllerApi;
 import cn.codeprobe.result.JSONResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

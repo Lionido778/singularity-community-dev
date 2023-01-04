@@ -1,4 +1,4 @@
-package cn.codeprobe.result;
+package cn.codeprobe.result.enums;
 
 /**
  * 响应结果枚举，用于提供给GraceJSONResult返回给前端的

@@ -27,8 +27,8 @@ public class ArticleGenerator {
 				callback, warnings);
 		myBatisGenerator.generate(null);
 
-	} 
-	
+	}
+
 	public static void main(String[] args) throws Exception {
 		try {
 			ArticleGenerator generatorSqlmap = new ArticleGenerator();

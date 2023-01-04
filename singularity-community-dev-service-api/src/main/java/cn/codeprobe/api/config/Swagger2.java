@@ -25,7 +25,7 @@ public class Swagger2 {
     @Bean
     public Docket createRestApi() {
 
-        Predicate<RequestHandler> userPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.user.controller");
+        Predicate<RequestHandler> userPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.test.controller");
 
 
         return new Docket(DocumentationType.SWAGGER_2)  // 指定api类型为swagger2

@@ -27,8 +27,8 @@ public class AdminGenerator {
 				callback, warnings);
 		myBatisGenerator.generate(null);
 
-	} 
-	
+	}
+
 	public static void main(String[] args) throws Exception {
 		try {
 			AdminGenerator generatorSqlmap = new AdminGenerator();

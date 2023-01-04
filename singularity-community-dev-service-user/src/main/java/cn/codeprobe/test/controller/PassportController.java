@@ -1,8 +1,6 @@
-package cn.codeprobe.user.controller;
+package cn.codeprobe.test.controller;
 
-import cn.codeprobe.api.controller.user.HelloControllerApi;
-import cn.codeprobe.api.controller.user.PassportControllerApi;
-import cn.codeprobe.result.JSONResult;
+import cn.codeprobe.api.controller.test.PassportControllerApi;
 import cn.codeprobe.utils.SMSUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,7 @@ import javax.annotation.Resource;
 @RestController
 public class PassportController implements PassportControllerApi {
 
-    static final Logger logger = LoggerFactory.getLogger("HelloController");
+    static final Logger logger = LoggerFactory.getLogger("PassportController");
 
 @Resource
 private SMSUtil smsUtil;

@@ -1,4 +1,4 @@
-package cn.codeprobe.api.controller.user;
+package cn.codeprobe.api.controller.test;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

@@ -1,7 +1,8 @@
 package cn.codeprobe.pojo;
 
+import javax.persistence.Column;
+import javax.persistence.Id;
 import java.util.Date;
-import javax.persistence.*;
 
 public class Comments {
     @Id
