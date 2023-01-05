@@ -18,20 +18,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class Swagger2 {
 
-    //    http://localhost:8088/swagger-ui.html     原路径
-    //    http://localhost:8088/doc.html            新路径
+    //    http://localhost:8080/swagger-ui.html     原路径
+    //    http://localhost:8080/doc.html            新路径
 
-    // 配置swagger2核心配置 docket
+    // swagger2核心配置 docket
     @Bean
     public Docket createRestApi() {
 
-        Predicate<RequestHandler> userPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.test.controller");
+        Predicate<RequestHandler> testPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.test.controller");
+        Predicate<RequestHandler> userPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.user.controller");
 
 
         return new Docket(DocumentationType.SWAGGER_2)  // 指定api类型为swagger2
                 .apiInfo(apiInfo())                 // 用于定义api文档汇总信息
                 .select()
-                .apis(Predicates.or(userPredicate))
+                .apis(Predicates.or(testPredicate, userPredicate))
 //                .apis(Predicates.or(adminPredicate, articlePredicate, userPredicate, filesPredicate))
                 .paths(PathSelectors.any())         // 所有controller
                 .build();
@@ -42,10 +43,10 @@ public class Swagger2 {
                 .title("奇点社区·接口api")                       // 文档页标题
                 .contact(new Contact("奇点社区",
                         "https://www.codeprobe.cn",
-                        "aingularity@codeprobe.cn"))                   // 联系人信息
-                .description("专为奇点社区·平台提供的api文档")      // 详细信息
-                .version("1.0.1")                               // 文档版本号
-                .termsOfServiceUrl("https://www.codeprobe.cn")     // 网站地址
+                        "aingularity@codeprobe.cn"))       // 联系人信息
+                .description("专为奇点社区·平台提供的api文档")        // 详细信息
+                .version("1.0.1")                                // 文档版本号
+                .termsOfServiceUrl("https://www.codeprobe.cn")   // 网站地址
                 .build();
     }
 }
