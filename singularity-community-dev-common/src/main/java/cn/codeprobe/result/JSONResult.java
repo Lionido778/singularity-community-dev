@@ -1,6 +1,6 @@
 package cn.codeprobe.result;
 
-import cn.codeprobe.result.enums.ResponseStatusEnum;
+import cn.codeprobe.enums.ResponseStatusEnum;
 
 import java.util.Map;
 

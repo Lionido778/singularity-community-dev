@@ -1,8 +1,8 @@
 package cn.codeprobe.api.interceptors;
 
 import cn.codeprobe.api.interceptors.base.BaseInterceptor;
+import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalException;
-import cn.codeprobe.result.enums.ResponseStatusEnum;
 import cn.codeprobe.utils.IPUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;

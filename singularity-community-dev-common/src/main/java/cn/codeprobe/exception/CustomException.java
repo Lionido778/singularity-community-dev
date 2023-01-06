@@ -1,6 +1,6 @@
 package cn.codeprobe.exception;
 
-import cn.codeprobe.result.enums.ResponseStatusEnum;
+import cn.codeprobe.enums.ResponseStatusEnum;
 
 /**
  * 自定义异常：来自服务内部的异常信息

@@ -1,6 +1,6 @@
 package cn.codeprobe.exception;
 
-import cn.codeprobe.result.enums.ResponseStatusEnum;
+import cn.codeprobe.enums.ResponseStatusEnum;
 
 /**
  * 统一全局异常
