@@ -121,6 +121,8 @@ public class UserServiceImpl extends BaseService implements UserService {
         appUser.setUpdatedTime(new Date());
         // 完善用户信息后，激活用户
         appUser.setActiveStatus(USER_ACTIVE);
+        // 缓存数据双写（最新数据写入数据库和redis）一致
+        redisUtil.del(REDIS_USER_INFO + ":" + updateUserInfoBO.getId());
         // 有选择的更新数据库记录，为空的属性不会影响数据库记录
         int result = appUserMapper.updateByPrimaryKeySelective(appUser);
         if (result != 1) {
@@ -129,6 +131,14 @@ public class UserServiceImpl extends BaseService implements UserService {
         // 更新后将最新的 user 写入缓存
         AppUser updatedUser = getUser(updateUserInfoBO.getId());
         redisUtil.set(REDIS_USER_INFO + ":" + updateUserInfoBO.getId(), JsonUtils.objectToJson(updatedUser));
+
+        try {
+            Thread.sleep(100);
+            // 缓存双删策略
+            redisUtil.del(REDIS_USER_INFO + ":" + updateUserInfoBO.getId());
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
