@@ -35,7 +35,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public AppUser queryAppUserIsExistByMobile(String mobile) {
+    public AppUser queryAppUserIsExist(String mobile) {
         // 构建example
         Example example = new Example(AppUser.class);
         Example.Criteria criteria = example.createCriteria();
@@ -78,7 +78,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
     @Override
     public AppUser RegisterLogin(RegisterLoginBO registerLoginBO) {
-        AppUser appUser = queryAppUserIsExistByMobile(registerLoginBO.getMobile());
+        AppUser appUser = queryAppUserIsExist(registerLoginBO.getMobile());
         // 判断用户是否被冻结
         if (appUser != null && appUser.getActiveStatus() == USER_FROZEN) {
             GlobalException.Internal(ResponseStatusEnum.USER_FROZEN);
@@ -98,12 +98,12 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public AppUser queryUserById(String userId) {
+    public AppUser getUserAccountInfo(String userId) {
         return getUser(userId);
     }
 
     @Override
-    public void updateUserInfo(UpdateUserInfoBO updateUserInfoBO) {
+    public void updateUserAccountInfo(UpdateUserInfoBO updateUserInfoBO) {
         AppUser appUser = new AppUser();
         BeanUtils.copyProperties(updateUserInfoBO, appUser);
         // 记录更新时间

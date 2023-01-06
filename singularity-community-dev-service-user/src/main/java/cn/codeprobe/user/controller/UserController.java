@@ -7,6 +7,7 @@ import cn.codeprobe.exception.GlobalException;
 import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
 import cn.codeprobe.pojo.vo.UserAccountInfoVO;
+import cn.codeprobe.pojo.vo.UserInfoVO;
 import cn.codeprobe.result.JSONResult;
 import cn.codeprobe.user.service.impl.UserServiceImpl;
 import cn.hutool.core.util.StrUtil;
@@ -24,13 +25,27 @@ public class UserController extends BaseController implements UserControllerApi 
     private UserServiceImpl userService;
 
     @Override
-    public JSONResult getUserInfo(String userId) {
+    public JSONResult getUserBasicInfo(String userId) {
         // 校验 userId
         if (StrUtil.isBlank(userId)) {
             GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 执行查询操作
-        AppUser user = userService.queryUserById(userId);
+        AppUser user = userService.getUserAccountInfo(userId);
+        UserInfoVO userInfoVO = new UserInfoVO();
+        // pojo -> vo
+        BeanUtils.copyProperties(user, userInfoVO);
+        return JSONResult.ok(userInfoVO);
+    }
+
+    @Override
+    public JSONResult getUserAccountInfo(String userId) {
+        // 校验 userId
+        if (StrUtil.isBlank(userId)) {
+            GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
+        }
+        // 执行查询操作
+        AppUser user = userService.getUserAccountInfo(userId);
         // pojo -> vo
         UserAccountInfoVO userAccountInfoVO = new UserAccountInfoVO();
         BeanUtils.copyProperties(user, userAccountInfoVO);
@@ -38,14 +53,14 @@ public class UserController extends BaseController implements UserControllerApi 
     }
 
     @Override
-    public JSONResult updateUserInfo(UpdateUserInfoBO updateUserInfoBO, BindingResult result) {
+    public JSONResult updateUserAccountInfo(UpdateUserInfoBO updateUserInfoBO, BindingResult result) {
         // 校验BO数据
         if (result.hasErrors()) {
             Map<String, String> errorMap = getErrors(result);
             return JSONResult.errorMap(errorMap);
         }
         // 执行更新操作
-        userService.updateUserInfo(updateUserInfoBO);
+        userService.updateUserAccountInfo(updateUserInfoBO);
         return JSONResult.ok();
     }
 }

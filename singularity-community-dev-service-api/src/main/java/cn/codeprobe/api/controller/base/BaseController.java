@@ -33,9 +33,6 @@ public class BaseController {
 
     /**
      * 获取前端数据校验的错误信息
-     *
-     * @param result
-     * @return
      */
     public Map<String, String> getErrors(BindingResult result) {
         Map<String, String> map = new HashMap<>();

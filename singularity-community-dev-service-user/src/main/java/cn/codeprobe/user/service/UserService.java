@@ -15,7 +15,7 @@ public interface UserService {
     /**
      * 根据手机号查询用户是否存在
      */
-    public AppUser queryAppUserIsExistByMobile(String mobile);
+    public AppUser queryAppUserIsExist(String mobile);
 
     /**
      * 注册用户
@@ -28,12 +28,12 @@ public interface UserService {
     public AppUser RegisterLogin(RegisterLoginBO registerLoginBO);
 
     /**
-     * 通过主键查询用户
+     * 获取用户信息
      */
-    public AppUser queryUserById(String userId);
+    public AppUser getUserAccountInfo(String userId);
 
     /**
-     * 更新用户信息
+     * 更新用户账户信息
      */
-    public void updateUserInfo(UpdateUserInfoBO updateUserInfoBO);
+    public void updateUserAccountInfo(UpdateUserInfoBO updateUserInfoBO);
 }

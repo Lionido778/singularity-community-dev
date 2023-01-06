@@ -16,12 +16,16 @@ import javax.validation.Valid;
 @RequestMapping("/user")
 public interface UserControllerApi {
 
-    @ApiOperation(value = "获取用户信息", notes = "获取用户信息", httpMethod = "POST")
-    @PostMapping("/getAccountInfo")
-    JSONResult getUserInfo(@RequestParam String userId);
+    @ApiOperation(value = "获取用户基本信息", notes = "用户基本信息", httpMethod = "POST")
+    @PostMapping("/getUserInfo")
+    JSONResult getUserBasicInfo(@RequestParam String userId);
 
-    @ApiOperation(value = "更新用户信息", notes = "更新用户信息", httpMethod = "POST")
+    @ApiOperation(value = "获取用户账户信息", notes = "用户账户信息", httpMethod = "POST")
+    @PostMapping("/getAccountInfo")
+    JSONResult getUserAccountInfo(@RequestParam String userId);
+
+    @ApiOperation(value = "更新用户账户信息", notes = "更新用户账户信息", httpMethod = "POST")
     @PostMapping("/updateUserInfo")
-    JSONResult updateUserInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO, BindingResult result);
+    JSONResult updateUserAccountInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO, BindingResult result);
 
 }
