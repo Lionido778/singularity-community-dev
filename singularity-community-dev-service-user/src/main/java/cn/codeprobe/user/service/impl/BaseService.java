@@ -35,6 +35,7 @@ public class BaseService extends BaseController {
     public final String COOKIE_NAME_ID = "uid";
     public final String COOKIE_NAME_TOKEN = "utoken";
     public final Integer COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
+    public final String REDIS_USER_INFO = "user_info";
 
     //  domain-name
     @Value("${website.domain-name}")
@@ -59,12 +60,7 @@ public class BaseService extends BaseController {
         response.addCookie(cookie);
     }
 
-    /**
-     * 查询用户
-     *
-     * @param userId 用户ID
-     * @return
-     */
+
     public AppUser getUser(String userId) {
         return appUserMapper.selectByPrimaryKey(userId);
     }

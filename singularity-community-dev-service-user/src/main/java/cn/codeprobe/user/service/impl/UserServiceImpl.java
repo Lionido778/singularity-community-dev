@@ -9,7 +9,9 @@ import cn.codeprobe.user.service.UserService;
 import cn.codeprobe.utils.DateUtil;
 import cn.codeprobe.utils.DesensitizationUtil;
 import cn.codeprobe.utils.IPUtil;
+import cn.codeprobe.utils.JsonUtils;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -72,7 +74,6 @@ public class UserServiceImpl extends BaseService implements UserService {
 
         // 创建用户，并往数据库表里插入记录
         appUserMapper.insert(appUser);
-
         return appUser;
     }
 
@@ -98,8 +99,18 @@ public class UserServiceImpl extends BaseService implements UserService {
     }
 
     @Override
-    public AppUser getUserAccountInfo(String userId) {
-        return getUser(userId);
+    public AppUser getUserInfo(String userId) {
+        // 先从缓存redis中查找user
+        String jsonUser = redisUtil.get(REDIS_USER_INFO + ":" + userId);
+        if (StrUtil.isNotBlank(jsonUser)) {
+            // 如果有，返回
+            return JsonUtils.jsonToPojo(jsonUser, AppUser.class);
+        }
+        // 如果没有，从数据库中查找user
+        AppUser user = getUser(userId);
+        // 并写入缓存redis
+        redisUtil.set(REDIS_USER_INFO + ":" + userId, JsonUtils.objectToJson(user));
+        return user;
     }
 
     @Override
@@ -115,6 +126,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         if (result != 1) {
             GlobalException.Internal(ResponseStatusEnum.USER_UPDATE_ERROR);
         }
+        // 更新后将最新的 user 写入缓存
+        AppUser updatedUser = getUser(updateUserInfoBO.getId());
+        redisUtil.set(REDIS_USER_INFO + ":" + updateUserInfoBO.getId(), JsonUtils.objectToJson(updatedUser));
     }
 
 

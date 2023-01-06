@@ -31,7 +31,7 @@ public class UserController extends BaseController implements UserControllerApi 
             GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 执行查询操作
-        AppUser user = userService.getUserAccountInfo(userId);
+        AppUser user = userService.getUserInfo(userId);
         UserInfoVO userInfoVO = new UserInfoVO();
         // pojo -> vo
         BeanUtils.copyProperties(user, userInfoVO);
@@ -45,7 +45,7 @@ public class UserController extends BaseController implements UserControllerApi 
             GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 执行查询操作
-        AppUser user = userService.getUserAccountInfo(userId);
+        AppUser user = userService.getUserInfo(userId);
         // pojo -> vo
         UserAccountInfoVO userAccountInfoVO = new UserAccountInfoVO();
         BeanUtils.copyProperties(user, userAccountInfoVO);

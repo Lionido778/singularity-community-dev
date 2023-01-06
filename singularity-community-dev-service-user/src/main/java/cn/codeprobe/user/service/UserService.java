@@ -28,9 +28,10 @@ public interface UserService {
     public AppUser RegisterLogin(RegisterLoginBO registerLoginBO);
 
     /**
-     * 获取用户信息
+     * 获取用户 (缓存,数据库)
+     * 由于该接口调用量巨大，为了缓解数据库压力，设计了缓存
      */
-    public AppUser getUserAccountInfo(String userId);
+    public AppUser getUserInfo(String userId);
 
     /**
      * 更新用户账户信息
