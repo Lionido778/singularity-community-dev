@@ -3,6 +3,7 @@ package cn.codeprobe.user.service.impl;
 import cn.codeprobe.api.controller.base.BaseController;
 import cn.codeprobe.enums.UserSex;
 import cn.codeprobe.enums.UserStatus;
+import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.user.mapper.AppUserMapper;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Value;
@@ -55,6 +56,16 @@ public class BaseService extends BaseController {
         cookie.setMaxAge(maxAge);
         cookie.setPath("/");
         response.addCookie(cookie);
+    }
+
+    /**
+     * 查询用户
+     *
+     * @param userId 用户ID
+     * @return
+     */
+    public AppUser getUser(String userId) {
+        return appUserMapper.selectByPrimaryKey(userId);
     }
 
 }

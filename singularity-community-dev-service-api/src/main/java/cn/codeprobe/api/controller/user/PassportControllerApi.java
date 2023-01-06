@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@Api(value = "用户注册登录", tags = "用户注册登录接口")
+@Api(value = "一键注册登录", tags = "一键注册登录接口")
 @RequestMapping("/passport")
 public interface PassportControllerApi {
 

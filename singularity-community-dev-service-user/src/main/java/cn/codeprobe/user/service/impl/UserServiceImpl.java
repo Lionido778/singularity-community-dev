@@ -4,7 +4,7 @@ import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalException;
 import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
-import cn.codeprobe.user.service.RegisterLogin;
+import cn.codeprobe.user.service.UserService;
 import cn.codeprobe.utils.DateUtil;
 import cn.codeprobe.utils.DesensitizationUtil;
 import cn.codeprobe.utils.IPUtil;
@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Service
-public class UserServiceImpl extends BaseService implements RegisterLogin {
+public class UserServiceImpl extends BaseService implements UserService {
 
 
     @Override
@@ -93,6 +93,11 @@ public class UserServiceImpl extends BaseService implements RegisterLogin {
         // 短信验证码有效次数一次，用户成功注册或登陆时，短信验证码作废
         redisUtil.del(MOBILE_SMS_CODE + ":" + registerLoginBO.getMobile());
         return appUser;
+    }
+
+    @Override
+    public AppUser queryUserById(String userId) {
+        return getUser(userId);
     }
 
 
