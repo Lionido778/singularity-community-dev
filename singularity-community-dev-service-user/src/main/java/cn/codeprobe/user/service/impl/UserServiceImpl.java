@@ -4,11 +4,13 @@ import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalException;
 import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
+import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
 import cn.codeprobe.user.service.UserService;
 import cn.codeprobe.utils.DateUtil;
 import cn.codeprobe.utils.DesensitizationUtil;
 import cn.codeprobe.utils.IPUtil;
 import cn.hutool.core.util.RandomUtil;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
@@ -58,7 +60,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         // 头像
         appUser.setFace(USER_FACE);
         // 激活状态
-        appUser.setActiveStatus(USER_ACTIVE_STATUS);
+        appUser.setActiveStatus(USER_UN_ACTIVE);
         // 生日（默认）
         appUser.setBirthday(DateUtil.stringToDate(USER_BIRTHDAY));
         //  性别（默认）
@@ -78,7 +80,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public AppUser RegisterLogin(RegisterLoginBO registerLoginBO) {
         AppUser appUser = queryAppUserIsExistByMobile(registerLoginBO.getMobile());
         // 判断用户是否被冻结
-        if (appUser != null && appUser.getActiveStatus() == USER_LOCKED) {
+        if (appUser != null && appUser.getActiveStatus() == USER_FROZEN) {
             GlobalException.Internal(ResponseStatusEnum.USER_FROZEN);
         } else if (appUser == null) {
             // 注册新用户
@@ -98,6 +100,21 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public AppUser queryUserById(String userId) {
         return getUser(userId);
+    }
+
+    @Override
+    public void updateUserInfo(UpdateUserInfoBO updateUserInfoBO) {
+        AppUser appUser = new AppUser();
+        BeanUtils.copyProperties(updateUserInfoBO, appUser);
+        // 记录更新时间
+        appUser.setUpdatedTime(new Date());
+        // 完善用户信息后，激活用户
+        appUser.setActiveStatus(USER_ACTIVE);
+        // 有选择的更新数据库记录，为空的属性不会影响数据库记录
+        int result = appUserMapper.updateByPrimaryKeySelective(appUser);
+        if (result != 1) {
+            GlobalException.Internal(ResponseStatusEnum.USER_UPDATE_ERROR);
+        }
     }
 
 
