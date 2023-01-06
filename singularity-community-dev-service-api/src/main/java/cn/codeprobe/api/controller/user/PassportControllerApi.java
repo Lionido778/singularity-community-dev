@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Api(value = "用户注册登录", tags = "用户注册登录接口")
@@ -16,7 +15,7 @@ public interface PassportControllerApi {
 
     @ApiOperation(value = "获取短信验证码", notes = "获取短信验证码60秒", httpMethod = "GET")
     @GetMapping("/getSMSCode")
-    JSONResult getSMSCode(@RequestParam String mobile, HttpServletRequest request) throws Exception;
+    JSONResult getSMSCode(@RequestParam String mobile) throws Exception;
 
     @ApiOperation(value = "一键注册登录", notes = "用户一键注册登录接口", httpMethod = "POST")
     @PostMapping("/doLogin")

@@ -6,7 +6,9 @@ import cn.codeprobe.pojo.bo.RegisterLoginBO;
 
 public interface RegisterLogin {
 
-    public AppUser queryAppUserByMobile(String mobile);
+    public void getSMSCode(String mobile);
+
+    public AppUser queryAppUserIsExistByMobile(String mobile);
 
     public AppUser createAppUser(String mobile);
 

@@ -28,7 +28,7 @@ public class PassportInterceptor extends BaseInterceptor implements HandlerInter
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestIp = IPUtil.getRequestIp(request);
-        boolean keyIsExist = redisUtil.keyIsExist(MOBILE_SMSCODE + ":" + requestIp);
+        boolean keyIsExist = redisUtil.keyIsExist(MOBILE_SMS_CODE + ":" + requestIp);
         if (keyIsExist) {
             GlobalException.Internal(ResponseStatusEnum.SMS_NEED_WAIT_ERROR);
             // 拦截

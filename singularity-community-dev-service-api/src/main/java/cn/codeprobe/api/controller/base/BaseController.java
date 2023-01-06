@@ -6,6 +6,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,13 +20,16 @@ public class BaseController {
 
     @Resource
     public SMSUtil smsUtil;
-
     @Resource
     public RedisUtil redisUtil;
+    @Resource
+    public HttpServletRequest request;
+    @Resource
+    public HttpServletResponse response;
 
-    public final static String MOBILE_SMSCODE = "mobile:smscode";
-    public final static Long MOBILE_SMSCODE_TIMEOUT = (long) (30 * 60);
-    public final static Integer MOBILE_SMSCODE_DIGITS = 6;
+    public static final String MOBILE_SMS_CODE = "mobile:smscode";
+    public static final Long MOBILE_SMS_CODE_TIMEOUT = (long) (30 * 60);
+    public static final Integer MOBILE_SMS_CODE_DIGITS = 6;
 
     /**
      * 获取前端数据校验的错误信息
