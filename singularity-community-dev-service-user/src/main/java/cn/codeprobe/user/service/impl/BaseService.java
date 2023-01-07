@@ -32,10 +32,12 @@ public class BaseService extends BaseController {
 
     // token & cookie
     public final String REDIS_USER_TOKEN = "user_token";
+    public final Integer TOKEN_TIMEOUT = 60 * 60;
     public final String COOKIE_NAME_ID = "uid";
     public final String COOKIE_NAME_TOKEN = "utoken";
     public final Integer COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
     public final String REDIS_USER_INFO = "user_info";
+
 
     //  domain-name
     @Value("${website.domain-name}")

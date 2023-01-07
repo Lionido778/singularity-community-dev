@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class PassportInterceptor extends BaseInterceptor implements HandlerInterceptor {
 
+
     /**
      * 请求进入controller 方法之前
      *
