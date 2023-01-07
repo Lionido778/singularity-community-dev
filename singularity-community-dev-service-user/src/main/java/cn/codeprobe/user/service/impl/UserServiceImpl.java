@@ -90,7 +90,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         UUID uToken = UUID.randomUUID();
         String uId = appUser.getId();
         // 保存分布式会话信息Cookie到redis(有效期一个小时)，并响应保存到前端
-        redisUtil.set(REDIS_USER_TOKEN + ":" + uId, uToken.toString().trim(), TOKEN_TIMEOUT);
+        redisUtil.set(REDIS_USER_TOKEN + ":" + uId, uToken.toString().trim(), REDIS_USER_TOKEN_TIMEOUT);
         setCookie(COOKIE_NAME_ID, uId, COOKIE_MAX_AGE);
         setCookie(COOKIE_NAME_TOKEN, uToken.toString(), COOKIE_MAX_AGE);
         // 短信验证码有效次数一次，用户成功注册或登陆时，短信验证码作废
@@ -138,6 +138,15 @@ public class UserServiceImpl extends BaseService implements UserService {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    @Override
+    public void userLogout(String userId) {
+        // 删除 redis 中的token
+        redisUtil.del(REDIS_USER_TOKEN + ":" + userId);
+        // 删除 cookie
+        setCookie(COOKIE_NAME_ID, "", COOKIE_DELETE);
+        setCookie(COOKIE_NAME_TOKEN, "", COOKIE_DELETE);
     }
 
 

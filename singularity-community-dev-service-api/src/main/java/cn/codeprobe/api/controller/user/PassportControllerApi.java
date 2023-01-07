@@ -21,4 +21,7 @@ public interface PassportControllerApi {
     @PostMapping("/doLogin")
     JSONResult RegisterLogin(@RequestBody @Valid RegisterLoginBO registerLoginBO, BindingResult result);
 
+    @ApiOperation(value = "用户退出登录", notes = "用户退出登录", httpMethod = "POST")
+    @PostMapping("/logout")
+    JSONResult logout(@RequestParam String userId);
 }

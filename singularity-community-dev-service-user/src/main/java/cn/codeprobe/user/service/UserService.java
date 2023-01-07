@@ -37,4 +37,9 @@ public interface UserService {
      * 更新用户账户信息
      */
     public void updateUserAccountInfo(UpdateUserInfoBO updateUserInfoBO);
+
+    /**
+     * 用户退出登录
+     */
+    void userLogout(String userId);
 }

@@ -48,4 +48,10 @@ public class PassportController extends BaseController implements PassportContro
         return JSONResult.ok(appUser.getActiveStatus());
     }
 
+    @Override
+    public JSONResult logout(String userId) {
+        userService.userLogout(userId);
+        return JSONResult.ok();
+    }
+
 }
