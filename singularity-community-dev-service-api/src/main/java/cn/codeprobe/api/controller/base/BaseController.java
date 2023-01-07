@@ -27,7 +27,7 @@ public class BaseController {
     @Resource
     public HttpServletResponse response;
 
-    public static final String MOBILE_SMS_CODE = "mobile:smscode";
+    public static final String MOBILE_SMS_CODE = "mobile_sms_code";
     public static final Long MOBILE_SMS_CODE_TIMEOUT = (long) (30 * 60);
     public static final Integer MOBILE_SMS_CODE_DIGITS = 6;
 
