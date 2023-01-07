@@ -30,6 +30,11 @@ spring:
     port: 6379
     password: lionido778
 
+## Dev 环境下打印 MyBatis SQL日志到控制台
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 ## 资源配置中设置域名，在java代码中获取，
 website:
   domain-name: codeprobe.cn
