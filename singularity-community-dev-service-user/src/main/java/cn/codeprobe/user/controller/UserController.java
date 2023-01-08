@@ -8,9 +8,9 @@ import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
 import cn.codeprobe.pojo.vo.UserAccountInfoVO;
 import cn.codeprobe.pojo.vo.UserInfoVO;
-import cn.codeprobe.result.JSONResult;
+import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.user.service.impl.UserServiceImpl;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +25,9 @@ public class UserController extends BaseController implements UserControllerApi 
     private UserServiceImpl userService;
 
     @Override
-    public JSONResult getUserBasicInfo(String userId) {
+    public JsonResult getUserBasicInfo(String userId) {
         // 校验 userId
-        if (StrUtil.isBlank(userId)) {
+        if (CharSequenceUtil.isBlank(userId)) {
             GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 执行查询操作
@@ -35,13 +35,13 @@ public class UserController extends BaseController implements UserControllerApi 
         UserInfoVO userInfoVO = new UserInfoVO();
         // pojo -> vo
         BeanUtils.copyProperties(user, userInfoVO);
-        return JSONResult.ok(userInfoVO);
+        return JsonResult.ok(userInfoVO);
     }
 
     @Override
-    public JSONResult getUserAccountInfo(String userId) {
+    public JsonResult getUserAccountInfo(String userId) {
         // 校验 userId
-        if (StrUtil.isBlank(userId)) {
+        if (CharSequenceUtil.isBlank(userId)) {
             GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 执行查询操作
@@ -49,18 +49,18 @@ public class UserController extends BaseController implements UserControllerApi 
         // pojo -> vo
         UserAccountInfoVO userAccountInfoVO = new UserAccountInfoVO();
         BeanUtils.copyProperties(user, userAccountInfoVO);
-        return JSONResult.ok(userAccountInfoVO);
+        return JsonResult.ok(userAccountInfoVO);
     }
 
     @Override
-    public JSONResult updateUserAccountInfo(UpdateUserInfoBO updateUserInfoBO, BindingResult result) {
+    public JsonResult updateUserAccountInfo(UpdateUserInfoBO updateUserInfoBO, BindingResult result) {
         // 校验BO数据
         if (result.hasErrors()) {
             Map<String, String> errorMap = getErrors(result);
-            return JSONResult.errorMap(errorMap);
+            return JsonResult.errorMap(errorMap);
         }
         // 执行更新操作
         userService.updateUserAccountInfo(updateUserInfoBO);
-        return JSONResult.ok();
+        return JsonResult.ok();
     }
 }

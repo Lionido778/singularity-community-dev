@@ -1,7 +1,9 @@
 package cn.codeprobe.enums;
 
 /**
- * @Desc: 用户状态 枚举
+ * 用户状态 枚举
+ *
+ * @author Lionido
  */
 public enum UserStatus {
 
@@ -32,9 +34,7 @@ public enum UserStatus {
      */
     public static boolean isUserStatusValid(Integer tempStatus) {
         if (tempStatus != null) {
-            if (tempStatus == INACTIVE.type || tempStatus == ACTIVE.type || tempStatus == FROZEN.type) {
-                return true;
-            }
+            return tempStatus.equals(INACTIVE.type) || tempStatus.equals(ACTIVE.type) || tempStatus.equals(FROZEN.type);
         }
         return false;
     }

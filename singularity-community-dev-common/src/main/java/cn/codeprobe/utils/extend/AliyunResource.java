@@ -6,10 +6,12 @@ import org.springframework.stereotype.Component;
 
 /**
  * 将 aliyun.properties 以Java对象（AliyunResource）的形式进行操作
+ *
+ * @author Lionido
  */
 @Component
 @PropertySource("classpath:aliyun.properties")
-@ConfigurationProperties(prefix = "aliyun")
+@ConfigurationProperties(prefix = "sms")
 public class AliyunResource {
 
     private String accessKeyId;

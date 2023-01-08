@@ -18,7 +18,9 @@ public class Sid {
 
 
     public static synchronized void configure(WorkerIdStrategy custom) {
-        if (workerIdStrategy != null) workerIdStrategy.release();
+        if (workerIdStrategy != null) {
+            workerIdStrategy.release();
+        }
         workerIdStrategy = custom;
         idWorker = new IdWorker(workerIdStrategy.availableWorkerId()) {
             @Override
@@ -54,7 +56,7 @@ public class Sid {
 
     public static void main(String[] args) {
         String aa = new Sid().nextShort();
-        String bb = new Sid().next();
+        String bb = Sid.next();
 
         System.out.println(aa);
         System.out.println(bb);

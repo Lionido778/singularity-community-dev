@@ -13,6 +13,11 @@ import javax.servlet.http.Cookie;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+/**
+ * 基础service ，提供共用常量、变量、方法等
+ *
+ * @author Lionido
+ */
 public class BaseService extends BaseController {
 
     @Resource
@@ -20,29 +25,35 @@ public class BaseService extends BaseController {
     @Resource
     public Sid sid;
 
-    // user
-    public final String NICKNAME_PREFIX = "用户_";
-    public final Integer USER_UN_ACTIVE = UserStatus.INACTIVE.type;
-    public final Integer USER_ACTIVE = UserStatus.ACTIVE.type;
-    public final Integer USER_FROZEN = UserStatus.FROZEN.type;
-    public final String USER_BIRTHDAY = "1900-1-1";
-    public final Integer USER_SEX = UserSex.secret.type;
-    public final Integer USER_TOTAL_INCOME = 0;
-    public final String USER_FACE = "https://img2.baidu.com/it/u=132501275,3612619305&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500";
+    /**
+     * user
+     */
+    public static final String NICKNAME_PREFIX = "用户_";
+    public static final Integer USER_UN_ACTIVE = UserStatus.INACTIVE.type;
+    public static final Integer USER_ACTIVE = UserStatus.ACTIVE.type;
+    public static final Integer USER_FROZEN = UserStatus.FROZEN.type;
+    public static final String USER_BIRTHDAY = "1900-1-1";
+    public static final Integer USER_SEX = UserSex.SECRET.type;
+    public static final Integer USER_TOTAL_INCOME = 0;
+    public static final String USER_FACE = "https://img2.baidu.com/it/u=132501275,3612619305&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500";
 
-    // token & cookie
-    public final String REDIS_USER_TOKEN = "user_token";
-    public final String REDIS_USER_INFO = "user_info";
-    public final Integer REDIS_USER_TOKEN_TIMEOUT = 60 * 60;
-    public final String COOKIE_NAME_ID = "uid";
-    public final String COOKIE_NAME_TOKEN = "utoken";
-    public final Integer COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
-    public final Integer COOKIE_DELETE = 0;
+    /**
+     * token & cookie
+     */
+    public static final String REDIS_USER_TOKEN = "user_token";
+    public static final String REDIS_USER_INFO = "user_info";
+    public static final Integer REDIS_USER_TOKEN_TIMEOUT = 60 * 60;
+    public static final String COOKIE_NAME_ID = "uid";
+    public static final String COOKIE_NAME_TOKEN = "utoken";
+    public static final Integer COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
+    public static final Integer COOKIE_DELETE = 0;
 
 
-    //  domain-name
+    /**
+     * domain-name
+     */
     @Value("${website.domain-name}")
-    private String DOMAIN_NAME;
+    private String domainName;
 
 
     public void setCookie(String cookieName, String cookieValue, Integer maxAge) {
@@ -57,7 +68,7 @@ public class BaseService extends BaseController {
 
     public void createCookie(String cookieName, String cookieValue, Integer maxAge) {
         Cookie cookie = new Cookie(cookieName, cookieValue);
-        cookie.setDomain(DOMAIN_NAME);
+        cookie.setDomain(domainName);
         cookie.setMaxAge(maxAge);
         cookie.setPath("/");
         response.addCookie(cookie);

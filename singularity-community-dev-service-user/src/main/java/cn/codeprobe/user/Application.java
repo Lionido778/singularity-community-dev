@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import tk.mybatis.spring.annotation.MapperScan;
 
+/**
+ * @author Lionido
+ */
 @SpringBootApplication
 @MapperScan("cn.codeprobe.user.mapper")
 @ComponentScan({"cn.codeprobe", "org.n3r.idworker"})

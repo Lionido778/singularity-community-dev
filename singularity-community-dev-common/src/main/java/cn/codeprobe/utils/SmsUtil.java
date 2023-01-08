@@ -6,8 +6,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Lionido
+ */
 @Component
-public class SMSUtil {
+public class SmsUtil {
 
     @Resource
     private AliyunResource aliyunResource;
@@ -34,12 +37,12 @@ public class SMSUtil {
     public void sendSms(String mobile,String randomCode) throws Exception {
 
         // 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378657.html
-        com.aliyun.dysmsapi20170525.Client client = SMSUtil.createClient(aliyunResource.getAccessKeyId(), aliyunResource.getAccessKeySecret());
+        com.aliyun.dysmsapi20170525.Client client = SmsUtil.createClient(aliyunResource.getAccessKeyId(), aliyunResource.getAccessKeySecret());
         com.aliyun.dysmsapi20170525.models.SendSmsRequest sendSmsRequest = new com.aliyun.dysmsapi20170525.models.SendSmsRequest()
                 .setPhoneNumbers(mobile)
                 .setSignName(aliyunResource.getSignName())
                 .setTemplateCode(aliyunResource.getTemplateCode())
-                .setTemplateParam("{\"code\":\""+ randomCode +"\"}");
+                .setTemplateParam("{\"code\":\"" + randomCode + "\"}");
         com.aliyun.teautil.models.RuntimeOptions runtime = new com.aliyun.teautil.models.RuntimeOptions();
         try {
             // 复制代码运行请自行打印 API 的返回值
@@ -47,8 +50,8 @@ public class SMSUtil {
         } catch (TeaException error) {
             // 如有需要，请打印 error
             com.aliyun.teautil.Common.assertAsString(error.message);
-        } catch (Exception _error) {
-            TeaException error = new TeaException(_error.getMessage(), _error);
+        } catch (Exception e) {
+            TeaException error = new TeaException(e.getMessage(), e);
             // 如有需要，请打印 error
             com.aliyun.teautil.Common.assertAsString(error.message);
         }

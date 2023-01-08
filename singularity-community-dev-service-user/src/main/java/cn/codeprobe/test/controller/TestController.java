@@ -1,44 +1,44 @@
 package cn.codeprobe.test.controller;
 
-import cn.codeprobe.api.controller.test.TestControllerApi;
-import cn.codeprobe.result.JSONResult;
+import cn.codeprobe.api.controller.test.TestUserControllerApi;
+import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.utils.RedisUtil;
-import cn.codeprobe.utils.SMSUtil;
+import cn.codeprobe.utils.SmsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * @author Lionido
+ */
 @RestController
-public class TestController implements TestControllerApi {
+public class TestController implements TestUserControllerApi {
 
-    static final Logger logger = LoggerFactory.getLogger("HelloController");
+    static final Logger logger = LoggerFactory.getLogger("TestController");
 
     @Override
-    public Object Hello() {
-        logger.debug("debug:" + "hello");
-        logger.info("info:" + "hello");
-        logger.warn("warn:" + "hello");
-        logger.error("error:" + "hello");
+    public Object hello() {
+        logger.debug("debug:" + "hello1");
+        logger.info("info:" + "hello2");
+        logger.warn("warn:" + "hello3");
+        logger.error("error:" + "hello4");
 
-        return JSONResult.ok();
-//        return JSONResult.error();
-//        return JSONResult.errorMsg("自定义错误消息");
-//        return JSONResult.errorTicket();
+        return JsonResult.ok();
     }
 
     @Resource
     private RedisUtil redisUtil;
 
     @Override
-    public JSONResult redis() {
+    public JsonResult redis() {
         redisUtil.set("test", "测试值");
-        return JSONResult.ok(redisUtil.get("test"));
+        return JsonResult.ok(redisUtil.get("test"));
     }
 
     @Resource
-    private SMSUtil smsUtil;
+    private SmsUtil smsUtil;
 
     @Override
     public Object sendSms() throws Exception {

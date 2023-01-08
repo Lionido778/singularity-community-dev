@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 配置、注册自定义拦截器
+ *
+ * @author Lionido
  */
 @Configuration
 public class Interceptors implements WebMvcConfigurer {
@@ -41,6 +43,5 @@ public class Interceptors implements WebMvcConfigurer {
         // 判断用户是否为激活状态,若未激活进行拦截
 //        registry.addInterceptor(userActivityInterceptor())
 //                .addPathPatterns("/user/getAccountInfo")
-//                .addPathPatterns("/user/updateUserInfo");
     }
 }

@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.codeprobe</groupId>
+        <artifactId>singularity-community-dev</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>singularity-community-dev-service-file</artifactId>
+    <packaging>jar</packaging>
+
+    <!--
+          文件微服务
+          提供文件处理，包括文件上传、下载等操作
+    -->
+    <name>singularity-community-dev-service-file</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>cn.codeprobe</groupId>
+            <artifactId>singularity-community-dev-service-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+
+    </dependencies>
+</project>

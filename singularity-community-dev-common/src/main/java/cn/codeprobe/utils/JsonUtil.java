@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -14,21 +15,19 @@ import java.util.List;
  * Copyright: Copyright (c)
  * Company: www.imooc.com
  */
-public class JsonUtils {
+public class JsonUtil {
 
-    // 定义jackson对象
+    /**
+     * 定义jackson对象
+     */
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * 将对象转换成json字符串。
-     *
-     * @param data
-     * @return
      */
     public static String objectToJson(Object data) {
         try {
-            String string = MAPPER.writeValueAsString(data);
-            return string;
+            return MAPPER.writeValueAsString(data);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -44,8 +43,7 @@ public class JsonUtils {
      */
     public static <T> T jsonToPojo(String jsonData, Class<T> beanType) {
         try {
-            T t = MAPPER.readValue(jsonData, beanType);
-            return t;
+            return MAPPER.readValue(jsonData, beanType);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -62,13 +60,11 @@ public class JsonUtils {
     public static <T> List<T> jsonToList(String jsonData, Class<T> beanType) {
         JavaType javaType = MAPPER.getTypeFactory().constructParametricType(List.class, beanType);
         try {
-            List<T> list = MAPPER.readValue(jsonData, javaType);
-            return list;
+            return MAPPER.readValue(jsonData, javaType);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return null;
+        return Collections.emptyList();
     }
 
 }

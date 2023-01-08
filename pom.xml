@@ -1,63 +1,66 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>cn.codeprobe</groupId>
-  <artifactId>singularity-community-dev</artifactId>
-  <version>1.0.0</version>
+    <groupId>cn.codeprobe</groupId>
+    <artifactId>singularity-community-dev</artifactId>
+    <version>1.0.0</version>
 
-  <packaging>pom</packaging>
+    <packaging>pom</packaging>
 
-  <name>singularity-community-dev</name>
-  <url>http://maven.apache.org</url>
+    <name>singularity-community-dev</name>
+    <url>http://maven.apache.org</url>
 
-  <modules>
-    <module>singularity-community-dev-common</module>
-    <module>singularity-community-dev-model</module>
-    <module>singularity-community-dev-service-api</module>
-    <module>singularity-community-dev-service-user</module>
-  </modules>
+    <modules>
+        <module>singularity-community-dev-common</module>
+        <module>singularity-community-dev-model</module>
+        <module>singularity-community-dev-service-api</module>
+        <module>singularity-community-dev-service-user</module>
+        <module>singularity-community-dev-service-file</module>
+    </modules>
 
-  <!--
-          1. 聚合工程可以分为顶级项目（顶级工程，父工程）与子工程（子module模块），
-              这两者的关系其实就是父子继承的关系，子工程在maven中可以称之为module，
-              模块与模块之间是平级的，是可以相互依赖的。
-          2. 子模块可以使用顶级工程中所有的资源（依赖），子模块之间如果有要使用资源的话，必须构建依赖（构建关系）
-          3. 一个顶级工程是可以由多个不同的子工程共同组合而成。
-      -->
+    <!--
+            1. 聚合工程可以分为顶级项目（顶级工程，父工程）与子工程（子module模块），
+                这两者的关系其实就是父子继承的关系，子工程在maven中可以称之为module，
+                模块与模块之间是平级的，是可以相互依赖的。
+            2. 子模块可以使用顶级工程中所有的资源（依赖），子模块之间如果有要使用资源的话，必须构建依赖（构建关系）
+            3. 一个顶级工程是可以由多个不同的子工程共同组合而成。
+        -->
 
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.2.5.RELEASE</version>
-    <relativePath />
-  </parent>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.2.5.RELEASE</version>
+        <relativePath/>
+    </parent>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <java.version>1.8</java.version>
 
-    <mysql-connector-java.version>5.1.41</mysql-connector-java.version>
-    <mybatis-spring-boot-starter.version>2.1.0</mybatis-spring-boot-starter.version>
-    <mapper-spring-boot-starter.version>2.1.5</mapper-spring-boot-starter.version>
-    <pagehelper-spring-boot-starter.version>1.2.12</pagehelper-spring-boot-starter.version>
+        <mysql-connector-java.version>5.1.41</mysql-connector-java.version>
+        <mybatis-spring-boot-starter.version>2.1.0</mybatis-spring-boot-starter.version>
+        <mapper-spring-boot-starter.version>2.1.5</mapper-spring-boot-starter.version>
+        <pagehelper-spring-boot-starter.version>1.2.12</pagehelper-spring-boot-starter.version>
 
-    <okhttp.version>4.2.2</okhttp.version>
-    <jackson.version>2.10.2</jackson.version>
+        <okhttp.version>4.2.2</okhttp.version>
+        <jackson.version>2.10.2</jackson.version>
 
-    <commons-codec.version>1.11</commons-codec.version>
-    <commons-lang3.version>3.4</commons-lang3.version>
-    <commons-fileupload.version>1.4</commons-fileupload.version>
-    <google-guava.version>28.2-jre</google-guava.version>
+        <commons-codec.version>1.11</commons-codec.version>
+        <commons-lang3.version>3.4</commons-lang3.version>
+        <commons-fileupload.version>1.4</commons-fileupload.version>
+        <google-guava.version>28.2-jre</google-guava.version>
 
-    <springfox-swagger2.version>2.4.0</springfox-swagger2.version>
-    <swagger-bootstrap-ui.version>1.6</swagger-bootstrap-ui.version>
-    <fastdfs.version>1.27.2</fastdfs.version>
+        <springfox-swagger2.version>2.4.0</springfox-swagger2.version>
+        <swagger-bootstrap-ui.version>1.6</swagger-bootstrap-ui.version>
+        <fastdfs.version>1.27.2</fastdfs.version>
 
-    <slf4j.version>1.7.21</slf4j.version>
-    <joda-time.version>2.10.6</joda-time.version>
-  </properties>
+        <slf4j.version>1.7.21</slf4j.version>
+        <joda-time.version>2.10.6</joda-time.version>
+
+        <junit.version>4.13.2</junit.version>
+    </properties>
 
   <!--
       使用dependencyManagement的目的是为了保证父工程的干净，
@@ -123,69 +126,76 @@
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-annotations</artifactId>
-        <version>${jackson.version}</version>
+          <artifactId>jackson-annotations</artifactId>
+          <version>${jackson.version}</version>
       </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
 
-      <!-- apache 工具类 -->
-      <dependency>
-        <groupId>commons-codec</groupId>
-        <artifactId>commons-codec</artifactId>
-        <version>${commons-codec.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.commons</groupId>
-        <artifactId>commons-lang3</artifactId>
-        <version>${commons-lang3.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-fileupload</groupId>
-        <artifactId>commons-fileupload</artifactId>
-        <version>${commons-fileupload.version}</version>
-      </dependency>
+        <!-- apache 工具类 -->
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>${commons-codec.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>${commons-fileupload.version}</version>
+        </dependency>
 
-      <!-- google 工具类 -->
-      <dependency>
-        <groupId>com.google.guava</groupId>
-        <artifactId>guava</artifactId>
-        <version>${google-guava.version}</version>
-      </dependency>
+        <!-- google 工具类 -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${google-guava.version}</version>
+        </dependency>
 
-      <!-- swagger2 配置 -->
-      <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-swagger2</artifactId>
-        <version>${springfox-swagger2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.springfox</groupId>
-        <artifactId>springfox-swagger-ui</artifactId>
-        <version>${springfox-swagger2.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.github.xiaoymin</groupId>
-        <artifactId>swagger-bootstrap-ui</artifactId>
-        <version>${swagger-bootstrap-ui.version}</version>
-      </dependency>
+        <!-- swagger2 配置 -->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox-swagger2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>${swagger-bootstrap-ui.version}</version>
+        </dependency>
 
-      <!-- 文件上传fdfs工具 -->
-      <dependency>
-        <groupId>com.github.tobato</groupId>
-        <artifactId>fastdfs-client</artifactId>
-        <version>${fastdfs.version}</version>
-      </dependency>
+        <!-- 文件上传fdfs工具 -->
+        <dependency>
+            <groupId>com.github.tobato</groupId>
+            <artifactId>fastdfs-client</artifactId>
+            <version>${fastdfs.version}</version>
+        </dependency>
 
-      <!-- joda-time 时间工具 -->
-      <dependency>
-        <groupId>joda-time</groupId>
-        <artifactId>joda-time</artifactId>
-        <version>${joda-time.version}</version>
-      </dependency>
+        <!-- joda-time 时间工具 -->
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+            <version>${joda-time.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
   </dependencyManagement>

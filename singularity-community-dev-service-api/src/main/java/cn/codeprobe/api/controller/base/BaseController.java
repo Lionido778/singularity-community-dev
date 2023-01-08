@@ -1,7 +1,7 @@
 package cn.codeprobe.api.controller.base;
 
 import cn.codeprobe.utils.RedisUtil;
-import cn.codeprobe.utils.SMSUtil;
+import cn.codeprobe.utils.SmsUtil;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
@@ -19,7 +19,7 @@ import java.util.Map;
 public class BaseController {
 
     @Resource
-    public SMSUtil smsUtil;
+    public SmsUtil smsUtil;
     @Resource
     public RedisUtil redisUtil;
     @Resource

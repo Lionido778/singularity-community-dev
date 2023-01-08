@@ -9,12 +9,11 @@ import cn.codeprobe.user.service.UserService;
 import cn.codeprobe.utils.DateUtil;
 import cn.codeprobe.utils.DesensitizationUtil;
 import cn.codeprobe.utils.IPUtil;
-import cn.codeprobe.utils.JsonUtils;
+import cn.codeprobe.utils.JsonUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.core.util.StrUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -44,11 +43,9 @@ public class UserServiceImpl extends BaseService implements UserService {
         // 查询条件
         criteria.andEqualTo("mobile", mobile);
         // 查询用户
-        AppUser appUser = appUserMapper.selectOneByExample(example);
-        return appUser;
+        return appUserMapper.selectOneByExample(example);
     }
 
-    @Transactional
     @Override
     public AppUser createAppUser(String mobile) {
         AppUser appUser = new AppUser();
@@ -81,7 +78,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     public AppUser RegisterLogin(RegisterLoginBO registerLoginBO) {
         AppUser appUser = queryAppUserIsExist(registerLoginBO.getMobile());
         // 判断用户是否被冻结
-        if (appUser != null && appUser.getActiveStatus() == USER_FROZEN) {
+        if (appUser != null && appUser.getActiveStatus().equals(USER_FROZEN)) {
             GlobalException.Internal(ResponseStatusEnum.USER_FROZEN);
         } else if (appUser == null) {
             // 注册新用户
@@ -102,14 +99,14 @@ public class UserServiceImpl extends BaseService implements UserService {
     public AppUser getUserInfo(String userId) {
         // 先从缓存redis中查找user
         String jsonUser = redisUtil.get(REDIS_USER_INFO + ":" + userId);
-        if (StrUtil.isNotBlank(jsonUser)) {
+        if (CharSequenceUtil.isNotBlank(jsonUser)) {
             // 如果有，返回
-            return JsonUtils.jsonToPojo(jsonUser, AppUser.class);
+            return JsonUtil.jsonToPojo(jsonUser, AppUser.class);
         }
         // 如果没有，从数据库中查找user
         AppUser user = getUser(userId);
         // 并写入缓存redis
-        redisUtil.set(REDIS_USER_INFO + ":" + userId, JsonUtils.objectToJson(user));
+        redisUtil.set(REDIS_USER_INFO + ":" + userId, JsonUtil.objectToJson(user));
         return user;
     }
 
@@ -130,7 +127,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         }
         // 更新后将最新的 user 写入缓存
         AppUser updatedUser = getUser(updateUserInfoBO.getId());
-        redisUtil.set(REDIS_USER_INFO + ":" + updateUserInfoBO.getId(), JsonUtils.objectToJson(updatedUser));
+        redisUtil.set(REDIS_USER_INFO + ":" + updateUserInfoBO.getId(), JsonUtil.objectToJson(updatedUser));
         try {
             Thread.sleep(100);
             // 缓存双删策略

@@ -2,9 +2,10 @@ package org.n3r.idworker.utils;
 
 /**
  * This utility provides methods to either convert an IPv4 address to its long format or a 32bit dotted format.
- *
- * @author Aion
+ * <p>
  * Created on 22/11/12
+ *
+ * @author Lionido
  */
 public class IPv4Utils {
 
@@ -43,7 +44,7 @@ public class IPv4Utils {
      */
     public static String toString(long ip) {
         // if ip is bigger than 255.255.255.255 or smaller than 0.0.0.0
-        if (ip > 4294967295l || ip < 0) {
+        if (ip > 4294967295L || ip < 0) {
             throw new IllegalArgumentException("invalid ip");
         }
         StringBuilder ipAddress = new StringBuilder();

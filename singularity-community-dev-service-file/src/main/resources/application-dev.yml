@@ -1,0 +1,25 @@
+server:
+  port: 8004
+
+spring:
+  application:
+    name: service-file  # 应用名称 service-file
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  ## Redis
+  redis:
+    database: 0
+    host: 192.168.80.3
+    port: 6379
+    password: lionido778
+  ## 限制上传文件大小不超过 500KB （512000）
+  servlet:
+    multipart:
+      max-file-size: 2000
+      max-request-size: 2000
+
+## 资源配置中设置域名，在java代码中获取，
+website:
+  domain-name: codeprobe.cn
+

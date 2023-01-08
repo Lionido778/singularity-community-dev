@@ -3,6 +3,7 @@ package cn.codeprobe.exception;
 import cn.codeprobe.enums.ResponseStatusEnum;
 
 /**
+ * @author Lionido
  * 自定义异常：来自服务内部的异常信息
  */
 public class CustomException extends RuntimeException {

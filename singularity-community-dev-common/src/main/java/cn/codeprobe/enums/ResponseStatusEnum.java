@@ -1,10 +1,12 @@
 package cn.codeprobe.enums;
 
 /**
- * 响应结果枚举，用于提供给GraceJSONResult返回给前端的
+ * @author Lionido
+ * @Description: 响应结果枚举，用于提供给GraceJSONResult返回给前端的
  * 本枚举类中包含了很多的不同的状态码供使用，可以自定义
  * 便于更优雅的对状态码进行管理，一目了然
  */
+
 public enum ResponseStatusEnum {
 
     SUCCESS(200, true, "操作成功！"),
@@ -22,8 +24,8 @@ public enum ResponseStatusEnum {
     USER_UPDATE_ERROR(508, false, "用户信息更新失败，请联系管理员！"),
     USER_INACTIVE_ERROR(509, false, "请前往[账号设置]修改信息激活后再进行后续操作！"),
     FILE_UPLOAD_NULL_ERROR(510, false, "文件不能为空，请选择一个文件再上传！"),
-    FILE_UPLOAD_FAILD(511, false, "文件上传失败！"),
-    FILE_FORMATTER_FAILD(512, false, "文件图片格式不支持！"),
+    FILE_UPLOAD_FAILED(511, false, "文件上传失败！"),
+    FILE_FORMATTER_FAILED(512, false, "文件图片格式不支持！"),
     FILE_MAX_SIZE_ERROR(513, false, "仅支持500kb大小以下的图片上传！"),
     FILE_NOT_EXIST_ERROR(514, false, "你所查看的文件不存在！"),
     USER_STATUS_ERROR(515, false, "用户状态参数出错！"),
@@ -74,12 +76,18 @@ public enum ResponseStatusEnum {
     SYSTEM_RESPONSE_NO_INFO(557, false, "");
 
 
-    // 响应业务状态
-    private Integer status;
-    // 调用是否成功
-    private Boolean success;
-    // 响应消息，可以为成功或者失败的消息
-    private String msg;
+    /**
+     * 响应业务状态
+     */
+    private final Integer status;
+    /**
+     * 调用是否成功
+     */
+    private final Boolean success;
+    /**
+     * 响应消息，可以为成功或者失败的消息
+     */
+    private final String msg;
 
     ResponseStatusEnum(Integer status, Boolean success, String msg) {
         this.status = status;
@@ -90,9 +98,11 @@ public enum ResponseStatusEnum {
     public Integer status() {
         return status;
     }
+
     public Boolean success() {
         return success;
     }
+
     public String msg() {
         return msg;
     }
