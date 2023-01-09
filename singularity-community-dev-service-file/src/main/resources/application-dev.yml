@@ -16,8 +16,8 @@ spring:
   ## 限制上传文件大小不超过 500KB （512000）
   servlet:
     multipart:
-      max-file-size: 2000
-      max-request-size: 2000
+      max-file-size: 512000
+      max-request-size: 512000
 
 ## 资源配置中设置域名，在java代码中获取，
 website:

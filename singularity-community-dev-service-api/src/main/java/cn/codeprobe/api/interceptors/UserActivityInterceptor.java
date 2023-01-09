@@ -2,15 +2,15 @@ package cn.codeprobe.api.interceptors;
 
 import cn.codeprobe.api.interceptors.base.BaseInterceptor;
 import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.exception.GlobalException;
+import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.utils.JsonUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Objects;
 
 /**
  * 用户状态拦截器
@@ -21,19 +21,24 @@ import java.util.Objects;
  */
 public class UserActivityInterceptor extends BaseInterceptor implements HandlerInterceptor {
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
 
         String userId = request.getHeader("headerUserId");
         String userJson = redisUtil.get(REDIS_USER_INFO + ":" + userId);
         if (CharSequenceUtil.isBlank(userJson)) {
             // 如果redis中没有用户信息缓存，用户未登录，拦截
-            GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
+            GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
             return false;
         }
-        if (!Objects.requireNonNull(JsonUtil.jsonToPojo(userJson, AppUser.class)).getActiveStatus().equals(USER_ACTIVE)) {
-            // 用户未激活，拦截
-            GlobalException.Internal(ResponseStatusEnum.USER_INACTIVE_ERROR);
-            return false;
+        AppUser appUser = JsonUtil.jsonToPojo(userJson, AppUser.class);
+        if (appUser != null) {
+            if (!appUser.getActiveStatus().equals(USER_ACTIVE)) {
+                // 用户未激活，拦截
+                GlobalExceptionManage.internal(ResponseStatusEnum.USER_INACTIVE_ERROR);
+                return false;
+            }
+        } else {
+            GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 用户是激活状态，放行
         return true;

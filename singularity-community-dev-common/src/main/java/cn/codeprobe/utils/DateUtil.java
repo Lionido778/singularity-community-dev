@@ -23,19 +23,19 @@ public class DateUtil {
     /**
      * yyyy-MM-dd hh:mm:ss
      */
-    public static String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
-    public static String DATE_PATTERN = "yyyyMMddHHmmss";
+    public static final String DATETIME_PATTERN = "yyyy-MM-dd HH:mm:ss";
+    public static final String DATE_PATTERN = "yyyyMMddHHmmss";
 
     /**
      * 则个
      */
-    private static boolean LENIENT_DATE = false;
+    private static final boolean LENIENT_DATE = false;
 
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
     private static final int ID_BYTES = 10;
 
-    public synchronized static String generateId() {
+    public static synchronized String generateId() {
         StringBuffer result = new StringBuffer();
         result = result.append(System.currentTimeMillis());
         for (int i = 0; i < ID_BYTES; i++) {
@@ -44,11 +44,9 @@ public class DateUtil {
         return result.toString();
     }
 
-    protected static final float normalizedJulian(float JD) {
+    protected static float normalizedJulian(float JD) {
 
-        float f = Math.round(JD + 0.5f) - 0.5f;
-
-        return f;
+        return Math.round(JD + 0.5f) - 0.5f;
     }
 
     /**
@@ -149,9 +147,7 @@ public class DateUtil {
         int C = 2 - A + B;
         float E = (int) (365.25f * (Y + 4716));
         float F = (int) (30.6001f * (M + 1));
-        float JD = C + D + E + F - 1524.5f;
-
-        return JD;
+        return C + D + E + F - 1524.5f;
     }
 
     /**
@@ -183,7 +179,7 @@ public class DateUtil {
                                             int field, int amount) {
 
         try {
-            Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone(
+            Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(
                     "GMT"));
             cal.setTime(stringToDate(isoString, fmt, true));
             cal.add(field, amount);
@@ -206,10 +202,9 @@ public class DateUtil {
      * @throws ParseException if an unknown field value is given.
      */
     public static final String roll(String isoString, String fmt, int field,
-                                    boolean up) throws ParseException {
+                                    boolean up) {
 
-        Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone(
-                "GMT"));
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
         cal.setTime(stringToDate(isoString, fmt));
         cal.roll(field, up);
 
@@ -225,19 +220,13 @@ public class DateUtil {
      * @param up        Indicates if rolling up or rolling down the field value.
      * @throws ParseException if an unknown field value is given.
      */
-    public static final String roll(String isoString, int field, boolean up) throws
-            ParseException {
+    public static final String roll(String isoString, int field, boolean up) {
 
         return roll(isoString, DATETIME_PATTERN, field, up);
     }
 
     /**
      * java.util.Date
-     *
-     * @param dateText
-     * @param format
-     * @param lenient
-     * @return
      */
     public static Date stringToDate(String dateText, String format,
                                     boolean lenient) {
@@ -247,7 +236,7 @@ public class DateUtil {
             return null;
         }
 
-        DateFormat df = null;
+        DateFormat df;
 
         try {
 
@@ -275,32 +264,19 @@ public class DateUtil {
         return new java.sql.Timestamp(new Date().getTime());
     }
 
-    /**
-     * java.util.Date
-     *
-     * @param dateString
-     * @param format
-     * @return
-     */
+
     public static Date stringToDate(String dateString, String format) {
 
         return stringToDate(dateString, format, LENIENT_DATE);
     }
 
     /**
-     * java.util.Date
-     *
-     * @param dateString
+     * stringToDate
      */
     public static Date stringToDate(String dateString) {
         return stringToDate(dateString, ISO_EXPANDED_DATE_FORMAT, LENIENT_DATE);
     }
 
-    /**
-     * @param pattern
-     * @param date
-     * @return
-     */
     public static String dateToString(Date date, String pattern) {
 
         if (date == null) {
@@ -323,35 +299,27 @@ public class DateUtil {
     /**
      * yyyy-MM-dd
      *
-     * @param date
-     * @return
+     * @param date date
+     * @return string
      */
     public static String dateToString(Date date) {
         return dateToString(date, ISO_EXPANDED_DATE_FORMAT);
     }
 
     /**
-     * @return
+     * @return CurrentDateTime
      */
     public static Date getCurrentDateTime() {
         Calendar calNow = Calendar.getInstance();
-        Date dtNow = calNow.getTime();
-
-        return dtNow;
+        return calNow.getTime();
     }
 
-    /**
-     * @param pattern
-     * @return
-     */
     public static String getCurrentDateString(String pattern) {
         return dateToString(getCurrentDateTime(), pattern);
     }
 
     /**
      * yyyy-MM-dd
-     *
-     * @return
      */
     public static String getCurrentDateString() {
         return dateToString(getCurrentDateTime(), ISO_EXPANDED_DATE_FORMAT);
@@ -360,8 +328,6 @@ public class DateUtil {
     /**
      * 返回固定格式的当前时间
      * yyyy-MM-dd hh:mm:ss
-     *
-     * @return
      */
     public static String dateToStringWithTime() {
 
@@ -371,9 +337,6 @@ public class DateUtil {
 
     /**
      * yyyy-MM-dd hh:mm:ss
-     *
-     * @param date
-     * @return
      */
     public static String dateToStringWithTime(Date date) {
 
@@ -381,13 +344,11 @@ public class DateUtil {
     }
 
     /**
-     * @param date
-     * @param days
      * @return java.util.Date
      */
     public static Date dateIncreaseByDay(Date date, int days) {
 
-        Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone(
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(
                 "GMT"));
         cal.setTime(date);
         cal.add(Calendar.DATE, days);
@@ -396,13 +357,11 @@ public class DateUtil {
     }
 
     /**
-     * @param date
-     * @param mnt
      * @return java.util.Date
      */
     public static Date dateIncreaseByMonth(Date date, int mnt) {
 
-        Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone(
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(
                 "GMT"));
         cal.setTime(date);
         cal.add(Calendar.MONTH, mnt);
@@ -411,13 +370,11 @@ public class DateUtil {
     }
 
     /**
-     * @param date
-     * @param mnt
      * @return java.util.Date
      */
     public static Date dateIncreaseByYear(Date date, int mnt) {
 
-        Calendar cal = GregorianCalendar.getInstance(TimeZone.getTimeZone(
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone(
                 "GMT"));
         cal.setTime(date);
         cal.add(Calendar.YEAR, mnt);
@@ -427,43 +384,30 @@ public class DateUtil {
 
     /**
      * @param date yyyy-MM-dd
-     * @param days
      * @return yyyy-MM-dd
      */
     public static String dateIncreaseByDay(String date, int days) {
         return dateIncreaseByDay(date, ISO_DATE_FORMAT, days);
     }
 
-    /**
-     * @param date
-     * @param fmt
-     * @param days
-     * @return
-     */
+
     public static String dateIncreaseByDay(String date, String fmt, int days) {
         return dateIncrease(date, fmt, Calendar.DATE, days);
     }
 
-    /**
-     * @param src
-     * @param srcfmt
-     * @param desfmt
-     * @return
-     */
-    public static String stringToString(String src, String srcfmt,
-                                        String desfmt) {
-        return dateToString(stringToDate(src, srcfmt), desfmt);
+
+    public static String stringToString(String raw, String format,
+                                        String des) {
+        return dateToString(stringToDate(raw, format), des);
     }
 
     /**
-     * @param date
      * @return string
      */
     public static String getYear(Date date) {
         SimpleDateFormat formater = new SimpleDateFormat(
                 "yyyy");
-        String cur_year = formater.format(date);
-        return cur_year;
+        return formater.format(date);
     }
 
     /**
@@ -473,8 +417,7 @@ public class DateUtil {
     public static String getMonth(Date date) {
         SimpleDateFormat formater = new SimpleDateFormat(
                 "MM");
-        String cur_month = formater.format(date);
-        return cur_month;
+        return formater.format(date);
     }
 
     /**
@@ -484,15 +427,14 @@ public class DateUtil {
     public static String getDay(Date date) {
         SimpleDateFormat formater = new SimpleDateFormat(
                 "dd");
-        String cur_day = formater.format(date);
-        return cur_day;
+        return formater.format(date);
     }
 
     public static int getDayInt(Date date) {
-        SimpleDateFormat formater = new SimpleDateFormat(
+        SimpleDateFormat formatter = new SimpleDateFormat(
                 "dd");
-        String cur_day = formater.format(date);
-        return Integer.valueOf(cur_day);
+        String curDay = formatter.format(date);
+        return Integer.parseInt(curDay);
     }
 
     /**
@@ -500,13 +442,12 @@ public class DateUtil {
      * @return string
      */
     public static String getHour(Date date) {
-        SimpleDateFormat formater = new SimpleDateFormat(
+        SimpleDateFormat formatter = new SimpleDateFormat(
                 "HH");
-        String cur_day = formater.format(date);
-        return cur_day;
+        return formatter.format(date);
     }
 
-    public static int getMinsFromDate(Date dt) {
+    public static int getMinFromDate(Date dt) {
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTime(dt);
         int hour = cal.get(Calendar.HOUR_OF_DAY);
@@ -553,24 +494,24 @@ public class DateUtil {
         return dt;
     }
 
-    public static String dateFromat(Date date, int minute) {
+    public static String dateFormat(Date date, int minute) {
         String dateFormat = null;
         int year = Integer.parseInt(getYear(date));
         int month = Integer.parseInt(getMonth(date));
         int day = Integer.parseInt(getDay(date));
         int hour = minute / 60;
         int min = minute % 60;
-        dateFormat = String.valueOf(year)
+        dateFormat = year
                 +
                 (month > 9 ? String.valueOf(month) :
-                        "0" + String.valueOf(month))
+                        "0" + month)
                 +
-                (day > 9 ? String.valueOf(day) : "0" + String.valueOf(day))
+                (day > 9 ? String.valueOf(day) : "0" + day)
                 + " "
                 +
-                (hour > 9 ? String.valueOf(hour) : "0" + String.valueOf(hour))
+                (hour > 9 ? String.valueOf(hour) : "0" + hour)
                 +
-                (min > 9 ? String.valueOf(min) : "0" + String.valueOf(min))
+                (min > 9 ? String.valueOf(min) : "0" + min)
                 + "00";
         return dateFormat;
     }
@@ -580,29 +521,21 @@ public class DateUtil {
     }
 
     /**
-     * @return
-     * @Description: 获得本月的第一天日期
-     * @author leechenxiang
-     * @date 2017年5月31日 下午1:37:34
+     * 获得本月的第一天日期
      */
     public static String getFirstDateOfThisMonth() {
 
         SimpleDateFormat format = new SimpleDateFormat(ISO_EXPANDED_DATE_FORMAT);
 
         Calendar calendarFirst = Calendar.getInstance();
-        calendarFirst = Calendar.getInstance();
         calendarFirst.add(Calendar.MONTH, 0);
         calendarFirst.set(Calendar.DAY_OF_MONTH, 1);
-        String firstDate = format.format(calendarFirst.getTime());
 
-        return firstDate;
+        return format.format(calendarFirst.getTime());
     }
 
     /**
-     * @return
-     * @Description: 获得本月的最后一天日期
-     * @author leechenxiang
-     * @date 2017年5月31日 下午1:37:50
+     * 获得本月的最后一天日期
      */
     public static String getLastDateOfThisMonth() {
         SimpleDateFormat format = new SimpleDateFormat(ISO_EXPANDED_DATE_FORMAT);
@@ -611,8 +544,7 @@ public class DateUtil {
         calendarLast.setTime(new Date());
         calendarLast.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        String lastDate = format.format(calendarLast.getTime());
-        return lastDate;
+        return format.format(calendarLast.getTime());
     }
 
     /**
@@ -632,10 +564,7 @@ public class DateUtil {
             if (date == null) {
                 return false;
             } else {
-                if (pos.getIndex() > sdf.format(date).length()) {
-                    return false;
-                }
-                return true;
+                return pos.getIndex() <= sdf.format(date).length();
             }
         } catch (Exception e) {
             e.printStackTrace();

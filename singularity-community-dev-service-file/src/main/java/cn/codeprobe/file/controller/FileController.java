@@ -2,7 +2,7 @@ package cn.codeprobe.file.controller;
 
 import cn.codeprobe.api.controller.file.FileControllerApi;
 import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.exception.GlobalException;
+import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.file.service.FileUploadService;
 import cn.codeprobe.result.JsonResult;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -25,15 +25,14 @@ public class FileController implements FileControllerApi {
     public JsonResult uploadFace(String userId, MultipartFile file) {
         // 校验 userId
         if (CharSequenceUtil.isBlank(userId)) {
-            GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
+            GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 校验 file
         if (ObjectUtil.isEmpty(file) || file.getSize() == 0 || CharSequenceUtil.isBlank(file.getOriginalFilename())) {
-            GlobalException.Internal(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
+            GlobalExceptionManage.internal(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
         }
-        String faceUrl = "";
         // 文件访问路径
-        faceUrl = fileUploadService.uploadToOss(userId, file);
+        String faceUrl = fileUploadService.uploadToOss(userId, file);
         return JsonResult.ok(faceUrl);
     }
 }

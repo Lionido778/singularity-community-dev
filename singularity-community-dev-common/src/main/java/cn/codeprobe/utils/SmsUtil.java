@@ -18,8 +18,9 @@ public class SmsUtil {
 
     /**
      * 使用AK&SK初始化账号Client
-     * @param accessKeyId
-     * @param accessKeySecret
+     *
+     * @param accessKeyId     AccessKey ID
+     * @param accessKeySecret AccessKey Secret
      * @return Client
      * @throws Exception
      */
@@ -34,7 +35,7 @@ public class SmsUtil {
         return new com.aliyun.dysmsapi20170525.Client(config);
     }
 
-    public void sendSms(String mobile,String randomCode) throws Exception {
+    public void sendSms(String mobile, String randomCode) throws Exception {
 
         // 工程代码泄露可能会导致AccessKey泄露，并威胁账号下所有资源的安全性。以下代码示例仅供参考，建议使用更安全的 STS 方式，更多鉴权访问方式请参见：https://help.aliyun.com/document_detail/378657.html
         com.aliyun.dysmsapi20170525.Client client = SmsUtil.createClient(aliyunResource.getAccessKeyId(), aliyunResource.getAccessKeySecret());

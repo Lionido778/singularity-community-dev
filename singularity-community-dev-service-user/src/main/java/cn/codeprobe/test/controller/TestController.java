@@ -24,7 +24,9 @@ public class TestController implements TestUserControllerApi {
         logger.info("info:" + "hello2");
         logger.warn("warn:" + "hello3");
         logger.error("error:" + "hello4");
-
+        //int exception = 1 / 0;
+        //int[] name = {1,2};
+        //int newname =  name[2];
         return JsonResult.ok();
     }
 
@@ -42,7 +44,7 @@ public class TestController implements TestUserControllerApi {
 
     @Override
     public Object sendSms() throws Exception {
-        smsUtil.sendSms("17789445253","123123");
+        smsUtil.sendSms("17789445253", "123123");
         return null;
     }
 

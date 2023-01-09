@@ -3,7 +3,7 @@ package cn.codeprobe.user.controller;
 import cn.codeprobe.api.controller.base.BaseController;
 import cn.codeprobe.api.controller.user.UserControllerApi;
 import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.exception.GlobalException;
+import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
 import cn.codeprobe.pojo.vo.UserAccountInfoVO;
@@ -28,7 +28,7 @@ public class UserController extends BaseController implements UserControllerApi 
     public JsonResult getUserBasicInfo(String userId) {
         // 校验 userId
         if (CharSequenceUtil.isBlank(userId)) {
-            GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
+            GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 执行查询操作
         AppUser user = userService.getUserInfo(userId);
@@ -42,7 +42,7 @@ public class UserController extends BaseController implements UserControllerApi 
     public JsonResult getUserAccountInfo(String userId) {
         // 校验 userId
         if (CharSequenceUtil.isBlank(userId)) {
-            GlobalException.Internal(ResponseStatusEnum.UN_LOGIN);
+            GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
         }
         // 执行查询操作
         AppUser user = userService.getUserInfo(userId);

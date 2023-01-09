@@ -6,6 +6,12 @@ import org.hibernate.validator.constraints.Length;
 import javax.validation.constraints.*;
 import java.util.Date;
 
+/**
+ * 用户账户信息更新表单
+ *
+ * @author Lionido
+ */
+
 public class UpdateUserInfoBO {
 
     @NotBlank(message = "用户ID不能为空")
@@ -30,8 +36,11 @@ public class UpdateUserInfoBO {
     @Max(value = 1, message = "性别选择不正确")
     private Integer sex;
 
+    /**
+     * 解决前端日期传到后端后是 字符串，将其转换为Date类型
+     */
     @NotNull(message = "请选择生日日期")
-    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd") // 解决前端日期字符串传到后端后，转换为Date类型
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private Date birthday;
 
     @NotBlank(message = "请选择所在城市")
@@ -121,5 +130,21 @@ public class UpdateUserInfoBO {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    @Override
+    public String toString() {
+        return "UpdateUserInfoBO{" +
+                "id='" + id + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", face='" + face + '\'' +
+                ", realname='" + realname + '\'' +
+                ", email='" + email + '\'' +
+                ", sex=" + sex +
+                ", birthday=" + birthday +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                '}';
     }
 }

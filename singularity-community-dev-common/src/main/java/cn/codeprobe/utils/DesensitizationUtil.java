@@ -7,6 +7,7 @@ package cn.codeprobe.utils;
  * 手机号
  * 邮箱
  * 地址等
+ * @author Lionido
  */
 public class DesensitizationUtil {
 
@@ -14,9 +15,9 @@ public class DesensitizationUtil {
     private static final String SYMBOL = "*";
 
     public static void main(String[] args) {
-        String name = commonDisplay("慕课网");
+        String name = commonDisplay("奇点社区");
         String mobile = commonDisplay("13900000000");
-        String mail = commonDisplay("admin@imooc.com");
+        String mail = commonDisplay("admin@admin.com");
         String address = commonDisplay("北京大运河东路888号");
 
         System.out.println(name);
@@ -28,8 +29,8 @@ public class DesensitizationUtil {
     /**
      * 通用脱敏方法
      *
-     * @param value
-     * @return
+     * @param value 即将脱敏的字符串
+     * @return 脱敏后的字符串
      */
     public static String commonDisplay(String value) {
         if (null == value || "".equals(value)) {

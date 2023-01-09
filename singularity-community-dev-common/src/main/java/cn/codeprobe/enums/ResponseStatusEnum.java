@@ -1,18 +1,23 @@
 package cn.codeprobe.enums;
 
 /**
+ * 响应结果枚举，用于提供给GraceJSONResult返回给前端的
+ * 本枚举类中包含了很多的不同的状态码供使用，可以自定义，便于更优雅的对状态码进行管理，一目了然
+ *
  * @author Lionido
- * @Description: 响应结果枚举，用于提供给GraceJSONResult返回给前端的
- * 本枚举类中包含了很多的不同的状态码供使用，可以自定义
- * 便于更优雅的对状态码进行管理，一目了然
  */
 
 public enum ResponseStatusEnum {
 
+    /**
+     * 后端接口访问成功、失败
+     */
     SUCCESS(200, true, "操作成功！"),
     FAILED(500, false, "操作失败！"),
 
-    // 50x
+    /**
+     * 50x
+     */
     UN_LOGIN(501, false, "请登录后再继续操作！"),
     TICKET_INVALID(502, false, "会话失效，请重新登录！"),
     NO_AUTH(503, false, "您的权限不足，无法继续操作！"),
@@ -31,8 +36,9 @@ public enum ResponseStatusEnum {
     USER_STATUS_ERROR(515, false, "用户状态参数出错！"),
     USER_NOT_EXIST_ERROR(516, false, "用户不存在！"),
 
-
-    // 自定义系统级别异常 54x
+    /**
+     * 自定义系统级别异常 54x
+     */
     SYSTEM_INDEX_OUT_OF_BOUNDS(541, false, "系统错误，数组越界！"),
     SYSTEM_ARITHMETIC_BY_ZERO(542, false, "系统错误，无法除零！"),
     SYSTEM_NULL_POINTER(543, false, "系统错误，空指针！"),
@@ -44,7 +50,9 @@ public enum ResponseStatusEnum {
     SYSTEM_PARSER_ERROR(549, false, "系统错误，解析出错！"),
     SYSTEM_DATE_PARSER_ERROR(550, false, "系统错误，日期解析出错！"),
 
-    // admin 管理系统 56x
+    /**
+     * admin 管理系统 56x
+     */
     ADMIN_USERNAME_NULL_ERROR(561, false, "管理员登录名不能为空！"),
     ADMIN_USERNAME_EXIST_ERROR(562, false, "管理员登录名已存在！"),
     ADMIN_NAME_NULL_ERROR(563, false, "管理员负责人不能为空！"),
@@ -56,7 +64,9 @@ public enum ResponseStatusEnum {
     ADMIN_FACE_LOGIN_ERROR(569, false, "人脸识别失败，请重试！"),
     CATEGORY_EXIST_ERROR(570, false, "文章分类已存在，请换一个分类名！"),
 
-    // 媒体中心 相关错误 58x
+    /**
+     * 媒体中心 相关错误 58x
+     */
     ARTICLE_COVER_NOT_EXIST_ERROR(580, false, "文章封面不存在，请选择一个！"),
     ARTICLE_CATEGORY_NOT_EXIST_ERROR(581, false, "请选择正确的文章领域！"),
     ARTICLE_CREATE_ERROR(582, false, "创建文章失败，请重试或联系管理员！"),
@@ -66,18 +76,23 @@ public enum ResponseStatusEnum {
     ARTICLE_REVIEW_ERROR(585, false, "文章审核出错！"),
     ARTICLE_ALREADY_READ_ERROR(586, false, "文章重复阅读！"),
 
-    // 人脸识别错误代码
+    /**
+     * 人脸识别错误代码
+     */
     FACE_VERIFY_TYPE_ERROR(600, false, "人脸比对验证类型不正确！"),
     FACE_VERIFY_LOGIN_ERROR(601, false, "人脸登录失败！"),
 
-    // 系统错误，未预期的错误 555
+    /**
+     * 系统错误，未预期的错误 555
+     */
     SYSTEM_ERROR(555, false, "系统繁忙，请稍后再试！"),
     SYSTEM_OPERATION_ERROR(556, false, "操作失败，请重试或联系管理员"),
-    SYSTEM_RESPONSE_NO_INFO(557, false, "");
+    SYSTEM_RESPONSE_NO_INFO(557, false, ""),
+    SYSTEM_INTERNAL_ERROR(558, false, "系统内部错误，请联系管理员！");
 
 
     /**
-     * 响应业务状态
+     * 业务响应状态码
      */
     private final Integer status;
     /**
@@ -85,7 +100,7 @@ public enum ResponseStatusEnum {
      */
     private final Boolean success;
     /**
-     * 响应消息，可以为成功或者失败的消息
+     * 响应消息
      */
     private final String msg;
 

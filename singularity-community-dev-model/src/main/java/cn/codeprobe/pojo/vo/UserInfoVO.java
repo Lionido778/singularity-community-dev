@@ -2,6 +2,7 @@ package cn.codeprobe.pojo.vo;
 
 /**
  * 用户基本信息 VO
+ * @author Lionido
  */
 public class UserInfoVO {
 
@@ -42,4 +43,13 @@ public class UserInfoVO {
         this.face = face;
     }
 
+    @Override
+    public String toString() {
+        return "UserInfoVO{" +
+                "id='" + id + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", face='" + face + '\'' +
+                ", activeStatus=" + activeStatus +
+                '}';
+    }
 }

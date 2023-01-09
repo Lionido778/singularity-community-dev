@@ -14,8 +14,17 @@ public enum UserStatus {
 //    2：已冻结。
 
 
+    /**
+     * 未激活
+     */
     INACTIVE(0, "未激活"),
+    /**
+     * 已激活
+     */
     ACTIVE(1, "已激活"),
+    /**
+     * 已冻结
+     */
     FROZEN(2, "已冻结");
 
     public final Integer type;
@@ -29,8 +38,8 @@ public enum UserStatus {
     /**
      * 判断传入的用户状态是不是有效的值
      *
-     * @param tempStatus
-     * @return
+     * @param tempStatus 传入状态
+     * @return true：有效，false: 无效
      */
     public static boolean isUserStatusValid(Integer tempStatus) {
         if (tempStatus != null) {

@@ -1,5 +1,6 @@
 package cn.codeprobe.api.config;
 
+
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,9 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * @author Lionido
+ */
 @Configuration
 @EnableSwagger2
 public class Swagger2 {
@@ -21,32 +25,35 @@ public class Swagger2 {
     //    http://localhost:8080/swagger-ui.html     原路径
     //    http://localhost:8080/doc.html            新路径
 
-    // swagger2核心配置 docket
+    /**
+     * swagger2核心配置 docket
+     */
     @Bean
     public Docket createRestApi() {
 
         Predicate<RequestHandler> testPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.test.controller");
         Predicate<RequestHandler> userPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.user.controller");
+        Predicate<RequestHandler> filePredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.file.controller");
+        Predicate<RequestHandler> adminPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.admin.controller");
 
-
-        return new Docket(DocumentationType.SWAGGER_2)  // 指定api类型为swagger2
-                .apiInfo(apiInfo())                 // 用于定义api文档汇总信息
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .select()
-                .apis(Predicates.or(testPredicate, userPredicate))
+                .apis(Predicates.or(testPredicate, userPredicate, filePredicate, adminPredicate))
 //                .apis(Predicates.or(adminPredicate, articlePredicate, userPredicate, filesPredicate))
-                .paths(PathSelectors.any())         // 所有controller
+                .paths(PathSelectors.any())
                 .build();
     }
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("奇点社区·接口api")                       // 文档页标题
+                .title("奇点社区·接口api")
                 .contact(new Contact("奇点社区",
                         "https://www.codeprobe.cn",
-                        "aingularity@codeprobe.cn"))       // 联系人信息
-                .description("专为奇点社区·平台提供的api文档")        // 详细信息
-                .version("1.0.1")                                // 文档版本号
-                .termsOfServiceUrl("https://www.codeprobe.cn")   // 网站地址
+                        "aingularity@codeprobe.cn"))
+                .description("专为奇点社区·平台提供的api文档")
+                .version("1.0.1")
+                .termsOfServiceUrl("https://www.codeprobe.cn")
                 .build();
     }
 }

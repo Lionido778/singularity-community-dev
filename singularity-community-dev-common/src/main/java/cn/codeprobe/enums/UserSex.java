@@ -7,8 +7,17 @@ package cn.codeprobe.enums;
  */
 public enum UserSex {
 
+    /**
+     * 女
+     */
     FEMALE(0, "女"),
+    /**
+     * 男
+     */
     MALE(1, "男"),
+    /**
+     * 保密
+     */
     SECRET(2, "保密");
 
     public final Integer type;

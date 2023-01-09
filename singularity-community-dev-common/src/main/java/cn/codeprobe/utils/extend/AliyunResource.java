@@ -5,12 +5,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
- * 将 aliyun.properties 以Java对象（AliyunResource）的形式进行操作
+ * 将 aliyun-sms.properties 配置文件映射为（AliyunResource）对象来进行操作
  *
  * @author Lionido
  */
 @Component
-@PropertySource("classpath:aliyun.properties")
+@PropertySource("classpath:aliyun-sms.properties")
 @ConfigurationProperties(prefix = "sms")
 public class AliyunResource {
 

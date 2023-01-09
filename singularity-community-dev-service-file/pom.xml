@@ -15,7 +15,7 @@
           提供文件处理，包括文件上传、下载等操作
     -->
     <name>singularity-community-dev-service-file</name>
-    <url>http://maven.apache.org</url>
+    <url>https://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -29,6 +29,12 @@
             <version>1.0.0</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
 </project>

@@ -7,7 +7,7 @@ import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.user.service.impl.UserServiceImpl;
-import cn.hutool.core.util.StrUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,9 +24,9 @@ public class PassportController extends BaseController implements PassportContro
     private UserServiceImpl userService;
 
     @Override
-    public JsonResult getSmsCode(String mobile) throws Exception {
+    public JsonResult getSmsCode(String mobile) {
         // 校验BO数据
-        if (StrUtil.isBlank(mobile)) {
+        if (CharSequenceUtil.isBlank(mobile)) {
             return JsonResult.errorCustom(ResponseStatusEnum.SMS_MOBILE_BLANK);
         }
         // 调用 service 执行获取验证码操作
@@ -43,7 +43,7 @@ public class PassportController extends BaseController implements PassportContro
         }
         // 校验验证码
         String redisSmsCode = redisUtil.get(MOBILE_SMS_CODE + ":" + registerLoginBO.getMobile());
-        if (StrUtil.isBlank(redisSmsCode) || !redisSmsCode.equals(registerLoginBO.getSmsCode())) {
+        if (CharSequenceUtil.isBlank(redisSmsCode) || !redisSmsCode.equals(registerLoginBO.getSmsCode())) {
             return JsonResult.errorCustom(ResponseStatusEnum.SMS_CODE_ERROR);
         }
         // 调用 service 执行注册登陆

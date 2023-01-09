@@ -1,14 +1,14 @@
 package cn.codeprobe.user.service.impl;
 
 import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.exception.GlobalException;
+import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
 import cn.codeprobe.user.service.UserService;
 import cn.codeprobe.utils.DateUtil;
 import cn.codeprobe.utils.DesensitizationUtil;
-import cn.codeprobe.utils.IPUtil;
+import cn.codeprobe.utils.IpUtil;
 import cn.codeprobe.utils.JsonUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -19,6 +19,9 @@ import tk.mybatis.mapper.entity.Example;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * @author Lionido
+ */
 @Service
 public class UserServiceImpl extends BaseService implements UserService {
 
@@ -26,11 +29,11 @@ public class UserServiceImpl extends BaseService implements UserService {
     @Override
     public void getSMSCode(String mobile) {
         // 获取用户ip，限制用户只允许在60秒内发送一次短信
-        String requestIp = IPUtil.getRequestIp(request);
+        String requestIp = IpUtil.getRequestIp(request);
         redisUtil.setnx60s(MOBILE_SMS_CODE + ":" + requestIp, requestIp);
         // 生成六位数随机数字验证码，并发送
         String randomCode = RandomUtil.randomNumbers(MOBILE_SMS_CODE_DIGITS);
-//        smsUtil.sendSms(mobile, randomCode);
+        // smsUtil.sendSms(mobile, randomCode);
         // 将验证码存入redis，有效期30分钟，方便后续验证
         redisUtil.set(MOBILE_SMS_CODE + ":" + mobile, randomCode, MOBILE_SMS_CODE_TIMEOUT);
     }
@@ -79,7 +82,7 @@ public class UserServiceImpl extends BaseService implements UserService {
         AppUser appUser = queryAppUserIsExist(registerLoginBO.getMobile());
         // 判断用户是否被冻结
         if (appUser != null && appUser.getActiveStatus().equals(USER_FROZEN)) {
-            GlobalException.Internal(ResponseStatusEnum.USER_FROZEN);
+            GlobalExceptionManage.internal(ResponseStatusEnum.USER_FROZEN);
         } else if (appUser == null) {
             // 注册新用户
             appUser = createAppUser(registerLoginBO.getMobile());
@@ -118,12 +121,12 @@ public class UserServiceImpl extends BaseService implements UserService {
         appUser.setUpdatedTime(new Date());
         // 完善用户信息后，激活用户
         appUser.setActiveStatus(USER_ACTIVE);
-        // 缓存数据双写（最新数据写入数据库和redis）一致
+        // 缓存数据双写（最新数据写入数据库和redis）一致。更新前删除缓存中原有的userInfo
         redisUtil.del(REDIS_USER_INFO + ":" + updateUserInfoBO.getId());
         // 有选择的更新数据库记录，为空的属性不会影响数据库记录
         int result = appUserMapper.updateByPrimaryKeySelective(appUser);
         if (result != 1) {
-            GlobalException.Internal(ResponseStatusEnum.USER_UPDATE_ERROR);
+            GlobalExceptionManage.internal(ResponseStatusEnum.USER_UPDATE_ERROR);
         }
         // 更新后将最新的 user 写入缓存
         AppUser updatedUser = getUser(updateUserInfoBO.getId());

@@ -1,7 +1,7 @@
 package cn.codeprobe.file.utils;
 
 import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.exception.GlobalException;
+import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.file.utils.expand.FileResource;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
@@ -35,21 +35,17 @@ public class OssUtil {
         String accessKeySecret = fileResource.getAccessKeySecret();
         // 填写Bucket名称
         String bucketName = fileResource.getBucketName();
-        // 填写Object完整路径，完整路径中不能包含Bucket名称，例如exampledir/exampleobject.txt
+        // 填写Object完整路径，完整路径中不能包含Bucket名称，例如 exampledir/exampleobject.txt
         long uploadTime = System.currentTimeMillis();
-        // 文件上传路径
-        String objectName = fileResource.getPath() + userId + "/" + Long.toString(uploadTime) + "." + fileExcName;
+
+        // 定义文件上传路径
+        String objectName = fileResource.getPath() + userId + "/" + uploadTime + "." + fileExcName;
 
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
 
         try {
-            InputStream inputStream = null;
-            try {
-                inputStream = file.getInputStream();
-            } catch (IOException e) {
-                GlobalException.Internal(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
-            }
+            InputStream inputStream = file.getInputStream();
             // 创建PutObjectRequest对象。
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, objectName, inputStream);
             // 设置该属性可以返回response。如果不设置，则返回的response为空。
@@ -70,12 +66,14 @@ public class OssUtil {
                     + "a serious internal problem while trying to communicate with OSS, "
                     + "such as not being able to access the network.");
             System.out.println("Error Message:" + ce.getMessage());
+        } catch (IOException e) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.FILE_UPLOAD_FAILED);
         } finally {
             if (ossClient != null) {
                 ossClient.shutdown();
             }
         }
-
+        // 返回文件上传路径
         return objectName;
     }
 

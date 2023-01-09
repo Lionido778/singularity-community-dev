@@ -15,6 +15,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Redis 工具类
+ *
+ * @author Lionido
  */
 @Component
 public class RedisUtil {
@@ -140,7 +142,7 @@ public class RedisUtil {
      * @return value
      */
     public String get(String key) {
-        return (String) redisTemplate.opsForValue().get(key);
+        return redisTemplate.opsForValue().get(key);
     }
 
     /**
@@ -164,7 +166,7 @@ public class RedisUtil {
 //		nginx -> keepalive
 //		redis -> pipeline
 
-        List<Object> result = redisTemplate.executePipelined(new RedisCallback<String>() {
+        return redisTemplate.executePipelined(new RedisCallback<String>() {
             @Override
             public String doInRedis(RedisConnection connection) throws DataAccessException {
                 StringRedisConnection src = (StringRedisConnection) connection;
@@ -175,8 +177,6 @@ public class RedisUtil {
                 return null;
             }
         });
-
-        return result;
     }
 
 
@@ -244,7 +244,7 @@ public class RedisUtil {
      * @return 列表key的头元素。
      */
     public String lpop(String key) {
-        return (String) redisTemplate.opsForList().leftPop(key);
+        return redisTemplate.opsForList().leftPop(key);
     }
 
     /**

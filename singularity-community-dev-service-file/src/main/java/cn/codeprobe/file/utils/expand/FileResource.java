@@ -5,12 +5,12 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 /**
- * 将 aliyun-dev.properties 配置文件映射为（FileResource）对象来进行操作
+ * 将 aliyun-oss-dev.properties 配置文件映射为（FileResource）对象来进行操作
  *
  * @author Lionido
  */
 @Component
-@PropertySource("classpath:aliyun-${spring.profiles.active}.properties")
+@PropertySource("classpath:aliyun-oss-${spring.profiles.active}.properties")
 @ConfigurationProperties(prefix = "oss")
 public class FileResource {
 
