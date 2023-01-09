@@ -17,6 +17,7 @@
         <module>singularity-community-dev-service-api</module>
         <module>singularity-community-dev-service-user</module>
         <module>singularity-community-dev-service-file</module>
+        <module>singularity-community-dev-service-admin</module>
     </modules>
 
     <!--
