@@ -3,13 +3,17 @@ package cn.codeprobe.admin.service.base;
 import cn.codeprobe.admin.mapper.AdminUserMapper;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.pojo.AdminUser;
+import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.RedisUtil;
+import com.github.pagehelper.PageInfo;
+import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.util.DigestUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -19,6 +23,8 @@ public class AdminBaseService extends ApiController {
 
     @Resource
     public AdminUserMapper adminUserMapper;
+    @Resource
+    public Sid sid;
     @Resource
     private RedisUtil redisUtil;
 
@@ -81,4 +87,15 @@ public class AdminBaseService extends ApiController {
         setCookie(COOKIE_NAME_ADMIN_TOKEN, adminToken, COOKIE_ADMIN_MAX_AGE, domainName);
         setCookie(COOKIE_NAME_ADMIN_NAME, adminName, COOKIE_ADMIN_MAX_AGE, domainName);
     }
+
+    public PagedGridResult setterPageGrid(List<?> list, int page) {
+        PageInfo<?> pageInfo = new PageInfo<>(list);
+        PagedGridResult gridResult = new PagedGridResult();
+        gridResult.setRows(list);
+        gridResult.setPage(page);
+        gridResult.setTotal(pageInfo.getPages());
+        gridResult.setRecords(pageInfo.getTotal());
+        return gridResult;
+    }
+
 }

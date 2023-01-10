@@ -1,12 +1,17 @@
 package cn.codeprobe.api.controller.admin;
 
 
+import cn.codeprobe.pojo.bo.NewAdminBO;
 import cn.codeprobe.result.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.validation.Valid;
 
 /**
  * @author Lionido
@@ -19,6 +24,16 @@ public interface AdminControllerApi {
     @PostMapping("/adminIsExist")
     @ApiOperation(value = "管理员是否存在接口", notes = "管理员是否存在接口")
     public JsonResult adminIsExist(@RequestParam String username);
+
+
+    @PostMapping("/addNewAdmin")
+    @ApiOperation(value = "添加管理员接口", notes = "添加管理员")
+    public JsonResult addNewAdmin(@RequestBody @Valid NewAdminBO newAdminBO, BindingResult result);
+
+
+    @PostMapping("/getAdminList")
+    @ApiOperation(value = "添加管理员接口", notes = "添加管理员")
+    public JsonResult getAdminList(@RequestParam String page, String pageSize);
 
 }
 

@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- *  注册、配置自定义拦截器
+ * 注册、配置自定义拦截器
  *
  * @author Lionido
  */
@@ -48,7 +48,8 @@ public class Interceptors implements WebMvcConfigurer {
                 .addPathPatterns("/user/updateUserInfo")
                 .addPathPatterns("/file/uploadFace");
         registry.addInterceptor(adminTokenInterceptor())
-                .addPathPatterns("/adminMng/adminIsExist");
+                .addPathPatterns("/adminMng/adminIsExist")
+                .addPathPatterns("/adminMng/addNewAdmin");
         // 检查用户的激活状态,若未激活进行拦截
         // registry.addInterceptor(userActivityInterceptor())
         //        .addPathPatterns("/user/getAccountInfo")

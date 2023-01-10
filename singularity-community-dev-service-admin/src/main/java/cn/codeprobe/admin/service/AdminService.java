@@ -1,5 +1,8 @@
 package cn.codeprobe.admin.service;
 
+import cn.codeprobe.pojo.bo.NewAdminBO;
+import cn.codeprobe.result.page.PagedGridResult;
+
 /**
  * @author Lionido
  */
@@ -11,4 +14,8 @@ public interface AdminService {
      * @return true exist;false: no exist
      */
     public Boolean checkAdminIsExist(String adminName);
+
+    void createAdminUser(NewAdminBO newAdminBO);
+
+    PagedGridResult queryAdminUserList(int page, int pageSize);
 }
