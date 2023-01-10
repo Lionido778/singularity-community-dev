@@ -1,6 +1,6 @@
 package cn.codeprobe.api.interceptors;
 
-import cn.codeprobe.api.interceptors.base.BaseInterceptor;
+import cn.codeprobe.api.interceptors.base.ApiInterceptor;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.utils.IpUtil;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Lionido
  */
 
-public class PassportInterceptor extends BaseInterceptor implements HandlerInterceptor {
+public class PassportInterceptor extends ApiInterceptor implements HandlerInterceptor {
 
 
     /**

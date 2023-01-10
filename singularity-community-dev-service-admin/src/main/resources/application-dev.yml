@@ -35,7 +35,7 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-### 资源配置中设置域名，在java代码中获取，
-#website:
-#  domain-name: codeprobe.cn
+## 资源配置中设置域名，在java代码中获取，
+website:
+  domain-name: codeprobe.cn
 

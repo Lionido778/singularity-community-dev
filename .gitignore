@@ -2,6 +2,7 @@ HELP.md
 target/
 logs/
 */src/test
+/mybatis-generator-database/*
 
 ### Maven ###
 .mvn

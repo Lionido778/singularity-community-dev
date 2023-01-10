@@ -3,40 +3,24 @@ package cn.codeprobe.user.service.impl;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.AppUser;
-import cn.codeprobe.pojo.bo.RegisterLoginBO;
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
 import cn.codeprobe.user.service.UserService;
+import cn.codeprobe.user.service.base.UserBaseService;
 import cn.codeprobe.utils.DateUtil;
 import cn.codeprobe.utils.DesensitizationUtil;
-import cn.codeprobe.utils.IpUtil;
 import cn.codeprobe.utils.JsonUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.core.util.RandomUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * @author Lionido
  */
 @Service
-public class UserServiceImpl extends BaseService implements UserService {
-
-
-    @Override
-    public void getSMSCode(String mobile) {
-        // 获取用户ip，限制用户只允许在60秒内发送一次短信
-        String requestIp = IpUtil.getRequestIp(request);
-        redisUtil.setnx60s(MOBILE_SMS_CODE + ":" + requestIp, requestIp);
-        // 生成六位数随机数字验证码，并发送
-        String randomCode = RandomUtil.randomNumbers(MOBILE_SMS_CODE_DIGITS);
-        // smsUtil.sendSms(mobile, randomCode);
-        // 将验证码存入redis，有效期30分钟，方便后续验证
-        redisUtil.set(MOBILE_SMS_CODE + ":" + mobile, randomCode, MOBILE_SMS_CODE_TIMEOUT);
-    }
+public class UserServiceImpl extends UserBaseService implements UserService {
 
     @Override
     public AppUser queryAppUserIsExist(String mobile) {
@@ -77,26 +61,6 @@ public class UserServiceImpl extends BaseService implements UserService {
         return appUser;
     }
 
-    @Override
-    public AppUser RegisterLogin(RegisterLoginBO registerLoginBO) {
-        AppUser appUser = queryAppUserIsExist(registerLoginBO.getMobile());
-        // 判断用户是否被冻结
-        if (appUser != null && appUser.getActiveStatus().equals(USER_FROZEN)) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.USER_FROZEN);
-        } else if (appUser == null) {
-            // 注册新用户
-            appUser = createAppUser(registerLoginBO.getMobile());
-        }
-        UUID uToken = UUID.randomUUID();
-        String uId = appUser.getId();
-        // 保存分布式会话信息Cookie到redis(有效期一个小时)，并响应保存到前端
-        redisUtil.set(REDIS_USER_TOKEN + ":" + uId, uToken.toString().trim(), REDIS_USER_TOKEN_TIMEOUT);
-        setCookie(COOKIE_NAME_ID, uId, COOKIE_MAX_AGE);
-        setCookie(COOKIE_NAME_TOKEN, uToken.toString(), COOKIE_MAX_AGE);
-        // 短信验证码有效次数一次，用户成功注册或登陆时，短信验证码作废
-        redisUtil.del(MOBILE_SMS_CODE + ":" + registerLoginBO.getMobile());
-        return appUser;
-    }
 
     @Override
     public AppUser getUserInfo(String userId) {
@@ -139,15 +103,5 @@ public class UserServiceImpl extends BaseService implements UserService {
             throw new RuntimeException(e);
         }
     }
-
-    @Override
-    public void userLogout(String userId) {
-        // 删除 redis 中的token
-        redisUtil.del(REDIS_USER_TOKEN + ":" + userId);
-        // 删除 cookie
-        setCookie(COOKIE_NAME_ID, "", COOKIE_DELETE);
-        setCookie(COOKIE_NAME_TOKEN, "", COOKIE_DELETE);
-    }
-
 
 }

@@ -1,6 +1,6 @@
 package cn.codeprobe.user.controller;
 
-import cn.codeprobe.api.controller.base.BaseController;
+import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.api.controller.user.UserControllerApi;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
@@ -18,8 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.Map;
 
+/**
+ * @author Lionido
+ */
 @RestController
-public class UserController extends BaseController implements UserControllerApi {
+public class UserController extends ApiController implements UserControllerApi {
 
     @Resource
     private UserServiceImpl userService;

@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import tk.mybatis.spring.annotation.MapperScan;
 
+/**
+ * @author Lionido
+ */
 @SpringBootApplication
 @MapperScan(basePackages = "cn.codeprobe.user.mapper")
 @ComponentScan(basePackages = {"cn.codeprobe"})

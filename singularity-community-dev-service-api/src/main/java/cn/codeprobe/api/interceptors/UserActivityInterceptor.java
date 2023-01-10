@@ -1,6 +1,6 @@
 package cn.codeprobe.api.interceptors;
 
-import cn.codeprobe.api.interceptors.base.BaseInterceptor;
+import cn.codeprobe.api.interceptors.base.ApiInterceptor;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.AppUser;
@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Lionido
  */
-public class UserActivityInterceptor extends BaseInterceptor implements HandlerInterceptor {
+public class UserActivityInterceptor extends ApiInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
 

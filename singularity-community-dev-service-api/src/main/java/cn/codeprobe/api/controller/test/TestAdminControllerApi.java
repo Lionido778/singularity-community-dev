@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Lionido
  */
 @Api(value = "管理中心项目测试接口", tags = "管理中心项目测试接口")
-@RequestMapping("/test/admin")
+@RequestMapping("/admin/test")
 public interface TestAdminControllerApi {
 
     @ApiOperation(value = "管理中心项目测试接口", notes = "管理中心项目测试接口", httpMethod = "GET")

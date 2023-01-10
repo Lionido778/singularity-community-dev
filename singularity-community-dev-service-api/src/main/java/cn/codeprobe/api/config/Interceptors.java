@@ -1,5 +1,6 @@
 package cn.codeprobe.api.config;
 
+import cn.codeprobe.api.interceptors.AdminTokenInterceptor;
 import cn.codeprobe.api.interceptors.PassportInterceptor;
 import cn.codeprobe.api.interceptors.UserActivityInterceptor;
 import cn.codeprobe.api.interceptors.UserTokenInterceptor;
@@ -9,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 配置、注册自定义拦截器
+ *  注册、配置自定义拦截器
  *
  * @author Lionido
  */
@@ -27,6 +28,11 @@ public class Interceptors implements WebMvcConfigurer {
     }
 
     @Bean
+    public AdminTokenInterceptor adminTokenInterceptor() {
+        return new AdminTokenInterceptor();
+    }
+
+    @Bean
     public UserActivityInterceptor userActivityInterceptor() {
         return new UserActivityInterceptor();
     }
@@ -41,6 +47,8 @@ public class Interceptors implements WebMvcConfigurer {
                 .addPathPatterns("/user/getAccountInfo")
                 .addPathPatterns("/user/updateUserInfo")
                 .addPathPatterns("/file/uploadFace");
+        registry.addInterceptor(adminTokenInterceptor())
+                .addPathPatterns("/adminMng/adminIsExist");
         // 检查用户的激活状态,若未激活进行拦截
         // registry.addInterceptor(userActivityInterceptor())
         //        .addPathPatterns("/user/getAccountInfo")

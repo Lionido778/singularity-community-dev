@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * @author Lionido
  */
 @Api(value = "项目测试接口", tags = "项目测试接口")
-@RequestMapping("/test")
+@RequestMapping("/user/test")
 public interface TestUserControllerApi {
 
     @ApiOperation(value = "用户项目测试Hello接口", notes = "用户项目测试Hello接口", httpMethod = "GET")

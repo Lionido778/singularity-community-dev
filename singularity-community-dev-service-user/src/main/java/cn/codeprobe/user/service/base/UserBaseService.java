@@ -1,29 +1,43 @@
-package cn.codeprobe.user.service.impl;
+package cn.codeprobe.user.service.base;
 
-import cn.codeprobe.api.controller.base.BaseController;
+import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.enums.UserSex;
 import cn.codeprobe.enums.UserStatus;
 import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.user.mapper.AppUserMapper;
+import cn.codeprobe.utils.RedisUtil;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Value;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 
 /**
  * 基础service ，提供共用常量、变量、方法等
  *
  * @author Lionido
  */
-public class BaseService extends BaseController {
+public class UserBaseService extends ApiController {
 
     @Resource
     public AppUserMapper appUserMapper;
     @Resource
     public Sid sid;
+    @Resource
+    public RedisUtil redisUtil;
+
+    /**
+     * domain-name
+     */
+    @Value("${website.domain-name}")
+    public String domainName;
+
+    /**
+     * sms
+     */
+    public static final String MOBILE_SMS_CODE = "mobile_sms_code";
+    public static final Long MOBILE_SMS_CODE_TIMEOUT = (long) (30 * 60);
+    public static final Integer MOBILE_SMS_CODE_DIGITS = 6;
 
     /**
      * user
@@ -50,33 +64,20 @@ public class BaseService extends BaseController {
 
 
     /**
-     * domain-name
+     * 获取用户
      */
-    @Value("${website.domain-name}")
-    private String domainName;
-
-
-    public void setCookie(String cookieName, String cookieValue, Integer maxAge) {
-        try {
-            String encodeCookieValue = URLEncoder.encode(cookieValue, "utf-8");
-            // 生成cookie
-            createCookie(cookieName, encodeCookieValue, maxAge);
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void createCookie(String cookieName, String cookieValue, Integer maxAge) {
-        Cookie cookie = new Cookie(cookieName, cookieValue);
-        cookie.setDomain(domainName);
-        cookie.setMaxAge(maxAge);
-        cookie.setPath("/");
-        response.addCookie(cookie);
-    }
-
-
     public AppUser getUser(String userId) {
         return appUserMapper.selectByPrimaryKey(userId);
+    }
+
+    public AppUser queryAppUserByMobile(String mobile) {
+        // 构建example
+        Example example = new Example(AppUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        // 查询条件
+        criteria.andEqualTo("mobile", mobile);
+        // 查询用户
+        return appUserMapper.selectOneByExample(example);
     }
 
 }
