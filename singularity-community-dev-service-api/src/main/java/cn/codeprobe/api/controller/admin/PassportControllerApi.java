@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author Lionido
@@ -17,7 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface PassportControllerApi {
 
     @PostMapping("/adminLogin")
-    @ApiOperation(value = "登录接口", notes = "登录接口")
+    @ApiOperation(value = "管理员登录接口", notes = "管理员登录")
     public JsonResult adminLogin(@RequestBody AdminLoginBO adminLoginBO);
+
+    @PostMapping("/adminLogout")
+    @ApiOperation(value = "管理员退出登录接口", notes = "管理员退出登录")
+    public JsonResult adminLogout(@RequestParam String adminId);
 
 }

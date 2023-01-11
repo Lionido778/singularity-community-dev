@@ -24,8 +24,18 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
             } else {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_NOT_EXIT_ERROR);
             }
-        }else {
+        } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_NOT_EXIT_ERROR);
         }
+    }
+
+    @Override
+    public void adminLogout(String adminId) {
+        // 删除 redis 中的token
+        redisUtil.del(REDIS_ADMIN_TOKEN + ":" + adminId);
+        // 删除 cookie
+        setCookie(COOKIE_NAME_ADMIN_ID, "", COOKIE_TIME_OUT, domainName);
+        setCookie(COOKIE_NAME_ADMIN_TOKEN, "", COOKIE_TIME_OUT, domainName);
+        setCookie(COOKIE_NAME_ADMIN_NAME, "", COOKIE_TIME_OUT, domainName);
     }
 }

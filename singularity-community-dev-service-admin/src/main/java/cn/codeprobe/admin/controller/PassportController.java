@@ -50,4 +50,10 @@ public class PassportController extends ApiController implements PassportControl
         return JsonResult.ok();
     }
 
+    @Override
+    public JsonResult adminLogout(String adminId) {
+        adminPassportService.adminLogout(adminId);
+        return JsonResult.ok();
+    }
+
 }

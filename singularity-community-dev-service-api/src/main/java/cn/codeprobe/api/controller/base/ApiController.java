@@ -47,7 +47,7 @@ public class ApiController {
      * 登录成功后设置 cookie
      */
     public void setCookie(String cookieName, String cookieValue, Integer maxAge) {
-        setCookie(cookieName, cookieValue, maxAge, null);
+        setCookie(cookieName, cookieValue, maxAge, "");
     }
 
     /**

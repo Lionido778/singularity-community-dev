@@ -26,7 +26,7 @@ public class AdminBaseService extends ApiController {
     @Resource
     public Sid sid;
     @Resource
-    private RedisUtil redisUtil;
+    public RedisUtil redisUtil;
 
     /**
      * domain-name
@@ -34,13 +34,21 @@ public class AdminBaseService extends ApiController {
     @Value("${website.domain-name}")
     public String domainName;
 
+    /**
+     * token
+     */
     public static final String REDIS_ADMIN_TOKEN = "admin_token";
     public static final String REDIS_ADMIN_INFO = "admin_info";
     public static final Integer REDIS_ADMIN_TOKEN_TIMEOUT = 30 * 60;
+
+    /**
+     * cookie
+     */
     public static final String COOKIE_NAME_ADMIN_ID = "aid";
     public static final String COOKIE_NAME_ADMIN_TOKEN = "atoken";
     public static final String COOKIE_NAME_ADMIN_NAME = "aname";
     public static final Integer COOKIE_ADMIN_MAX_AGE = 24 * 60 * 60;
+    public static final Integer COOKIE_TIME_OUT = 0;
 
 
     /**
