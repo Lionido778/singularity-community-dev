@@ -18,10 +18,13 @@ public class AdminTokenInterceptor extends ApiInterceptor implements HandlerInte
 
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
-        String adminId = request.getHeader("adminUserId");
-        String adminToken = request.getHeader("adminUserToken");
-        // 校验用户的登陆状态
-        return verifyIdAndToken(adminId, adminToken, ROLE_ADMIN);
+        String adminId = request.getHeader(HEADER_ADMIN_ID);
+        String adminToken = request.getHeader(HEADER_ADMIN_TOKEN);
+        // 校验管理员的登陆状态
+        Boolean isLogged = checkLoginStatus(adminId, adminToken, ROLE_ADMIN);
+        // 打印拦截日志
+        recordInterceptLog(isLogged, ROLE_ADMIN, adminId, adminToken);
+        return isLogged;
     }
 
 

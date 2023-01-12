@@ -50,6 +50,12 @@
             <version>1.2.3</version>
         </dependency>
 
+        <!--MongoDB 驱动-->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongodb-driver</artifactId>
+        </dependency>
+
         <!-- swagger2 配置 -->
         <dependency>
             <groupId>io.springfox</groupId>

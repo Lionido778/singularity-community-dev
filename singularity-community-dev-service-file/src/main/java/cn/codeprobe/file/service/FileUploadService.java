@@ -1,5 +1,6 @@
 package cn.codeprobe.file.service;
 
+import cn.codeprobe.pojo.bo.NewAdminBO;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -8,11 +9,19 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileUploadService {
 
     /**
-     * 文件上传到OSS云存储
+     * 文件上传到 OSS云存储
      *
      * @param userId 用户ID
      * @param file   待上传文件
      * @return faceUlr    上传头像的访问路径
      */
     String uploadToOss(String userId, MultipartFile file);
+
+    /**
+     * 文件上传至 GridFS
+     *
+     * @param newAdminBO 包含着图像上传信息
+     * @return fileId 上传文件ID
+     */
+    String uploadToGridFs(NewAdminBO newAdminBO);
 }

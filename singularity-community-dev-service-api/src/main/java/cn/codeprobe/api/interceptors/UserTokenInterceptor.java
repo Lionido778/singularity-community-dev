@@ -18,10 +18,13 @@ public class UserTokenInterceptor extends ApiInterceptor implements HandlerInter
 
     @Override
     public boolean preHandle(HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
-        String userId = request.getHeader("headerUserId");
-        String userToken = request.getHeader("headerUserToken");
+        String userId = request.getHeader(HEADER_USER_ID);
+        String userToken = request.getHeader(HEADER_USER_TOKEN);
         // 校验用户的登陆状态
-        return verifyIdAndToken(userId, userToken, ROLE_USER);
+        Boolean isLogged = checkLoginStatus(userId, userToken, ROLE_USER);
+        // 打印拦截日志
+        recordInterceptLog(isLogged, ROLE_USER, userId, userToken);
+        return isLogged;
     }
 
 

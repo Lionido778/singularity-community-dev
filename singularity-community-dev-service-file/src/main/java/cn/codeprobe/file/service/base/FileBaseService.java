@@ -2,16 +2,19 @@ package cn.codeprobe.file.service.base;
 
 import cn.codeprobe.file.utils.OssUtil;
 import cn.codeprobe.file.utils.expand.FileResource;
+import com.mongodb.client.gridfs.GridFSBucket;
 
 import javax.annotation.Resource;
 
 /**
  * @author Lionido
  */
-public class BaseService {
+public class FileBaseService {
 
     @Resource
     public OssUtil ossUtil;
+    @Resource
+    public GridFSBucket gridFsBucket;
 
     @Resource
     public FileResource fileResource;

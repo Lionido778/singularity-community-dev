@@ -29,7 +29,7 @@ public class ApiController {
 
 
     /**
-     * 获取 前端数据校验的错误信息
+     * 获取前端数据校验的错误信息
      */
     public Map<String, String> getErrors(BindingResult result) {
         Map<String, String> map = new HashMap<>();

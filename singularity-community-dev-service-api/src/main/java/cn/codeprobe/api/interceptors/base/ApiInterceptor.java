@@ -7,6 +7,8 @@ import cn.codeprobe.utils.RedisUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 公用拦截器
@@ -19,13 +21,31 @@ public class ApiInterceptor {
     @Resource
     public RedisUtil redisUtil;
 
+    /**
+     * sms
+     */
     public static final String MOBILE_SMS_CODE = "mobile_sms_code";
+    /**
+     * token
+     */
     public static final String REDIS_USER_TOKEN = "user_token";
     public static final String REDIS_ADMIN_TOKEN = "admin_token";
-    public static final String REDIS_USER_INFO = "user_info";
+    /**
+     * role
+     */
     public static final String ROLE_ADMIN = "admin";
     public static final String ROLE_USER = "user";
+    /**
+     * header
+     */
+    public static final String HEADER_USER_ID = "headerUserId";
+    public static final String HEADER_USER_TOKEN = "headerUserToken";
+    public static final String HEADER_ADMIN_ID = "adminUserId";
+    public static final String HEADER_ADMIN_TOKEN = "adminUserToken";
+
+    public static final String REDIS_USER_INFO = "user_info";
     public static final Integer USER_ACTIVE = UserStatus.ACTIVE.type;
+
 
     /**
      * 登录状态检查
@@ -72,4 +92,42 @@ public class ApiInterceptor {
     }
 
 
+    /**
+     * 记录打印 拦截放行日记
+     *
+     * @param isLogged 是否是登录状态
+     * @param role     角色（管理员、用户）
+     * @param id       主键ID
+     * @param token    令牌
+     */
+    public void recordInterceptLog(boolean isLogged, String role, String id, String token) {
+        System.out.println("=====================================================================");
+        if (isLogged) {
+            System.out.println("该请求已被拦截！");
+        } else {
+            System.out.println("该请求已被放行！");
+        }
+        System.out.println(role + "TokenInterceptor - " + role + "Id = " + id);
+        System.out.println(role + "TokenInterceptor - " + role + "Token = " + token);
+        System.out.println("=====================================================================");
+    }
+
+    /**
+     * 从cookie中取值
+     * @param request 请求
+     * @param key     cookie name
+     * @return
+     */
+    public String getCookie(HttpServletRequest request, String key) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return null;
+        }
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals(key)){
+                return cookie.getValue();
+            }
+        }
+        return null;
+    }
 }

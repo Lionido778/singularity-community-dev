@@ -65,7 +65,7 @@ public enum ResponseStatusEnum {
     CATEGORY_EXIST_ERROR(570, false, "文章分类已存在，请换一个分类名！"),
     ADMIN_ALL_NULL_ERROR(571, false, "登录参数不可以为空！"),
     ADMIN_PAGE_NULL_ERROR(572, false, "查询分页参数不可以为空！"),
-    ADMIN_QUERY_ERROR(572, false, "管理员列表查询失败！"),
+    ADMIN_QUERY_ERROR(573, false, "管理员列表查询失败！"),
 
     /**
      * 媒体中心 相关错误 58x

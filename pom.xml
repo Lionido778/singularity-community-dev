@@ -80,7 +80,7 @@
         <scope>import</scope>
       </dependency>
 
-      <!-- 引入 mongodb 依赖 -->
+      <!-- 引入 mongodb 驱动 -->
       <dependency>
         <groupId>org.mongodb</groupId>
         <artifactId>mongodb-driver</artifactId>
