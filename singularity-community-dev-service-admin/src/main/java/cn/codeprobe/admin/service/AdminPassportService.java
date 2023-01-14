@@ -5,7 +5,8 @@ package cn.codeprobe.admin.service;
  */
 public interface AdminPassportService {
 
-    public void loginByUsernameAndPwd(String username, String password);
+    void loginByUsernameAndPwd(String username, String password);
 
+    void loginByFace(String username, String img64Face);
     void adminLogout(String adminId);
 }

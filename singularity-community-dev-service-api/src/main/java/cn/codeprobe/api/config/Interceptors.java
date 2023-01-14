@@ -39,17 +39,21 @@ public class Interceptors implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // 检查用户发送短信请求是否在限制时间内，若是，拦截请求
+        // 检查用户发送短信请求是否在限制时间内。若是，拦截请求
         registry.addInterceptor(passportInterceptor())
                 .addPathPatterns("/passport/getSMSCode");
-        // 检查用户登录状态,若未登录，要进行拦截
+        // 检查用户登录状态。若未登录，拦截
         registry.addInterceptor(userTokenInterceptor())
                 .addPathPatterns("/user/getAccountInfo")
                 .addPathPatterns("/user/updateUserInfo")
                 .addPathPatterns("/file/uploadFace");
+        // 检查管理员登录状态。若未登录，拦截
         registry.addInterceptor(adminTokenInterceptor())
                 .addPathPatterns("/adminMng/adminIsExist")
-                .addPathPatterns("/adminMng/addNewAdmin");
+                .addPathPatterns("/adminMng/addNewAdmin")
+                .addPathPatterns("/adminMng/getAdminList")
+                .addPathPatterns("/file/uploadToGridFS")
+                .addPathPatterns("/file/readFromGridFS");
         // 检查用户的激活状态,若未激活进行拦截
         // registry.addInterceptor(userActivityInterceptor())
         //        .addPathPatterns("/user/getAccountInfo")

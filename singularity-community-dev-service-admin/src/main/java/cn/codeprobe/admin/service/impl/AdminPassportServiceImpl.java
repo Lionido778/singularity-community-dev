@@ -5,6 +5,10 @@ import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.AdminUser;
+import cn.codeprobe.result.JsonResult;
+import cn.codeprobe.utils.FileUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -14,18 +18,58 @@ import org.springframework.stereotype.Service;
 public class AdminPassportServiceImpl extends AdminBaseService implements AdminPassportService {
 
     @Override
-    public void loginByUsernameAndPwd(String userName, String password) {
-        AdminUser adminUser = queryAdminByUsername(userName);
+    public void loginByUsernameAndPwd(String username, String password) {
+        AdminUser adminUser = queryAdminByUsername(username);
         if (adminUser != null) {
             String encryptedPwd = adminUser.getPassword();
             if (Boolean.TRUE.equals(isPasswordMatched(password, encryptedPwd))) {
-                // 登陆成功，进行 token、cookie配置
-                adminLoginSetting(adminUser);
+                // 登陆成功，进行token、cookie配置
+                adminLoggedSetting(adminUser);
             } else {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_NOT_EXIT_ERROR);
             }
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_NOT_EXIT_ERROR);
+        }
+    }
+
+    @Override
+    public void loginByFace(String username, String img64Face) {
+        AdminUser adminUser = queryAdminByUsername(username);
+        if (adminUser != null) {
+            String faceId = adminUser.getFaceId();
+            if (CharSequenceUtil.isNotBlank(faceId)) {
+                // 暂时使用 RestTemplate 调用 file 服务的下载保存在GridFS中的人脸数据（Base64）
+                String accessFileServerUrl = FILE_SERVER_URL + faceId;
+                ResponseEntity<JsonResult> responseEntity = restTemplate.getForEntity(accessFileServerUrl, JsonResult.class);
+                JsonResult body = responseEntity.getBody();
+                if (body != null) {
+                    String img64FaceGridFs = (String) body.getData();
+                    FileUtil.base64ToFile(FACE_TEMP_DIR + "/" + username, img64Face, LOGIN_FACE_NAME + EXTEND_NAME);
+                    FileUtil.base64ToFile(FACE_TEMP_DIR + "/" + username, img64FaceGridFs, FACE_DATA_NAME + EXTEND_NAME);
+                    String faceFile = FACE_TEMP_DIR + "/" + username + "/" + LOGIN_FACE_NAME + EXTEND_NAME;
+                    String dataFile = FACE_TEMP_DIR + "/" + username + "/" + FACE_DATA_NAME + EXTEND_NAME;
+                    try {
+                        // 调用阿里云人脸识别接口，进行人脸识别登录
+                        Boolean pass = faceVerifyUtil.verifyFace(TARGET_CONFIDENCE, faceFile, dataFile);
+                        if (Boolean.TRUE.equals(pass)) {
+                            // 人脸识别登陆成功，设置管理员登陆参数
+                            adminLoggedSetting(adminUser);
+                        } else {
+                            // 人脸识别失败
+                            GlobalExceptionManage.internal(ResponseStatusEnum.FACE_VERIFY_TYPE_ERROR);
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    GlobalExceptionManage.internal(ResponseStatusEnum.FILE_DOWNLOAD_ERROR);
+                }
+            } else {
+                GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_FACE_NOT_EXIST_ERROR);
+            }
+        } else {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_NOT_EXIT_FACE_ERROR);
         }
     }
 

@@ -4,12 +4,14 @@ import cn.codeprobe.admin.mapper.AdminUserMapper;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.pojo.AdminUser;
 import cn.codeprobe.result.page.PagedGridResult;
+import cn.codeprobe.utils.FaceVerifyUtil;
 import cn.codeprobe.utils.RedisUtil;
 import com.github.pagehelper.PageInfo;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.client.RestTemplate;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
@@ -27,6 +29,10 @@ public class AdminBaseService extends ApiController {
     public Sid sid;
     @Resource
     public RedisUtil redisUtil;
+    @Resource
+    public RestTemplate restTemplate;
+    @Resource
+    public FaceVerifyUtil faceVerifyUtil;
 
     /**
      * domain-name
@@ -49,6 +55,20 @@ public class AdminBaseService extends ApiController {
     public static final String COOKIE_NAME_ADMIN_NAME = "aname";
     public static final Integer COOKIE_ADMIN_MAX_AGE = 24 * 60 * 60;
     public static final Integer COOKIE_TIME_OUT = 0;
+
+    /**
+     * 人脸识别
+     */
+    public static final Float TARGET_CONFIDENCE = 60F;
+    public static final String FACE_TEMP_DIR = "/workspace/compare";
+    public static final String LOGIN_FACE_NAME = "登陆头像";
+    public static final String FACE_DATA_NAME = "人脸数据";
+    public static final String EXTEND_NAME = ".png";
+
+    /**
+     * file url
+     */
+    public static final String FILE_SERVER_URL = "http://file.codeprobe.cn:8004/file/readBase64FromGridFS?faceId=";
 
 
     /**
@@ -81,9 +101,9 @@ public class AdminBaseService extends ApiController {
     }
 
     /**
-     * admin 登录后 生成 token、cookie
+     * admin 登录后成功后 生成token、cookie
      */
-    public void adminLoginSetting(AdminUser adminUser) {
+    public void adminLoggedSetting(AdminUser adminUser) {
         String adminId = adminUser.getId();
         UUID uuid = UUID.randomUUID();
         String adminToken = uuid.toString();
@@ -96,6 +116,13 @@ public class AdminBaseService extends ApiController {
         setCookie(COOKIE_NAME_ADMIN_NAME, adminName, COOKIE_ADMIN_MAX_AGE, domainName);
     }
 
+    /**
+     * 查询分页配置
+     *
+     * @param list 查询数据（每页）
+     * @param page 当前页
+     * @return 封装分页查询结果
+     */
     public PagedGridResult setterPageGrid(List<?> list, int page) {
         PageInfo<?> pageInfo = new PageInfo<>(list);
         PagedGridResult gridResult = new PagedGridResult();

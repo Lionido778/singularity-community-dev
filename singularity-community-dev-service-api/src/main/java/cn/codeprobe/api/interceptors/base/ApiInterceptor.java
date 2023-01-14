@@ -3,12 +3,14 @@ package cn.codeprobe.api.interceptors.base;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.enums.UserStatus;
 import cn.codeprobe.exception.GlobalExceptionManage;
+import cn.codeprobe.utils.IpUtil;
 import cn.codeprobe.utils.RedisUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 公用拦截器
@@ -20,6 +22,10 @@ public class ApiInterceptor {
 
     @Resource
     public RedisUtil redisUtil;
+    @Resource
+    private HttpServletRequest request;
+    @Resource
+    private HttpServletResponse response;
 
     /**
      * sms
@@ -48,6 +54,13 @@ public class ApiInterceptor {
 
 
     /**
+     * 登录状态
+     */
+    public static final Boolean LOGGED = true;
+    public static final Boolean UN_LOGGED = false;
+
+
+    /**
      * 登录状态检查
      *
      * @param id    用户、管理员id
@@ -55,8 +68,8 @@ public class ApiInterceptor {
      * @param role  用户或管理员
      * @return true 放行请求；false 拦截请求
      */
-    public Boolean checkLoginStatus(String id, String token, String role) {
-        return verifyIdAndToken(id, token, role);
+    public void checkLoginStatus(String id, String token, String role) {
+        verifyIdAndToken(id, token, role);
     }
 
     /**
@@ -65,14 +78,15 @@ public class ApiInterceptor {
      * @param id    用户、管理员id
      * @param token 令牌
      * @param role  用户或管理员
-     * @return true 放行请求；false 拦截请求
      */
-    public Boolean verifyIdAndToken(String id, String token, String role) {
-        // 检查header中userId或userToken是否为空
+    public void verifyIdAndToken(String id, String token, String role) {
+        // 检查header中 id 或 token 是否为空
         if (CharSequenceUtil.isBlank(id) || CharSequenceUtil.isBlank(token)) {
+            // 打印拦截日志
+            recordInterceptLog(UN_LOGGED, role, id, token);
             GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
         }
-        // 检查redis 缓存中token是否有效
+        // 检查token是否过了有效期（redis缓存中token是否存在）
         String redisToken = "";
         if (role.equalsIgnoreCase(ROLE_ADMIN)) {
             // admin token
@@ -82,13 +96,16 @@ public class ApiInterceptor {
             redisToken = redisUtil.get(REDIS_USER_TOKEN + ":" + id);
         }
         if (CharSequenceUtil.isBlank(redisToken)) {
+            // 打印拦截日志
+            recordInterceptLog(UN_LOGGED, role, id, token);
             GlobalExceptionManage.internal(ResponseStatusEnum.TICKET_INVALID);
         }
-        // token是否匹配
+        // 检查token是否匹配
         if (!redisToken.equalsIgnoreCase(token)) {
+            // 打印拦截日志
+            recordInterceptLog(UN_LOGGED, role, id, token);
             GlobalExceptionManage.internal(ResponseStatusEnum.TICKET_INVALID);
         }
-        return true;
     }
 
 
@@ -102,10 +119,12 @@ public class ApiInterceptor {
      */
     public void recordInterceptLog(boolean isLogged, String role, String id, String token) {
         System.out.println("=====================================================================");
+        // 获取请求IP
+        String requestIp = IpUtil.getRequestIp(request);
         if (isLogged) {
-            System.out.println("该请求已被拦截！");
+            System.out.println("IP: " + requestIp + " 请求已被放行！");
         } else {
-            System.out.println("该请求已被放行！");
+            System.out.println("IP: " + requestIp + " 请求已被拦截！");
         }
         System.out.println(role + "TokenInterceptor - " + role + "Id = " + id);
         System.out.println(role + "TokenInterceptor - " + role + "Token = " + token);
@@ -114,6 +133,7 @@ public class ApiInterceptor {
 
     /**
      * 从cookie中取值
+     *
      * @param request 请求
      * @param key     cookie name
      * @return
@@ -123,8 +143,8 @@ public class ApiInterceptor {
         if (cookies == null) {
             return null;
         }
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals(key)){
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(key)) {
                 return cookie.getValue();
             }
         }

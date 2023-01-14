@@ -4,15 +4,19 @@ import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.api.controller.file.FileControllerApi;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
+import cn.codeprobe.file.service.FileDownloadService;
 import cn.codeprobe.file.service.FileUploadService;
 import cn.codeprobe.pojo.bo.NewAdminBO;
 import cn.codeprobe.result.JsonResult;
+import cn.codeprobe.utils.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 /**
  * @author Lionido
@@ -22,6 +26,9 @@ public class FileController extends ApiController implements FileControllerApi {
 
     @Resource
     private FileUploadService fileUploadService;
+    @Resource
+    private FileDownloadService fileDownloadService;
+
 
     @Override
     public JsonResult uploadFace(String userId, MultipartFile file) {
@@ -56,8 +63,27 @@ public class FileController extends ApiController implements FileControllerApi {
     }
 
     @Override
-    public JsonResult readFromGridFs(String faceId) {
-        //String img64 = fileSer
-        return null;
+    public void readFaceFromGridFs(String faceId) throws FileNotFoundException {
+        // 校验 faceId
+        if (CharSequenceUtil.isBlank(faceId) || "null".equalsIgnoreCase(faceId)) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.FILE_NOT_EXIST_ERROR);
+        }
+        // 调用 service 获取人脸文件
+        File faceFile = fileDownloadService.downloadFileFromGridFs(faceId);
+        // 将人脸图像响应到前端
+        FileUtil.downloadFileByStream(response, faceFile);
+    }
+
+    @Override
+    public JsonResult readBase64FaceFromGridFs(String faceId) {
+        // 校验 faceId
+        if (CharSequenceUtil.isBlank(faceId)) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.FILE_NOT_EXIST_ERROR);
+        }
+        // 调用 service 获取人脸数据文件
+        File faceFile = fileDownloadService.downloadFileFromGridFs(faceId);
+        // 返回 Base64
+        String base64 = FileUtil.fileToBase64(faceFile);
+        return JsonResult.ok(base64);
     }
 }

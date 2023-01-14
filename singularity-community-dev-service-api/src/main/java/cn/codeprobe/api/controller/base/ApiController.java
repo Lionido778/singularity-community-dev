@@ -55,7 +55,8 @@ public class ApiController {
      */
     public void setCookie(String cookieName, String cookieValue, Integer maxAge, String domainName) {
         try {
-            String encodeCookieValue = URLEncoder.encode(cookieValue, "utf-8");
+            String encodeCookieValue = URLEncoder.encode(cookieValue, "UTF-8");
+            System.out.println(cookieName + ":" + cookieValue + "-" + encodeCookieValue);
             // 生成cookie
             createCookie(cookieName, encodeCookieValue, maxAge, domainName);
         } catch (UnsupportedEncodingException e) {

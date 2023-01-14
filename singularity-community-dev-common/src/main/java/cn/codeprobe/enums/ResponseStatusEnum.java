@@ -66,6 +66,9 @@ public enum ResponseStatusEnum {
     ADMIN_ALL_NULL_ERROR(571, false, "登录参数不可以为空！"),
     ADMIN_PAGE_NULL_ERROR(572, false, "查询分页参数不可以为空！"),
     ADMIN_QUERY_ERROR(573, false, "管理员列表查询失败！"),
+    ADMIN_FACE_NOT_EXIST_ERROR(574, false, "该管理员未录入人脸数据！"),
+    ADMIN_NOT_EXIT_FACE_ERROR(575, false, "管理员不存在或人脸识别失败！"),
+
 
     /**
      * 媒体中心 相关错误 58x
@@ -91,7 +94,13 @@ public enum ResponseStatusEnum {
     SYSTEM_ERROR(555, false, "系统繁忙，请稍后再试！"),
     SYSTEM_OPERATION_ERROR(556, false, "操作失败，请重试或联系管理员"),
     SYSTEM_RESPONSE_NO_INFO(557, false, ""),
-    SYSTEM_INTERNAL_ERROR(558, false, "系统内部错误，请联系管理员！");
+    SYSTEM_INTERNAL_ERROR(558, false, "系统内部错误，请联系管理员！"),
+
+
+    /**
+     * file system
+     */
+    FILE_DOWNLOAD_ERROR(701, false, "文件下载失败！");
 
 
     /**

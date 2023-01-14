@@ -19,9 +19,9 @@ public class AdminCookieInterceptor extends ApiInterceptor implements HandlerInt
         String adminId = getCookie(request, HEADER_ADMIN_ID);
         String adminToken = request.getHeader(HEADER_ADMIN_TOKEN);
         // 校验管理员的登陆状态
-        Boolean isLogged = checkLoginStatus(adminId, adminToken, ROLE_ADMIN);
+        checkLoginStatus(adminId, adminToken, ROLE_ADMIN);
         // 打印拦截日志
-        recordInterceptLog(isLogged, ROLE_ADMIN, adminId, adminToken);
-        return isLogged;
+        recordInterceptLog(LOGGED, ROLE_ADMIN, adminId, adminToken);
+        return true;
     }
 }

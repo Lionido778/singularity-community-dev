@@ -21,10 +21,10 @@ public class UserTokenInterceptor extends ApiInterceptor implements HandlerInter
         String userId = request.getHeader(HEADER_USER_ID);
         String userToken = request.getHeader(HEADER_USER_TOKEN);
         // 校验用户的登陆状态
-        Boolean isLogged = checkLoginStatus(userId, userToken, ROLE_USER);
-        // 打印拦截日志
-        recordInterceptLog(isLogged, ROLE_USER, userId, userToken);
-        return isLogged;
+        checkLoginStatus(userId, userToken, ROLE_USER);
+        // 打印放行日志
+        recordInterceptLog(LOGGED, ROLE_USER, userId, userToken);
+        return true;
     }
 
 

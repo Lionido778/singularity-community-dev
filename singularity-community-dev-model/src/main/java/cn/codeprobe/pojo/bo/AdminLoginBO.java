@@ -3,6 +3,8 @@ package cn.codeprobe.pojo.bo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * 管理员登录 BO
  *
@@ -12,6 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel
 public class AdminLoginBO {
 
+    @NotBlank(message = "登录名不可以为空！")
     @ApiModelProperty(notes = "管理员名称")
     private String username;
 

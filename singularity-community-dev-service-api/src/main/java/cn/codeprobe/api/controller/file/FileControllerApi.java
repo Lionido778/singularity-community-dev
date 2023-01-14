@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+
 /**
  * @author Lionido
  */
@@ -41,9 +43,18 @@ public interface FileControllerApi {
      * 从GridFS中读取人脸头像
      *
      * @param faceId 人脸图像ID
+     */
+    @ApiOperation(value = "查看用户头像", notes = "查看用户头像", httpMethod = "GET")
+    @GetMapping("/readFromGridFS")
+    void readFaceFromGridFs(@RequestParam String faceId) throws FileNotFoundException;
+
+    /**
+     * 从GridFS中读取人脸头像，并转换为img64格式
+     *
+     * @param faceId 人脸图像ID
      * @return img64
      */
-    @ApiOperation(value = "", notes = "查看用户头像", httpMethod = "GET")
-    @GetMapping("/readFromGridFS")
-    JsonResult readFromGridFs(@RequestParam String faceId);
+    @ApiOperation(value = "获取用户头像Base64格式", notes = "获取用户头像Base64格式", httpMethod = "GET")
+    @GetMapping("/readBase64FromGridFS")
+    JsonResult readBase64FaceFromGridFs(@RequestParam String faceId) throws FileNotFoundException;
 }
