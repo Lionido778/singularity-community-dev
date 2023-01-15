@@ -1,17 +1,26 @@
-package cn.codeprobe.pojo.mo;
+package cn.codeprobe.pojo.bo;
 
+import cn.codeprobe.validate.CheckUrl;
 import org.springframework.data.mongodb.core.mapping.Field;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author Lionido
  */
-public class FriendLinkMO {
+public class FriendLinkBO {
 
     private String id;
-    @Field(value = "link_name")
+
+    @NotBlank(message = "链接名称不可以为空！")
     private String linkName;
+
+    @NotBlank(message = "链接地址不可以为空！")
+    @CheckUrl
     @Field(value = "link_url")
     private String linkUrl;
+
+    @NotBlank(message = "请选择保留或者是删除！")
     @Field(value = "is_delete")
     private Integer isDelete;
 

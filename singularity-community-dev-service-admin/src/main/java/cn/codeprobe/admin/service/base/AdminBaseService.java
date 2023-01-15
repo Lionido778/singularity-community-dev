@@ -1,6 +1,7 @@
 package cn.codeprobe.admin.service.base;
 
 import cn.codeprobe.admin.mapper.AdminUserMapper;
+import cn.codeprobe.admin.mapper.CategoryMapper;
 import cn.codeprobe.admin.repository.FriendLinkRepository;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.pojo.AdminUser;
@@ -36,6 +37,8 @@ public class AdminBaseService extends ApiController {
     public FaceVerifyUtil faceVerifyUtil;
     @Resource
     public FriendLinkRepository friendLinkRepository;
+    @Resource
+    public CategoryMapper categoryMapper;
 
     /**
      * domain-name

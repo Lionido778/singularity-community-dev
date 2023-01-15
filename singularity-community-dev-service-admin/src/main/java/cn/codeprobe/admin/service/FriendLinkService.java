@@ -1,5 +1,6 @@
 package cn.codeprobe.admin.service;
 
+import cn.codeprobe.pojo.bo.FriendLinkBO;
 import cn.codeprobe.pojo.mo.FriendLinkMO;
 
 import java.util.List;
@@ -12,9 +13,9 @@ public interface FriendLinkService {
     /**
      * 保存或更新 FriendLink
      *
-     * @param friendLinkMO 友情链接
+     * @param friendLinkBO 友情链接
      */
-    void saveOrUpdateFriendLink(FriendLinkMO friendLinkMO);
+    void saveOrUpdateFriendLink(FriendLinkBO friendLinkBO);
 
     /**
      * 获取FriendLinkList
