@@ -26,7 +26,10 @@ public interface FriendLinkService {
 
     /**
      * 删除 友情链接
+     *
      * @param linkId id
      */
     void delete(String linkId);
+
+    Boolean checkFriendLinkIsExist(String linkName);
 }

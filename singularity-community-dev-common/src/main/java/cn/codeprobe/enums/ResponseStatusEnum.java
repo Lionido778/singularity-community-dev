@@ -69,7 +69,9 @@ public enum ResponseStatusEnum {
     ADMIN_FACE_NOT_EXIST_ERROR(574, false, "该管理员未录入人脸数据！"),
     ADMIN_NOT_EXIT_FACE_ERROR(575, false, "管理员不存在或人脸识别失败！"),
     ADMIN_CATEGORY_ADD_FAILED(576, false, "分类添加失败！"),
-    ADMIN_CATEGORY_DELETE_FAILED(576, false, "分类删除失败！"),
+    ADMIN_CATEGORY_DELETE_FAILED(577, false, "分类删除失败！"),
+    ADMIN_CATEGORY_IS_EXISTED(578, false, "该分类已存在！"),
+    ADMIN_FRIEND_LINK_IS_EXISTED(579, false, "该友情链接已存在！"),
 
 
     /**

@@ -1,9 +1,11 @@
 package cn.codeprobe.pojo.bo;
 
 import cn.codeprobe.validate.CheckUrl;
-import org.springframework.data.mongodb.core.mapping.Field;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 /**
  * @author Lionido
@@ -11,17 +13,14 @@ import javax.validation.constraints.NotBlank;
 public class FriendLinkBO {
 
     private String id;
-
     @NotBlank(message = "链接名称不可以为空！")
     private String linkName;
-
     @NotBlank(message = "链接地址不可以为空！")
     @CheckUrl
-    @Field(value = "link_url")
     private String linkUrl;
-
-    @NotBlank(message = "请选择保留或者是删除！")
-    @Field(value = "is_delete")
+    @NotNull(message = "请选择一个性别")
+    @Min(value = 0, message = "状态选择不正确")
+    @Max(value = 1, message = "状态选择不正确")
     private Integer isDelete;
 
     public String getId() {

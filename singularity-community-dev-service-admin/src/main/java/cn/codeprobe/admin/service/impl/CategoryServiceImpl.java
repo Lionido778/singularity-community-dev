@@ -8,6 +8,7 @@ import cn.codeprobe.pojo.Category;
 import cn.codeprobe.pojo.bo.CategoryBO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
@@ -18,6 +19,12 @@ import java.util.List;
 public class CategoryServiceImpl extends AdminBaseService implements CategoryService {
     @Override
     public void saveOrUpdateCategory(CategoryBO categoryBO) {
+        // 判断 分类名是否已存在
+        String name = categoryBO.getName();
+        Boolean isExist = checkCategoryIsExist(name);
+        if (Boolean.TRUE.equals(isExist)) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CATEGORY_IS_EXISTED);
+        }
         // 判断 更新或者是新添加
         Integer id = categoryBO.getId();
         Category category = new Category();
@@ -46,5 +53,14 @@ public class CategoryServiceImpl extends AdminBaseService implements CategorySer
         if (result != 1) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CATEGORY_DELETE_FAILED);
         }
+    }
+
+    @Override
+    public Boolean checkCategoryIsExist(String categoryName) {
+        Example example = new Example(Category.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", categoryName);
+        Category category = categoryMapper.selectOneByExample(example);
+        return category != null;
     }
 }
