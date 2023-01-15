@@ -22,17 +22,17 @@ public interface AdminControllerApi {
 
 
     @PostMapping("/adminIsExist")
-    @ApiOperation(value = "管理员是否存在接口", notes = "管理员是否存在接口")
+    @ApiOperation(value = "管理员是否存在", notes = "管理员是否存在")
     public JsonResult adminIsExist(@RequestParam String username);
 
 
     @PostMapping("/addNewAdmin")
-    @ApiOperation(value = "添加管理员接口", notes = "添加管理员")
+    @ApiOperation(value = "添加管理员", notes = "添加管理员")
     public JsonResult addNewAdmin(@RequestBody @Valid NewAdminBO newAdminBO, BindingResult result);
 
 
     @PostMapping("/getAdminList")
-    @ApiOperation(value = "添加管理员接口", notes = "添加管理员")
+    @ApiOperation(value = "获取管理员列表", notes = "获取管理员列表")
     public JsonResult getAdminList(@RequestParam String page, String pageSize);
 
 }

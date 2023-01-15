@@ -53,7 +53,9 @@ public class Interceptors implements WebMvcConfigurer {
                 .addPathPatterns("/adminMng/addNewAdmin")
                 .addPathPatterns("/adminMng/getAdminList")
                 .addPathPatterns("/file/uploadToGridFS")
-                .addPathPatterns("/file/readFromGridFS");
+                .addPathPatterns("/file/readFromGridFS")
+                .addPathPatterns("/adminMng/friendLinkMng/saveOrUpdateFriendLink")
+                .addPathPatterns("/adminMng/friendLinkMng/getFriendLinkList");
         // 检查用户的激活状态,若未激活进行拦截
         // registry.addInterceptor(userActivityInterceptor())
         //        .addPathPatterns("/user/getAccountInfo")

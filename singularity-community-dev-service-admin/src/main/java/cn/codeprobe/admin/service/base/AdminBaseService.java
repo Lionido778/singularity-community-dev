@@ -1,6 +1,7 @@
 package cn.codeprobe.admin.service.base;
 
 import cn.codeprobe.admin.mapper.AdminUserMapper;
+import cn.codeprobe.admin.repository.FriendLinkRepository;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.pojo.AdminUser;
 import cn.codeprobe.result.page.PagedGridResult;
@@ -33,6 +34,8 @@ public class AdminBaseService extends ApiController {
     public RestTemplate restTemplate;
     @Resource
     public FaceVerifyUtil faceVerifyUtil;
+    @Resource
+    public FriendLinkRepository friendLinkRepository;
 
     /**
      * domain-name
@@ -59,7 +62,7 @@ public class AdminBaseService extends ApiController {
     /**
      * 人脸识别
      */
-    public static final Float TARGET_CONFIDENCE = 60F;
+    public static final Float TARGET_CONFIDENCE = 80F;
     public static final String FACE_TEMP_DIR = "/workspace/compare";
     public static final String LOGIN_FACE_NAME = "登陆头像";
     public static final String FACE_DATA_NAME = "人脸数据";
