@@ -1,6 +1,7 @@
 package cn.codeprobe.utils;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -8,6 +9,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Component
 public class DateUtil {
 
     /**

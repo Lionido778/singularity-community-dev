@@ -4,13 +4,16 @@ import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.enums.UserSex;
 import cn.codeprobe.enums.UserStatus;
 import cn.codeprobe.pojo.AppUser;
+import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.mapper.AppUserMapper;
 import cn.codeprobe.utils.RedisUtil;
+import com.github.pagehelper.PageInfo;
 import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Value;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 基础service ，提供共用常量、变量、方法等
@@ -78,6 +81,23 @@ public class UserBaseService extends ApiController {
         criteria.andEqualTo("mobile", mobile);
         // 查询用户
         return appUserMapper.selectOneByExample(example);
+    }
+
+    /**
+     * 查询分页配置
+     *
+     * @param list 查询数据（每页）
+     * @param page 当前页
+     * @return 封装分页查询结果
+     */
+    public PagedGridResult setterPageGrid(List<?> list, int page) {
+        PageInfo<?> pageInfo = new PageInfo<>(list);
+        PagedGridResult gridResult = new PagedGridResult();
+        gridResult.setRows(list);
+        gridResult.setPage(page);
+        gridResult.setTotal(pageInfo.getPages());
+        gridResult.setRecords(pageInfo.getTotal());
+        return gridResult;
     }
 
 }
