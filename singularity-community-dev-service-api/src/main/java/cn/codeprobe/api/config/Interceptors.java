@@ -47,6 +47,7 @@ public class Interceptors implements WebMvcConfigurer {
                 .addPathPatterns("/user/getAccountInfo")
                 .addPathPatterns("/user/updateUserInfo")
                 .addPathPatterns("/file/uploadFace");
+        // 检查管理员登录状态。若未登录，拦截
         registry.addInterceptor(adminTokenInterceptor())
                 .addPathPatterns("/adminMng/adminIsExist")
                 .addPathPatterns("/adminMng/addNewAdmin")
@@ -62,9 +63,8 @@ public class Interceptors implements WebMvcConfigurer {
                 .addPathPatterns("/userMng/userDetail")
                 .addPathPatterns("/userMng/freezeUserOrNot");
 
-        // 检查管理员登录状态。若未登录，拦截
         // 检查用户的激活状态,若未激活进行拦截
-        // registry.addInterceptor(userActivityInterceptor())
-        //        .addPathPatterns("/user/getAccountInfo")
+        //registry.addInterceptor(userActivityInterceptor());
+               //.addPathPatterns("/adminMng/categoryMng/getCategories");
     }
 }

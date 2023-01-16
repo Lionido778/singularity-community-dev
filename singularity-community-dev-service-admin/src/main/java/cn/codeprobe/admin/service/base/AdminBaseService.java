@@ -51,6 +51,7 @@ public class AdminBaseService extends ApiController {
      */
     public static final String REDIS_ADMIN_TOKEN = "admin_token";
     public static final String REDIS_ADMIN_INFO = "admin_info";
+    public static final String REDIS_ALL_CATEGORIES = "redis_all_categories";
     public static final Integer REDIS_ADMIN_TOKEN_TIMEOUT = 30 * 60;
 
     /**

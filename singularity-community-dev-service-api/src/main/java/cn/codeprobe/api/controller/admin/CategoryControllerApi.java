@@ -6,10 +6,7 @@ import cn.codeprobe.result.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -25,8 +22,12 @@ public interface CategoryControllerApi {
     public JsonResult saveOrUpdateFriendLink(@RequestBody @Valid CategoryBO categoryBO, BindingResult result);
 
     @PostMapping("/getCategoryList")
-    @ApiOperation(value = "获取分类列表", notes = "获取分类列表")
-    public JsonResult getFriendLinkList();
+    @ApiOperation(value = "管理中心获取分类列表", notes = "管理中心获取分类列表", httpMethod = "POST")
+    public JsonResult getCategoryList();
+
+    @GetMapping("/getCategories")
+    @ApiOperation(value = "创作中心获取分类列表", notes = "创作中心获取分类列表", httpMethod = "GET")
+    public JsonResult getCategories();
 
     @PostMapping("/delete")
     @ApiOperation(value = "删除分类", notes = "删除分类")

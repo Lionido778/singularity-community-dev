@@ -1,0 +1,13 @@
+server:
+  port: 8805
+
+spring:
+  redis:
+    database: 0
+    host: 192.168.31.101
+    port: 6379
+    password: 123456
+
+## 资源配置中设置域名，在java代码中获取，
+#website:
+#  domain-name: codeprobe.cn

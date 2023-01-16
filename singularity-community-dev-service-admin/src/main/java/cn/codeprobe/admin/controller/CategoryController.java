@@ -33,7 +33,12 @@ public class CategoryController extends ApiController implements CategoryControl
     }
 
     @Override
-    public JsonResult getFriendLinkList() {
+    public JsonResult getCategoryList() {
+        return JsonResult.ok(categoryService.queryCategories());
+    }
+
+    @Override
+    public JsonResult getCategories() {
         return JsonResult.ok(categoryService.getCategories());
     }
 

@@ -26,6 +26,13 @@ public interface CategoryService {
     List<Category> getCategories();
 
     /**
+     * 创作中心 用户 获取 category List
+     *
+     * @return list
+     */
+    List<Category> queryCategories();
+
+    /**
      * 删除 分类
      *
      * @param categoryId id

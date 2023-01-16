@@ -6,6 +6,8 @@ import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.Category;
 import cn.codeprobe.pojo.bo.CategoryBO;
+import cn.codeprobe.utils.JsonUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -40,11 +42,25 @@ public class CategoryServiceImpl extends AdminBaseService implements CategorySer
         if (result != 1) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CATEGORY_ADD_FAILED);
         }
+        // 删除缓存，避免前端读取旧数据，保证数据同步
+        redisUtil.del(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES);
+    }
+
+    @Override
+    public List<Category> queryCategories() {
+        return categoryMapper.selectAll();
     }
 
     @Override
     public List<Category> getCategories() {
-        return categoryMapper.selectAll();
+        String jsonCategoriesList = redisUtil.get(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES);
+        if (CharSequenceUtil.isNotBlank(jsonCategoriesList)) {
+            return JsonUtil.jsonToList(jsonCategoriesList, Category.class);
+        } else {
+            List<Category> list = categoryMapper.selectAll();
+            redisUtil.set(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES, JsonUtil.objectToJson(list));
+            return list;
+        }
     }
 
     @Override
@@ -53,6 +69,8 @@ public class CategoryServiceImpl extends AdminBaseService implements CategorySer
         if (result != 1) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CATEGORY_DELETE_FAILED);
         }
+        // 删除缓存，避免前端读取旧数据，保证数据同步
+        redisUtil.del(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES);
     }
 
     @Override
@@ -63,4 +81,6 @@ public class CategoryServiceImpl extends AdminBaseService implements CategorySer
         Category category = categoryMapper.selectOneByExample(example);
         return category != null;
     }
+
+
 }
