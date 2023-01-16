@@ -9,13 +9,23 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileUploadService {
 
     /**
-     * 文件上传到 OSS云存储
+     * 上传单个图片到 OSS云存储
      *
      * @param userId 用户ID
      * @param file   待上传文件
      * @return faceUlr    上传头像的访问路径
      */
-    String uploadToOss(String userId, MultipartFile file);
+    String uploadImageToOss(String userId, MultipartFile file);
+
+    /**
+     * 上传多个图片到 OSS云存储
+     *
+     * @param userId 用户ID
+     * @param file   待上传文件
+     * @return faceUlr    上传头像的访问路径
+     */
+    String uploadImagesToOss(String userId, MultipartFile file);
+
 
     /**
      * 文件上传至 GridFS

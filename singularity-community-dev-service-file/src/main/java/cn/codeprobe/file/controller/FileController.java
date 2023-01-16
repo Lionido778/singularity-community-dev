@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 /**
  * @author Lionido
@@ -41,7 +42,7 @@ public class FileController extends ApiController implements FileControllerApi {
             GlobalExceptionManage.internal(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
         }
         // 文件访问路径
-        String faceUrl = fileUploadService.uploadToOss(userId, file);
+        String faceUrl = fileUploadService.uploadImageToOss(userId, file);
         return JsonResult.ok(faceUrl);
     }
 
@@ -85,5 +86,30 @@ public class FileController extends ApiController implements FileControllerApi {
         // 返回 Base64
         String base64 = FileUtil.fileToBase64(faceFile);
         return JsonResult.ok(base64);
+    }
+
+    @Override
+    public JsonResult uploadSerialsFiles(String userId, MultipartFile[] files) {
+        // 校验 userId
+        if (CharSequenceUtil.isBlank(userId)) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
+        }
+        // 校验 files
+        int length = files.length;
+        if (length == 0) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
+        }
+        ArrayList<String> list = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String url = "";
+            try {
+                url = fileUploadService.uploadImagesToOss(userId, file);
+            } catch (Exception e) {
+                e.getStackTrace();
+                continue;
+            }
+            list.add(url);
+        }
+        return JsonResult.ok(list);
     }
 }

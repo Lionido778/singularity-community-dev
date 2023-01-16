@@ -20,23 +20,23 @@ import java.io.IOException;
 public class FileUploadServiceImpl extends FileBaseService implements FileUploadService {
 
     @Override
-    public String uploadToOss(String userId, MultipartFile file) {
+    public String uploadImagesToOss(String userId, MultipartFile file) {
         // 获取用户上传的文件扩展名
-        String fileName = file.getOriginalFilename();
-        assert fileName != null;
-        String[] fileNameArr = fileName.split("\\.");
-        // 这里需要转义\\.
-        if (fileNameArr.length == 0) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
-        }
-        String fileExcName = fileNameArr[fileNameArr.length - 1];
-        // 安全起见，只接收 PNG/JPG/JPEG 格式的文件
-        if (!EXE_NAME_PNG.equalsIgnoreCase(fileExcName) && !EXE_NAME_JPG.equalsIgnoreCase(fileExcName)
-                && !EXE_NAME_JPEG.equalsIgnoreCase(fileExcName)) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.FILE_FORMATTER_FAILED);
-        }
+        String imageExcName = getFileExcName(file);
+        // 上传文件
+        String articlePath = fileResource.getArticlePath();
+        String storagePath = ossUtil.uploadToOss(userId, file, imageExcName, articlePath);
+        // 返回可访问路径
+        return fileResource.getHost() + storagePath;
+    }
+
+    @Override
+    public String uploadImageToOss(String userId, MultipartFile file) {
+        // 获取用户上传的文件扩展名
+        String imageExcName = getFileExcName(file);
         // 上传头像
-        String storagePath = ossUtil.uploadToOss(userId, file, fileExcName);
+        String facePath = fileResource.getFacePath();
+        String storagePath = ossUtil.uploadToOss(userId, file, imageExcName, facePath);
         // 返回可访问路径
         return fileResource.getHost() + storagePath;
     }

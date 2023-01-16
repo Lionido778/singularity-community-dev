@@ -57,4 +57,17 @@ public interface FileControllerApi {
     @ApiOperation(value = "获取用户头像Base64格式", notes = "获取用户头像Base64格式", httpMethod = "GET")
     @GetMapping("/readBase64FromGridFS")
     JsonResult readBase64FaceFromGridFs(@RequestParam String faceId) throws FileNotFoundException;
+
+
+    /**
+     * 用户上传多张图片，审核通过后，将图像链接列表返回给前端
+     *
+     * @param userId 用户ID
+     * @param files   用户上传的头像
+     * @return face_url 图像链接
+     */
+    @ApiOperation(value = "用户上传多张图片", notes = "用户上传多张图片", httpMethod = "POST")
+    @PostMapping("/uploadSerialsFiles")
+    JsonResult uploadSerialsFiles(@RequestParam String userId, MultipartFile[] files);
+
 }

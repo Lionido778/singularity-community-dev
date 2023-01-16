@@ -27,7 +27,7 @@ public class OssUtil {
     @Resource
     private FileResource fileResource;
 
-    public String uploadToOss(String userId, MultipartFile file, String fileExcName) {
+    public String uploadToOss(String userId, MultipartFile file, String fileExcName, String storagePath) {
         // Endpoint
         String endpoint = fileResource.getEndpoint();
         // 阿里云账号AccessKey拥有所有API的访问权限，风险很高。强烈建议您创建并使用RAM用户进行API访问或日常运维，请登录RAM控制台创建RAM用户。
@@ -37,10 +37,8 @@ public class OssUtil {
         String bucketName = fileResource.getBucketName();
         // 填写Object完整路径，完整路径中不能包含Bucket名称，例如 exampledir/exampleobject.txt
         long uploadTime = System.currentTimeMillis();
-
         // 定义文件上传路径
-        String objectName = fileResource.getPath() + userId + "/" + uploadTime + "." + fileExcName;
-
+        String objectName = storagePath + userId + "/" + uploadTime + "." + fileExcName;
         // 创建OSSClient实例。
         OSS ossClient = new OSSClientBuilder().build(endpoint, accessKeyId, accessKeySecret);
 

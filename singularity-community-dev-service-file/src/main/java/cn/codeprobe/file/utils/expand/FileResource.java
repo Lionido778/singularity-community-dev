@@ -18,7 +18,8 @@ public class FileResource {
     private String accessKeyId;
     private String accessKeySecret;
     private String bucketName;
-    private String path;
+    private String facePath;
+    private String articlePath;
     private String host;
 
     public String getHost() {
@@ -29,12 +30,20 @@ public class FileResource {
         this.host = host;
     }
 
-    public String getPath() {
-        return path;
+    public String getFacePath() {
+        return facePath;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setFacePath(String facePath) {
+        this.facePath = facePath;
+    }
+
+    public String getArticlePath() {
+        return articlePath;
+    }
+
+    public void setArticlePath(String articlePath) {
+        this.articlePath = articlePath;
     }
 
     public String getBucketName() {
