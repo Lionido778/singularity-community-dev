@@ -1,6 +1,8 @@
 package cn.codeprobe.user.service.impl;
 
+import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.enums.UserStatus;
+import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.service.UserMngService;
@@ -38,5 +40,28 @@ public class UserMngServiceImpl extends UserBaseService implements UserMngServic
         PageMethod.startPage(page, pageSize);
         List<AppUser> list = appUserMapper.selectByExample(example);
         return setterPageGrid(list, page);
+    }
+
+    @Override
+    public void freezeUserOrNot(String userId, Integer doStatus) {
+        // 校验
+        AppUser appUser = appUserMapper.selectByPrimaryKey(userId);
+        if (appUser == null) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.USER_NOT_EXIST_ERROR);
+        }
+        AppUser user = new AppUser();
+        user.setId(userId);
+        user.setActiveStatus(doStatus);
+        // 更新用户状态（冻结或解冻）
+        int result = appUserMapper.updateByPrimaryKeySelective(user);
+        if (result != 1) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.USER_OPERATION_ERROR);
+        }
+        // 如果冻结，删除该用户会话
+        if (doStatus.equals(UserStatus.FROZEN.type)) {
+            redisUtil.del(REDIS_USER_TOKEN + ":" + userId);
+        }
+        // 删除 user info 缓存信息
+        redisUtil.del(REDIS_USER_INFO + ":" + userId);
     }
 }

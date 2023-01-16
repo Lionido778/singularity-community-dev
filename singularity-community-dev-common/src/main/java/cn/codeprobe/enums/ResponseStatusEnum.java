@@ -35,6 +35,8 @@ public enum ResponseStatusEnum {
     FILE_NOT_EXIST_ERROR(514, false, "你所查看的文件不存在！"),
     USER_STATUS_ERROR(515, false, "用户状态参数出错！"),
     USER_NOT_EXIST_ERROR(516, false, "用户不存在！"),
+    USER_QUERY_ERROR(517, false, "获取用户信息失败！"),
+    USER_OPERATION_ERROR(518, false, "操作失败！"),
 
     /**
      * 自定义系统级别异常 54x
@@ -77,14 +79,14 @@ public enum ResponseStatusEnum {
     /**
      * 媒体中心 相关错误 58x
      */
-    ARTICLE_COVER_NOT_EXIST_ERROR(580, false, "文章封面不存在，请选择一个！"),
-    ARTICLE_CATEGORY_NOT_EXIST_ERROR(581, false, "请选择正确的文章领域！"),
-    ARTICLE_CREATE_ERROR(582, false, "创建文章失败，请重试或联系管理员！"),
-    ARTICLE_QUERY_PARAMS_ERROR(583, false, "文章列表查询参数错误！"),
-    ARTICLE_DELETE_ERROR(584, false, "文章删除失败！"),
-    ARTICLE_WITHDRAW_ERROR(585, false, "文章撤回失败！"),
-    ARTICLE_REVIEW_ERROR(585, false, "文章审核出错！"),
-    ARTICLE_ALREADY_READ_ERROR(586, false, "文章重复阅读！"),
+    ARTICLE_COVER_NOT_EXIST_ERROR(590, false, "文章封面不存在，请选择一个！"),
+    ARTICLE_CATEGORY_NOT_EXIST_ERROR(591, false, "请选择正确的文章领域！"),
+    ARTICLE_CREATE_ERROR(592, false, "创建文章失败，请重试或联系管理员！"),
+    ARTICLE_QUERY_PARAMS_ERROR(593, false, "文章列表查询参数错误！"),
+    ARTICLE_DELETE_ERROR(594, false, "文章删除失败！"),
+    ARTICLE_WITHDRAW_ERROR(595, false, "文章撤回失败！"),
+    ARTICLE_REVIEW_ERROR(596, false, "文章审核出错！"),
+    ARTICLE_ALREADY_READ_ERROR(597, false, "文章重复阅读！"),
 
     /**
      * 人脸识别错误代码
