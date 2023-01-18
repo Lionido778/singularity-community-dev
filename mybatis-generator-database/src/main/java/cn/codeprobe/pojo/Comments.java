@@ -4,6 +4,9 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import java.util.Date;
 
+/**
+ * @author Lionido
+ */
 public class Comments {
     @Id
     private String id;

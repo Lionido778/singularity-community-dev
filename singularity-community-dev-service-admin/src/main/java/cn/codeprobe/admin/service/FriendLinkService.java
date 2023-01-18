@@ -1,7 +1,7 @@
 package cn.codeprobe.admin.service;
 
 import cn.codeprobe.pojo.bo.FriendLinkBO;
-import cn.codeprobe.pojo.mo.FriendLinkMO;
+import cn.codeprobe.pojo.mo.FriendLinkDO;
 
 import java.util.List;
 
@@ -22,14 +22,20 @@ public interface FriendLinkService {
      *
      * @return list
      */
-    List<FriendLinkMO> getFriendLinks();
+    List<FriendLinkDO> listFriendLinks();
 
     /**
      * 删除 友情链接
      *
      * @param linkId id
      */
-    void delete(String linkId);
+    void removeFriendLink(String linkId);
 
+    /**
+     * 检查友情链接是否存在
+     *
+     * @param linkName 链接名称
+     * @return true / false
+     */
     Boolean checkFriendLinkIsExist(String linkName);
 }

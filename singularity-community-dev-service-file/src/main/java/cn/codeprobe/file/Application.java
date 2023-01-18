@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @author Lionido
  */
 @SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
-@ComponentScan({"cn.codeprobe", "org.n3r.idworker"})
+@ComponentScan({"cn.codeprobe"})
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

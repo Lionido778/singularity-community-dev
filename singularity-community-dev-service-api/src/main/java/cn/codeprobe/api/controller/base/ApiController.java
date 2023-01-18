@@ -32,7 +32,7 @@ public class ApiController {
      * 获取前端数据校验的错误信息
      */
     public Map<String, String> getErrors(BindingResult result) {
-        Map<String, String> map = new HashMap<>();
+        Map<String, String> map = new HashMap<>(0);
         List<FieldError> errorList = result.getFieldErrors();
         for (FieldError error : errorList) {
             String field = error.getField();

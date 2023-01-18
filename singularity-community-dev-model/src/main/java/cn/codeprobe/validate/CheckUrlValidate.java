@@ -15,6 +15,6 @@ public class CheckUrlValidate implements ConstraintValidator<CheckUrl, String> {
 
     @Override
     public boolean isValid(String url, ConstraintValidatorContext context) {
-        return UrlUtil.verifyUrl(url.trim());
+        return UrlUtil.verifyUrlByUrl(url.trim());
     }
 }

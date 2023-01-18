@@ -1,7 +1,7 @@
 package cn.codeprobe.admin.controller;
 
 import cn.codeprobe.admin.service.CategoryService;
-import cn.codeprobe.api.controller.admin.CategoryControllerApi;
+import cn.codeprobe.api.controller.admin.CategoryMngControllerApi;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.pojo.bo.CategoryBO;
 import cn.codeprobe.result.JsonResult;
@@ -15,13 +15,13 @@ import java.util.Map;
  * @author Lionido
  */
 @RestController
-public class CategoryController extends ApiController implements CategoryControllerApi {
+public class CategoryMngController extends ApiController implements CategoryMngControllerApi {
 
     @Resource
     private CategoryService categoryService;
 
     @Override
-    public JsonResult saveOrUpdateFriendLink(CategoryBO categoryBO, BindingResult result) {
+    public JsonResult addOrModifyCategory(CategoryBO categoryBO, BindingResult result) {
         // 校验 BO 数据
         if (result.hasErrors()) {
             Map<String, String> map = getErrors(result);
@@ -33,18 +33,18 @@ public class CategoryController extends ApiController implements CategoryControl
     }
 
     @Override
-    public JsonResult getCategoryList() {
-        return JsonResult.ok(categoryService.queryCategories());
+    public JsonResult queryListCategories() {
+        return JsonResult.ok(categoryService.listCategories());
     }
 
     @Override
-    public JsonResult getCategories() {
+    public JsonResult queryCategories() {
         return JsonResult.ok(categoryService.getCategories());
     }
 
     @Override
     public JsonResult deleteCategory(Integer categoryId) {
-        categoryService.delete(categoryId);
+        categoryService.removeCategory(categoryId);
         return JsonResult.ok();
     }
 }

@@ -3,10 +3,11 @@ package cn.codeprobe.user.controller;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.api.controller.user.PassportControllerApi;
 import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
+import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.user.service.UserPassportService;
+import cn.codeprobe.utils.RegexUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,10 +25,13 @@ public class PassportController extends ApiController implements PassportControl
     private UserPassportService userPassportService;
 
     @Override
-    public JsonResult getSmsCode(String mobile) {
+    public JsonResult querySmsCode(String mobile) {
         // 校验数据
         if (CharSequenceUtil.isBlank(mobile)) {
             return JsonResult.errorCustom(ResponseStatusEnum.SMS_MOBILE_BLANK);
+            // 校验手机号码格式
+        } else if (!RegexUtil.isMobile(mobile)) {
+            return JsonResult.errorCustom(ResponseStatusEnum.SMS_MOBILE_FORMAT_ERROR);
         }
         // 调用 service 执行获取验证码操作
         userPassportService.getSmsCode(mobile);
@@ -42,8 +46,8 @@ public class PassportController extends ApiController implements PassportControl
             return JsonResult.errorMap(errorMap);
         }
         // 调用 service 执行注册登陆
-        AppUser appUser = userPassportService.registerLogin(registerLoginBO);
-        return JsonResult.ok(appUser.getActiveStatus());
+        AppUserDO appUserDO = userPassportService.registerLogin(registerLoginBO);
+        return JsonResult.ok(appUserDO.getActiveStatus());
     }
 
     @Override

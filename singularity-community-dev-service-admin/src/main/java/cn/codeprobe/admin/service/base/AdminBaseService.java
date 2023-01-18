@@ -4,12 +4,12 @@ import cn.codeprobe.admin.mapper.AdminUserMapper;
 import cn.codeprobe.admin.mapper.CategoryMapper;
 import cn.codeprobe.admin.repository.FriendLinkRepository;
 import cn.codeprobe.api.controller.base.ApiController;
-import cn.codeprobe.pojo.AdminUser;
+import cn.codeprobe.pojo.po.AdminUserDO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.FaceVerifyUtil;
+import cn.codeprobe.utils.IdWorker;
 import cn.codeprobe.utils.RedisUtil;
 import com.github.pagehelper.PageInfo;
-import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.util.DigestUtils;
@@ -28,7 +28,7 @@ public class AdminBaseService extends ApiController {
     @Resource
     public AdminUserMapper adminUserMapper;
     @Resource
-    public Sid sid;
+    public IdWorker idWorker;
     @Resource
     public RedisUtil redisUtil;
     @Resource
@@ -81,8 +81,8 @@ public class AdminBaseService extends ApiController {
     /**
      * 获取管理员用户信息
      */
-    public AdminUser queryAdminByUsername(String username) {
-        Example example = new Example(AdminUser.class);
+    public AdminUserDO queryAdminByUsername(String username) {
+        Example example = new Example(AdminUserDO.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("username", username);
         return adminUserMapper.selectOneByExample(example);
@@ -110,11 +110,11 @@ public class AdminBaseService extends ApiController {
     /**
      * admin 登录后成功后 生成token、cookie
      */
-    public void adminLoggedSetting(AdminUser adminUser) {
-        String adminId = adminUser.getId();
+    public void adminLoggedSetting(AdminUserDO adminUserDO) {
+        String adminId = adminUserDO.getId();
         UUID uuid = UUID.randomUUID();
         String adminToken = uuid.toString();
-        String adminName = adminUser.getUsername();
+        String adminName = adminUserDO.getUsername();
         // 将adminToken写入redis
         redisUtil.set(REDIS_ADMIN_TOKEN + ":" + adminId, adminToken, REDIS_ADMIN_TOKEN_TIMEOUT);
         // 设置cookie

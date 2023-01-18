@@ -16,7 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 /**
@@ -50,7 +49,7 @@ public class FileController extends ApiController implements FileControllerApi {
     public JsonResult uploadToGridFs(NewAdminBO newAdminBO) {
         // 校验 img64(人脸头像)
         String img64 = newAdminBO.getImg64();
-        if (CharSequenceUtil.isBlank(img64) || "null".equalsIgnoreCase(img64)) {
+        if (CharSequenceUtil.isBlank(img64)) {
             JsonResult.errorCustom(ResponseStatusEnum.ADMIN_FACE_NULL_ERROR);
         }
         // 校验 username (管理员用户名)
@@ -64,9 +63,9 @@ public class FileController extends ApiController implements FileControllerApi {
     }
 
     @Override
-    public void readFaceFromGridFs(String faceId) throws FileNotFoundException {
+    public void readFaceFromGridFs(String faceId) {
         // 校验 faceId
-        if (CharSequenceUtil.isBlank(faceId) || "null".equalsIgnoreCase(faceId)) {
+        if (CharSequenceUtil.isBlank(faceId)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.FILE_NOT_EXIST_ERROR);
         }
         // 调用 service 获取人脸文件

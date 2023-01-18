@@ -1,12 +1,15 @@
-package cn.codeprobe.pojo;
+package cn.codeprobe.pojo.po;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
+/**
+ * @author Lionido
+ */
 @Table(name = "app_user")
-public class AppUser {
+public class AppUserDO {
     @Id
     private String id;
 
@@ -348,5 +351,26 @@ public class AppUser {
      */
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    @Override
+    public String toString() {
+        return "AppUserDO{" +
+                "id='" + id + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", face='" + face + '\'' +
+                ", realname='" + realname + '\'' +
+                ", email='" + email + '\'' +
+                ", sex=" + sex +
+                ", birthday=" + birthday +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                ", activeStatus=" + activeStatus +
+                ", totalIncome=" + totalIncome +
+                ", createdTime=" + createdTime +
+                ", updatedTime=" + updatedTime +
+                '}';
     }
 }

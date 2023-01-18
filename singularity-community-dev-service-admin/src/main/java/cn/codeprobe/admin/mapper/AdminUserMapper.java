@@ -1,7 +1,7 @@
 package cn.codeprobe.admin.mapper;
 
 import cn.codeprobe.mapper.MyMapper;
-import cn.codeprobe.pojo.AdminUser;
+import cn.codeprobe.pojo.po.AdminUserDO;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -10,6 +10,6 @@ import org.springframework.stereotype.Repository;
  * @author Lionido
  */
 @Repository
-public interface AdminUserMapper extends MyMapper<AdminUser> {
+public interface AdminUserMapper extends MyMapper<AdminUserDO> {
 
 }

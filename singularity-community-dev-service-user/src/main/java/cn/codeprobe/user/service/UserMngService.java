@@ -10,9 +10,17 @@ import java.util.Date;
 public interface UserMngService {
 
     /**
-     * 获取用户列表
+     * 获取用户分页列表
+     *
+     * @param nickname     登陆名
+     * @param activeStatus 激活状态
+     * @param startTime    创建起始时间
+     * @param endTime      创建截止时间
+     * @param page         当前页
+     * @param pageSize     当前页查询数量
+     * @return 用户分页列表
      */
-    PagedGridResult getUserList(String nickname, Integer activeStatus, Date startTime, Date endTime, Integer page, Integer pageSize);
+    PagedGridResult pageListUsers(String nickname, Integer activeStatus, Date startTime, Date endTime, Integer page, Integer pageSize);
 
     /**
      * 冻结或者解冻用户

@@ -2,7 +2,7 @@ package cn.codeprobe.test.controller;
 
 import cn.codeprobe.api.controller.test.TestAdminControllerApi;
 import cn.codeprobe.result.JsonResult;
-import org.n3r.idworker.Sid;
+import cn.codeprobe.utils.IdWorker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -18,14 +18,14 @@ import javax.annotation.Resource;
 public class TestController implements TestAdminControllerApi {
 
     @Resource
-    Sid sid;
+    IdWorker idWorker;
 
     static final Logger logger = LoggerFactory.getLogger("TestController");
 
 
     @Override
     public Object hello() {
-        System.out.println(sid.nextShort());
+        System.out.println(idWorker.nextIdStr());
         return JsonResult.ok("hello! service-admin");
     }
 

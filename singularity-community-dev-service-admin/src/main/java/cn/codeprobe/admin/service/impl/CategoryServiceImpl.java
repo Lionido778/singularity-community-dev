@@ -4,10 +4,10 @@ import cn.codeprobe.admin.service.CategoryService;
 import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.Category;
 import cn.codeprobe.pojo.bo.CategoryBO;
-import cn.codeprobe.utils.JsonUtil;
+import cn.codeprobe.pojo.po.CategoryDO;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.json.JSONUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
@@ -29,15 +29,15 @@ public class CategoryServiceImpl extends AdminBaseService implements CategorySer
         }
         // 判断 更新或者是新添加
         Integer id = categoryBO.getId();
-        Category category = new Category();
-        BeanUtils.copyProperties(categoryBO, category);
+        CategoryDO categoryDO = new CategoryDO();
+        BeanUtils.copyProperties(categoryBO, categoryDO);
         int result;
         if (id == null) {
             // 添加
-            result = categoryMapper.insert(category);
+            result = categoryMapper.insert(categoryDO);
         } else {
             // 更新
-            result = categoryMapper.updateByPrimaryKeySelective(category);
+            result = categoryMapper.updateByPrimaryKeySelective(categoryDO);
         }
         if (result != 1) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CATEGORY_ADD_FAILED);
@@ -46,25 +46,26 @@ public class CategoryServiceImpl extends AdminBaseService implements CategorySer
         redisUtil.del(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES);
     }
 
-    @Override
-    public List<Category> queryCategories() {
-        return categoryMapper.selectAll();
-    }
 
     @Override
-    public List<Category> getCategories() {
+    public List<CategoryDO> getCategories() {
         String jsonCategoriesList = redisUtil.get(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES);
         if (CharSequenceUtil.isNotBlank(jsonCategoriesList)) {
-            return JsonUtil.jsonToList(jsonCategoriesList, Category.class);
+            return JSONUtil.toList(jsonCategoriesList, CategoryDO.class);
         } else {
-            List<Category> list = categoryMapper.selectAll();
-            redisUtil.set(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES, JsonUtil.objectToJson(list));
+            List<CategoryDO> list = categoryMapper.selectAll();
+            redisUtil.set(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES, JSONUtil.toJsonStr(list));
             return list;
         }
     }
 
     @Override
-    public void delete(Integer categoryId) {
+    public List<CategoryDO> listCategories() {
+        return categoryMapper.selectAll();
+    }
+
+    @Override
+    public void removeCategory(Integer categoryId) {
         int result = categoryMapper.deleteByPrimaryKey(categoryId);
         if (result != 1) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CATEGORY_DELETE_FAILED);
@@ -75,12 +76,11 @@ public class CategoryServiceImpl extends AdminBaseService implements CategorySer
 
     @Override
     public Boolean checkCategoryIsExist(String categoryName) {
-        Example example = new Example(Category.class);
+        Example example = new Example(CategoryDO.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("name", categoryName);
-        Category category = categoryMapper.selectOneByExample(example);
-        return category != null;
+        CategoryDO categoryDO = categoryMapper.selectOneByExample(example);
+        return categoryDO != null;
     }
-
 
 }

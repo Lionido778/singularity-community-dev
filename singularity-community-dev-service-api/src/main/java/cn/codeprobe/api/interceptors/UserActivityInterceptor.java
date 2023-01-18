@@ -3,9 +3,9 @@ package cn.codeprobe.api.interceptors;
 import cn.codeprobe.api.interceptors.base.ApiInterceptor;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.AppUser;
-import cn.codeprobe.utils.JsonUtil;
+import cn.codeprobe.pojo.po.AppUserDO;
 import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.json.JSONUtil;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -30,9 +30,9 @@ public class UserActivityInterceptor extends ApiInterceptor implements HandlerIn
             GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
             return false;
         }
-        AppUser appUser = JsonUtil.jsonToPojo(userJson, AppUser.class);
-        if (appUser != null) {
-            if (!appUser.getActiveStatus().equals(USER_ACTIVE)) {
+        AppUserDO appUserDO = JSONUtil.toBean(userJson, AppUserDO.class);
+        if (appUserDO != null) {
+            if (!appUserDO.getActiveStatus().equals(USER_ACTIVE)) {
                 // 用户未激活，拦截
                 GlobalExceptionManage.internal(ResponseStatusEnum.USER_INACTIVE_ERROR);
                 return false;

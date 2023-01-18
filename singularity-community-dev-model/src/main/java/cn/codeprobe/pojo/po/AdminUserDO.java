@@ -1,4 +1,4 @@
-package cn.codeprobe.pojo;
+package cn.codeprobe.pojo.po;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -9,7 +9,7 @@ import java.util.Date;
  * @author Lionido
  */
 @Table(name = "admin_user")
-public class AdminUser {
+public class AdminUserDO {
     @Id
     private String id;
 
@@ -167,5 +167,18 @@ public class AdminUser {
      */
     public void setUpdatedTime(Date updatedTime) {
         this.updatedTime = updatedTime;
+    }
+
+    @Override
+    public String toString() {
+        return "AdminUserDO{" +
+                "id='" + id + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", faceId='" + faceId + '\'' +
+                ", adminName='" + adminName + '\'' +
+                ", createdTime=" + createdTime +
+                ", updatedTime=" + updatedTime +
+                '}';
     }
 }

@@ -5,7 +5,7 @@ import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.FriendLinkBO;
-import cn.codeprobe.pojo.mo.FriendLinkMO;
+import cn.codeprobe.pojo.mo.FriendLinkDO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
@@ -27,28 +27,28 @@ public class FriendLinkServiceImpl extends AdminBaseService implements FriendLin
         if (Boolean.TRUE.equals(isExist)){
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_FRIEND_LINK_IS_EXISTED);
         }
-        FriendLinkMO friendLinkMo = new FriendLinkMO();
-        BeanUtils.copyProperties(friendLinkBO, friendLinkMo);
+        FriendLinkDO friendLinkDO = new FriendLinkDO();
+        BeanUtils.copyProperties(friendLinkBO, friendLinkDO);
         // 保存或更新
-        friendLinkRepository.save(friendLinkMo);
+        friendLinkRepository.save(friendLinkDO);
     }
 
     @Override
-    public List<FriendLinkMO> getFriendLinks() {
+    public List<FriendLinkDO> listFriendLinks() {
         return friendLinkRepository.findAll();
     }
 
     @Override
-    public void delete(String linkId) {
+    public void removeFriendLink(String linkId) {
         friendLinkRepository.deleteById(linkId);
     }
 
     @Override
     public Boolean checkFriendLinkIsExist(String linkName) {
-        FriendLinkMO friendLinkMo = new FriendLinkMO();
-        friendLinkMo.setLinkName(linkName);
-        Example<FriendLinkMO> example = Example.of(friendLinkMo);
-        Optional<FriendLinkMO> one = friendLinkRepository.findOne(example);
+        FriendLinkDO friendLinkDO = new FriendLinkDO();
+        friendLinkDO.setLinkName(linkName);
+        Example<FriendLinkDO> example = Example.of(friendLinkDO);
+        Optional<FriendLinkDO> one = friendLinkRepository.findOne(example);
         return one.isPresent();
     }
 

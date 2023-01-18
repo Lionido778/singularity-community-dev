@@ -1,11 +1,15 @@
 package cn.codeprobe.pojo.mo;
 
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 /**
+ * MongoDB 对应 PO
+ *
  * @author Lionido
  */
-public class FriendLinkMO {
+@Document(value = "friend_link")
+public class FriendLinkDO {
 
     private String id;
     @Field(value = "link_name")

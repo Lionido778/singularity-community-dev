@@ -1,7 +1,7 @@
 package cn.codeprobe.admin.controller;
 
 import cn.codeprobe.admin.service.AdminService;
-import cn.codeprobe.api.controller.admin.AdminControllerApi;
+import cn.codeprobe.api.controller.admin.AdminMngControllerApi;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.pojo.bo.NewAdminBO;
@@ -18,13 +18,13 @@ import java.util.Map;
  * @author Lionido
  */
 @RestController
-public class AdminController extends ApiController implements AdminControllerApi {
+public class AdminMngController extends ApiController implements AdminMngControllerApi {
 
     @Resource
     private AdminService adminService;
 
     @Override
-    public JsonResult adminIsExist(String username) {
+    public JsonResult queryAdminIsExist(String username) {
         Boolean isExist = adminService.checkAdminIsExist(username);
         if (Boolean.TRUE.equals(isExist)) {
             return JsonResult.errorCustom(ResponseStatusEnum.ADMIN_USERNAME_EXIST_ERROR);
@@ -49,18 +49,18 @@ public class AdminController extends ApiController implements AdminControllerApi
             JsonResult.errorCustom(ResponseStatusEnum.ADMIN_USERNAME_EXIST_ERROR);
         }
         // 添加管理员用户
-        adminService.createAdminUser(newAdminBO);
+        adminService.saveAdminUser(newAdminBO);
         return JsonResult.ok();
     }
 
     @Override
-    public JsonResult getAdminList(String page, String pageSize) {
+    public JsonResult queryListAdmins(String page, String pageSize) {
         // 参数校验
         if (CharSequenceUtil.isBlank(page) || CharSequenceUtil.isBlank(pageSize)) {
             JsonResult.errorCustom(ResponseStatusEnum.ADMIN_PAGE_NULL_ERROR);
         }
         // 封装 分页数据
-        PagedGridResult pagedGridResult = adminService.queryAdminUserList(Integer.parseInt(page), Integer.parseInt(pageSize));
+        PagedGridResult pagedGridResult = adminService.pageListAdminUsers(Integer.parseInt(page), Integer.parseInt(pageSize));
         return JsonResult.ok(pagedGridResult);
     }
 }

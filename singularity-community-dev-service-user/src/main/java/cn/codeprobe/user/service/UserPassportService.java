@@ -1,7 +1,7 @@
 package cn.codeprobe.user.service;
 
-import cn.codeprobe.pojo.AppUser;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
+import cn.codeprobe.pojo.po.AppUserDO;
 
 /**
  * @author Lionido
@@ -20,7 +20,7 @@ public interface UserPassportService {
      * @param registerLoginBO 注册登陆表单
      * @return AppUser
      */
-    public AppUser registerLogin(RegisterLoginBO registerLoginBO);
+    public AppUserDO registerLogin(RegisterLoginBO registerLoginBO);
 
     /**
      * 用户退出登录

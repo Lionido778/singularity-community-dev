@@ -3,7 +3,7 @@ package cn.codeprobe.user.service.impl;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.enums.UserStatus;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.AppUser;
+import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.service.UserMngService;
 import cn.codeprobe.user.service.base.UserBaseService;
@@ -21,8 +21,8 @@ import java.util.List;
 @Service
 public class UserMngServiceImpl extends UserBaseService implements UserMngService {
     @Override
-    public PagedGridResult getUserList(String nickname, Integer activeStatus, Date startTime, Date endTime, Integer page, Integer pageSize) {
-        Example example = new Example(AppUser.class);
+    public PagedGridResult pageListUsers(String nickname, Integer activeStatus, Date startTime, Date endTime, Integer page, Integer pageSize) {
+        Example example = new Example(AppUserDO.class);
         example.orderBy("createdTime").desc();
         Example.Criteria criteria = example.createCriteria();
         if (CharSequenceUtil.isNotBlank(nickname)) {
@@ -38,18 +38,18 @@ public class UserMngServiceImpl extends UserBaseService implements UserMngServic
             criteria.andLessThanOrEqualTo("createdTime", endTime);
         }
         PageMethod.startPage(page, pageSize);
-        List<AppUser> list = appUserMapper.selectByExample(example);
-        return setterPageGrid(list, page);
+        List<AppUserDO> list = appUserMapper.selectByExample(example);
+        return setPageGrid(list, page);
     }
 
     @Override
     public void freezeUserOrNot(String userId, Integer doStatus) {
         // 校验
-        AppUser appUser = appUserMapper.selectByPrimaryKey(userId);
-        if (appUser == null) {
+        AppUserDO appUserDO = appUserMapper.selectByPrimaryKey(userId);
+        if (appUserDO == null) {
             GlobalExceptionManage.internal(ResponseStatusEnum.USER_NOT_EXIST_ERROR);
         }
-        AppUser user = new AppUser();
+        AppUserDO user = new AppUserDO();
         user.setId(userId);
         user.setActiveStatus(doStatus);
         // 更新用户状态（冻结或解冻）

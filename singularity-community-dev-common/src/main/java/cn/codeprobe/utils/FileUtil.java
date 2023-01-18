@@ -10,21 +10,27 @@ import java.nio.file.Files;
 import java.util.Base64;
 
 /**
+ * 文件工具
+ *
  * @author Lionido
  */
 public class FileUtil {
 
+    private static final String IMAGE_TYPES = "jpg,jpeg,gif,png";
+    private static final String FILE_TYPE_PDF = "pdf";
+    private static final String ENCODE_FILE_PATH_SIGN = "%";
+
     /**
      * 文件流下载，在浏览器展示
      *
-     * @param response
+     * @param response 响应
      * @param file     文件从盘符开始的完整路径
      */
     public static void downloadFileByStream(HttpServletResponse response, File file) {
         String filePath = file.getPath();
         System.out.println("filePath = " + filePath);
         // 对encode过的filePath处理
-        if (filePath.contains("%")) {
+        if (filePath.contains(ENCODE_FILE_PATH_SIGN)) {
             try {
                 filePath = URLDecoder.decode(filePath, "UTF-8");
             } catch (UnsupportedEncodingException e) {
@@ -42,10 +48,10 @@ public class FileUtil {
             String fileType = array[array.length - 1].toLowerCase();
             // 设置文件ContentType类型
             // 判断图片类型
-            if ("jpg,jepg,gif,png".contains(fileType)) {
+            if (IMAGE_TYPES.contains(fileType)) {
                 response.setContentType("image/" + fileType);
                 // 判断pdf类型
-            } else if ("pdf".contains(fileType)) {
+            } else if (FILE_TYPE_PDF.contains(fileType)) {
                 response.setContentType("application/pdf");
                 // 设置multipart
             } else {
@@ -82,7 +88,7 @@ public class FileUtil {
         try {
             in = Files.newInputStream(file.toPath());
             fileData = new byte[in.available()];
-            in.read(fileData);
+            int read = in.read(fileData);
             in.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -106,7 +112,7 @@ public class FileUtil {
         //创建文件目录
         File dir = new File(destPath);
         if (!dir.exists() && !dir.isDirectory()) {
-            dir.mkdirs();
+            boolean mkdirs = dir.mkdirs();
         }
         BufferedOutputStream bos = null;
         java.io.FileOutputStream fos = null;

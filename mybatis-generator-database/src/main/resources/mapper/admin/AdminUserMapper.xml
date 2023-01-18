@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.codeprobe.admin.mapper.AdminUserMapper">
-  <resultMap id="BaseResultMap" type="cn.codeprobe.pojo.AdminUser">
+  <resultMap id="BaseResultMap" type="cn.codeprobe.pojo.po.AdminUserDO">
     <!--
       WARNING - @mbg.generated
     -->
@@ -13,7 +13,7 @@
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
   </resultMap>
-  <resultMap id="BaseResultMap" type="cn.codeprobe.pojo.AdminUser">
+  <resultMap id="BaseResultMap" type="cn.codeprobe.pojo.po.AdminUserDO">
     <!--
       WARNING - @mbg.generated
     -->
@@ -25,7 +25,7 @@
     <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
     <result column="updated_time" jdbcType="TIMESTAMP" property="updatedTime" />
   </resultMap>
-  <resultMap id="BaseResultMap" type="cn.codeprobe.pojo.AdminUser">
+  <resultMap id="BaseResultMap" type="cn.codeprobe.pojo.po.AdminUserDO">
     <!--
       WARNING - @mbg.generated
     -->

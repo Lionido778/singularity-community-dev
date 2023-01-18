@@ -18,14 +18,33 @@ import javax.validation.Valid;
 @RequestMapping("/passport")
 public interface PassportControllerApi {
 
+    /**
+     * 获取短信验证码
+     *
+     * @param mobile 手机号
+     * @return sms_code(6位)
+     */
     @ApiOperation(value = "获取短信验证码", notes = "获取短信验证码60秒", httpMethod = "GET")
-    @GetMapping("/getSMSCode")
-    JsonResult getSmsCode(@RequestParam String mobile) throws Exception;
+    @GetMapping("/querySMSCode")
+    JsonResult querySmsCode(@RequestParam String mobile);
 
-    @ApiOperation(value = "一键注册登录", notes = "用户一键注册登录接口", httpMethod = "POST")
+    /**
+     * 一键注册登录
+     *
+     * @param registerLoginBO 注册登陆表单
+     * @param result          表单验证结果
+     * @return yes / no
+     */
+    @ApiOperation(value = "用户一键注册登录接口", notes = "用户一键注册登录", httpMethod = "POST")
     @PostMapping("/doLogin")
     JsonResult registerLogin(@RequestBody @Valid RegisterLoginBO registerLoginBO, BindingResult result);
 
+    /**
+     * 用户退出登录
+     *
+     * @param userId 用户ID
+     * @return yes / no
+     */
     @ApiOperation(value = "用户退出登录", notes = "用户退出登录", httpMethod = "POST")
     @PostMapping("/logout")
     JsonResult logout(@RequestParam String userId);

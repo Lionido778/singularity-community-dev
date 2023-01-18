@@ -18,22 +18,39 @@ import javax.validation.Valid;
  */
 @Api(value = "管理中心相关接口", tags = "管理中心相关接口")
 @RequestMapping("/adminMng")
-public interface AdminControllerApi {
+public interface AdminMngControllerApi {
 
-
-    @PostMapping("/adminIsExist")
+    /**
+     * 查询管理员是否存在
+     *
+     * @param username 管理员登录名
+     * @return 不存在 ok/ 已存在 抛异常
+     */
+    @PostMapping("/queryAdminIsExist")
     @ApiOperation(value = "管理员是否存在", notes = "管理员是否存在")
-    public JsonResult adminIsExist(@RequestParam String username);
+    public JsonResult queryAdminIsExist(@RequestParam String username);
 
-
+    /**
+     * 新增管理员用户
+     *
+     * @param newAdminBO 表单数据
+     * @param result     表单验证结果
+     * @return ok/no
+     */
     @PostMapping("/addNewAdmin")
     @ApiOperation(value = "添加管理员", notes = "添加管理员")
     public JsonResult addNewAdmin(@RequestBody @Valid NewAdminBO newAdminBO, BindingResult result);
 
-
-    @PostMapping("/getAdminList")
+    /**
+     * 获取管理员分页列表
+     *
+     * @param page     当前页
+     * @param pageSize 当前页查询数量
+     * @return 管理员分页列表
+     */
+    @PostMapping("/queryListAdmins")
     @ApiOperation(value = "获取管理员列表", notes = "获取管理员列表")
-    public JsonResult getAdminList(@RequestParam String page, String pageSize);
+    public JsonResult queryListAdmins(@RequestParam String page, String pageSize);
 
 }
 

@@ -1,7 +1,7 @@
 package cn.codeprobe.admin.controller;
 
 import cn.codeprobe.admin.service.FriendLinkService;
-import cn.codeprobe.api.controller.admin.FriendLinkControllerApi;
+import cn.codeprobe.api.controller.admin.FriendLinkMngControllerApi;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.pojo.bo.FriendLinkBO;
 import cn.codeprobe.result.JsonResult;
@@ -15,13 +15,13 @@ import java.util.Map;
  * @author Lionido
  */
 @RestController
-public class FriendLinkController extends ApiController implements FriendLinkControllerApi {
+public class FriendLinkMngController extends ApiController implements FriendLinkMngControllerApi {
 
     @Resource
     private FriendLinkService friendLinkService;
 
     @Override
-    public JsonResult saveOrUpdateFriendLink(FriendLinkBO friendLinkBO, BindingResult result) {
+    public JsonResult addOrModifyFriendLink(FriendLinkBO friendLinkBO, BindingResult result) {
         // 校验 BO 数据
         if (result.hasErrors()) {
             Map<String, String> map = getErrors(result);
@@ -33,13 +33,13 @@ public class FriendLinkController extends ApiController implements FriendLinkCon
     }
 
     @Override
-    public JsonResult getFriendLinkList() {
-        return JsonResult.ok(friendLinkService.getFriendLinks());
+    public JsonResult queryListFriendLinks() {
+        return JsonResult.ok(friendLinkService.listFriendLinks());
     }
 
     @Override
     public JsonResult deleteFriendLink(String linkId) {
-        friendLinkService.delete(linkId);
+        friendLinkService.removeFriendLink(linkId);
         return JsonResult.ok();
     }
 }

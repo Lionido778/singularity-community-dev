@@ -52,7 +52,7 @@ public class PassportController extends ApiController implements PassportControl
         }
         // 校验登陆参数,人脸图像(img64) 不可以为空
         String img64Face = adminLoginBO.getImg64();
-        if (CharSequenceUtil.isBlank(img64Face) || "null".equalsIgnoreCase(img64Face)) {
+        if (CharSequenceUtil.isBlank(img64Face)) {
             return JsonResult.errorCustom(ResponseStatusEnum.ADMIN_FACE_NULL_ERROR);
         }
         // 调用 service 进行人脸识别登录

@@ -1,12 +1,14 @@
-package cn.codeprobe.pojo;
+package cn.codeprobe.pojo.po;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author Lionido
  */
-public class Category {
+@Table(name = "category")
+public class CategoryDO {
     @Id
     private Integer id;
 
@@ -70,5 +72,14 @@ public class Category {
      */
     public void setTagColor(String tagColor) {
         this.tagColor = tagColor;
+    }
+
+    @Override
+    public String toString() {
+        return "CategoryDO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", tagColor='" + tagColor + '\'' +
+                '}';
     }
 }

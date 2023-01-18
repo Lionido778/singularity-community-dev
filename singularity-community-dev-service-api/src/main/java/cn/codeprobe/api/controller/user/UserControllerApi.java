@@ -12,20 +12,42 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.validation.Valid;
 
+/**
+ * @author Lionido
+ */
 @Api(value = "用户信息相关接口", tags = "用户信息相关接口")
 @RequestMapping("/user")
 public interface UserControllerApi {
 
+    /**
+     * 获取用户基本信息
+     *
+     * @param userId 用户ID
+     * @return yes / no
+     */
     @ApiOperation(value = "获取用户基本信息", notes = "用户基本信息", httpMethod = "POST")
-    @PostMapping("/getUserInfo")
-    JsonResult getUserBasicInfo(@RequestParam String userId);
+    @PostMapping("/queryUserInfo")
+    JsonResult queryUserBasicInfo(@RequestParam String userId);
 
+    /**
+     * 获取用户账户信息
+     *
+     * @param userId 用户ID
+     * @return yes / no
+     */
     @ApiOperation(value = "获取用户账户信息", notes = "用户账户信息", httpMethod = "POST")
-    @PostMapping("/getAccountInfo")
-    JsonResult getUserAccountInfo(@RequestParam String userId);
+    @PostMapping("/queryAccountInfo")
+    JsonResult queryUserAccountInfo(@RequestParam String userId);
 
+    /**
+     * 更新用户账户信息
+     *
+     * @param updateUserInfoBO 用户更新表单
+     * @param result           表单验证结果
+     * @return yes / no
+     */
     @ApiOperation(value = "更新用户账户信息", notes = "更新用户账户信息", httpMethod = "POST")
-    @PostMapping("/updateUserInfo")
-    JsonResult updateUserAccountInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO, BindingResult result);
+    @PostMapping("/modifyUserInfo")
+    JsonResult modifyUserAccountInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO, BindingResult result);
 
 }

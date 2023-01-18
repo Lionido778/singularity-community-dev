@@ -1,10 +1,10 @@
 package cn.codeprobe.user.mapper;
 
 import cn.codeprobe.mapper.MyMapper;
-import cn.codeprobe.pojo.Fans;
+import cn.codeprobe.pojo.po.FansDO;
 
 /**
  * @author Lionido
  */
-public interface FansMapper extends MyMapper<Fans> {
+public interface FansMapper extends MyMapper<FansDO> {
 }

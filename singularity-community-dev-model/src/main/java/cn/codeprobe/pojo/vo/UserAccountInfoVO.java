@@ -4,6 +4,8 @@ import java.util.Date;
 
 /**
  * 用户账户信息 VO
+ *
+ * @author Lionido
  */
 public class UserAccountInfoVO {
 
@@ -105,5 +107,22 @@ public class UserAccountInfoVO {
 
     public void setDistrict(String district) {
         this.district = district;
+    }
+
+    @Override
+    public String toString() {
+        return "UserAccountInfoVO{" +
+                "id='" + id + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", face='" + face + '\'' +
+                ", realname='" + realname + '\'' +
+                ", email='" + email + '\'' +
+                ", sex=" + sex +
+                ", birthday=" + birthday +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", district='" + district + '\'' +
+                '}';
     }
 }

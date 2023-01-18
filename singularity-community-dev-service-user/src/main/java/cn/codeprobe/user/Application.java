@@ -11,7 +11,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication(exclude = MongoAutoConfiguration.class)
 @MapperScan("cn.codeprobe.user.mapper")
-@ComponentScan({"cn.codeprobe", "org.n3r.idworker"})
+@ComponentScan({"cn.codeprobe"})
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

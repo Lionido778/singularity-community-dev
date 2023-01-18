@@ -1,4 +1,4 @@
-package cn.codeprobe.pojo;
+package cn.codeprobe.pojo.po;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -6,7 +6,7 @@ import javax.persistence.Id;
 /**
  * @author Lionido
  */
-public class Fans {
+public class FansDO {
     @Id
     private String id;
 
@@ -163,5 +163,18 @@ public class Fans {
      */
     public void setProvince(String province) {
         this.province = province;
+    }
+
+    @Override
+    public String toString() {
+        return "FansDO{" +
+                "id='" + id + '\'' +
+                ", writerId='" + writerId + '\'' +
+                ", fanId='" + fanId + '\'' +
+                ", face='" + face + '\'' +
+                ", fanNickname='" + fanNickname + '\'' +
+                ", sex=" + sex +
+                ", province='" + province + '\'' +
+                '}';
     }
 }

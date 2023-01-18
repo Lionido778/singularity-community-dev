@@ -4,7 +4,7 @@ import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.api.controller.user.UserMngControllerApi;
 import cn.codeprobe.enums.PageHelper;
 import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.pojo.AppUser;
+import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.service.UserMngService;
@@ -29,7 +29,7 @@ public class UserMngController extends ApiController implements UserMngControlle
     private UserService userService;
 
     @Override
-    public JsonResult getUserList(String nickname, Integer status, Date startDate, Date endDate, Integer page, Integer pageSize) {
+    public JsonResult queryPageListUsers(String nickname, Integer status, Date startDate, Date endDate, Integer page, Integer pageSize) {
         if (page == null) {
             page = PageHelper.DEFAULT_PAGE.page;
         }
@@ -37,19 +37,19 @@ public class UserMngController extends ApiController implements UserMngControlle
             pageSize = PageHelper.DEFAULT_PAGE.pageSize;
         }
         // 调用service 获取用户列表
-        PagedGridResult pagedGridResult = userMngService.getUserList(
+        PagedGridResult pagedGridResult = userMngService.pageListUsers(
                 nickname, status, startDate, endDate, page, pageSize);
         return JsonResult.ok(pagedGridResult);
     }
 
     @Override
-    public JsonResult getUserInfo(String userId) {
+    public JsonResult queryUserInfo(String userId) {
         // 校验参数
         if (CharSequenceUtil.isBlank(userId)) {
             return JsonResult.errorCustom(ResponseStatusEnum.USER_QUERY_ERROR);
         }
         // 调用service 获取用户信息
-        AppUser userInfo = userService.getUserInfo(userId);
+        AppUserDO userInfo = userService.getUserInfo(userId);
         return JsonResult.ok(userInfo);
     }
 

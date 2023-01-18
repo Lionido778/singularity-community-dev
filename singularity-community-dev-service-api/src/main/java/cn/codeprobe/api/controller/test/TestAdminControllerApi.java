@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin/test")
 public interface TestAdminControllerApi {
 
+    /**
+     * 管理中心项目测试接口
+     *
+     * @return hello
+     */
     @ApiOperation(value = "管理中心项目测试接口", notes = "管理中心项目测试接口", httpMethod = "GET")
     @GetMapping("/hello")
     Object hello();

@@ -3,6 +3,9 @@ package cn.codeprobe.pojo;
 import javax.persistence.Column;
 import javax.persistence.Id;
 
+/**
+ * @author Lionido
+ */
 public class Fans {
     @Id
     private String id;

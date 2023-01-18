@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * @author Lionido
+ */
 public class AdminGenerator {
 
 	public void generator() throws Exception {

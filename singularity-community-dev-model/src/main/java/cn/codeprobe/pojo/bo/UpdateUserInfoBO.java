@@ -1,5 +1,6 @@
 package cn.codeprobe.pojo.bo;
 
+import cn.codeprobe.validate.CheckUrl;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 
@@ -22,6 +23,7 @@ public class UpdateUserInfoBO {
     private String nickname;
 
     @NotBlank(message = "用户头像不能为空")
+    @CheckUrl
     private String face;
 
     @NotBlank(message = "真实姓名不能为空")

@@ -13,14 +13,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/user/test")
 public interface TestUserControllerApi {
 
+    /**
+     * 用户项目测试Hello接口
+     *
+     * @return hello
+     */
     @ApiOperation(value = "用户项目测试Hello接口", notes = "用户项目测试Hello接口", httpMethod = "GET")
     @GetMapping("/hello")
     Object hello();
 
+    /**
+     * 短信发送测试接口
+     *
+     * @return hello
+     * @throws Exception
+     */
     @ApiOperation(value = "短信发送测试接口", notes = "短信发送测试接口", httpMethod = "GET")
     @GetMapping("/sendSms")
     Object sendSms() throws Exception;
 
+    /**
+     * Redis测试接口
+     *
+     * @return redis
+     */
     @ApiOperation(value = "Redis测试接口", notes = "测试Redis是否整合成功", httpMethod = "GET")
     @GetMapping("/redis")
     JsonResult redis();

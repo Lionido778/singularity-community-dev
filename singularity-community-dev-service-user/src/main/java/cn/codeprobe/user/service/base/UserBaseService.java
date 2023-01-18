@@ -3,12 +3,13 @@ package cn.codeprobe.user.service.base;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.enums.UserSex;
 import cn.codeprobe.enums.UserStatus;
-import cn.codeprobe.pojo.AppUser;
+import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.mapper.AppUserMapper;
+import cn.codeprobe.utils.IdWorker;
 import cn.codeprobe.utils.RedisUtil;
+import cn.codeprobe.utils.SmsUtil;
 import com.github.pagehelper.PageInfo;
-import org.n3r.idworker.Sid;
 import org.springframework.beans.factory.annotation.Value;
 import tk.mybatis.mapper.entity.Example;
 
@@ -25,9 +26,11 @@ public class UserBaseService extends ApiController {
     @Resource
     public AppUserMapper appUserMapper;
     @Resource
-    public Sid sid;
+    public IdWorker idWorker;
     @Resource
     public RedisUtil redisUtil;
+    @Resource
+    public SmsUtil smsUtil;
 
     /**
      * domain-name
@@ -69,13 +72,13 @@ public class UserBaseService extends ApiController {
     /**
      * 获取用户
      */
-    public AppUser getUser(String userId) {
+    public AppUserDO getUser(String userId) {
         return appUserMapper.selectByPrimaryKey(userId);
     }
 
-    public AppUser queryAppUserByMobile(String mobile) {
+    public AppUserDO queryAppUserByMobile(String mobile) {
         // 构建example
-        Example example = new Example(AppUser.class);
+        Example example = new Example(AppUserDO.class);
         Example.Criteria criteria = example.createCriteria();
         // 查询条件
         criteria.andEqualTo("mobile", mobile);
@@ -90,7 +93,7 @@ public class UserBaseService extends ApiController {
      * @param page 当前页
      * @return 封装分页查询结果
      */
-    public PagedGridResult setterPageGrid(List<?> list, int page) {
+    public PagedGridResult setPageGrid(List<?> list, int page) {
         PageInfo<?> pageInfo = new PageInfo<>(list);
         PagedGridResult gridResult = new PagedGridResult();
         gridResult.setRows(list);

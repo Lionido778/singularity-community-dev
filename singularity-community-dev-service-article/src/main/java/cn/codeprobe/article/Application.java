@@ -10,7 +10,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  */
 @SpringBootApplication
 @MapperScan("cn.codeprobe.article.mapper")
-@ComponentScan({"cn.codeprobe", "org.n3r.idworker"})
+@ComponentScan({"cn.codeprobe"})
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

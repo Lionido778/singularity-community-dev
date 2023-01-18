@@ -4,7 +4,7 @@ import cn.codeprobe.admin.service.AdminPassportService;
 import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.AdminUser;
+import cn.codeprobe.pojo.po.AdminUserDO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.utils.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -19,12 +19,12 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
 
     @Override
     public void loginByUsernameAndPwd(String username, String password) {
-        AdminUser adminUser = queryAdminByUsername(username);
-        if (adminUser != null) {
-            String encryptedPwd = adminUser.getPassword();
+        AdminUserDO adminUserDO = queryAdminByUsername(username);
+        if (adminUserDO != null) {
+            String encryptedPwd = adminUserDO.getPassword();
             if (Boolean.TRUE.equals(isPasswordMatched(password, encryptedPwd))) {
                 // 登陆成功，进行token、cookie配置
-                adminLoggedSetting(adminUser);
+                adminLoggedSetting(adminUserDO);
             } else {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_NOT_EXIT_ERROR);
             }
@@ -35,9 +35,9 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
 
     @Override
     public void loginByFace(String username, String img64Face) {
-        AdminUser adminUser = queryAdminByUsername(username);
-        if (adminUser != null) {
-            String faceId = adminUser.getFaceId();
+        AdminUserDO adminUserDO = queryAdminByUsername(username);
+        if (adminUserDO != null) {
+            String faceId = adminUserDO.getFaceId();
             if (CharSequenceUtil.isNotBlank(faceId)) {
                 // 暂时使用 RestTemplate 调用 file 服务的下载保存在GridFS中的人脸数据（Base64）
                 String accessFileServerUrl = FILE_SERVER_URL + faceId;
@@ -54,7 +54,7 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
                         Boolean pass = faceVerifyUtil.verifyFace(TARGET_CONFIDENCE, faceFile, dataFile);
                         if (Boolean.TRUE.equals(pass)) {
                             // 人脸识别登陆成功，设置管理员登陆参数
-                            adminLoggedSetting(adminUser);
+                            adminLoggedSetting(adminUserDO);
                         } else {
                             // 人脸识别失败
                             GlobalExceptionManage.internal(ResponseStatusEnum.FACE_VERIFY_TYPE_ERROR);

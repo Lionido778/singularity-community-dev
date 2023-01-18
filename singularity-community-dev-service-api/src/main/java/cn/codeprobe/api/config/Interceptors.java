@@ -41,30 +41,32 @@ public class Interceptors implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         // 检查用户发送短信请求是否在限制时间内。若是，拦截请求
         registry.addInterceptor(passportInterceptor())
-                .addPathPatterns("/passport/getSMSCode");
+                .addPathPatterns("/passport/querySMSCode");
         // 检查用户登录状态。若未登录，拦截
         registry.addInterceptor(userTokenInterceptor())
-                .addPathPatterns("/user/getAccountInfo")
-                .addPathPatterns("/user/updateUserInfo")
-                .addPathPatterns("/file/uploadFace");
+                .addPathPatterns("/user/queryAccountInfo")
+                .addPathPatterns("/user/modifyUserInfo")
+                .addPathPatterns("/file/uploadFace")
+                .addPathPatterns("/file/uploadSerialsFiles");
         // 检查管理员登录状态。若未登录，拦截
         registry.addInterceptor(adminTokenInterceptor())
-                .addPathPatterns("/adminMng/adminIsExist")
+                .addPathPatterns("/adminMng/queryAdminIsExist")
                 .addPathPatterns("/adminMng/addNewAdmin")
-                .addPathPatterns("/adminMng/getAdminList")
+                .addPathPatterns("/adminMng/queryListAdmins")
                 .addPathPatterns("/file/uploadToGridFS")
                 .addPathPatterns("/file/readFromGridFS")
-                .addPathPatterns("/adminMng/friendLinkMng/saveOrUpdateFriendLink")
-                .addPathPatterns("/adminMng/friendLinkMng/getFriendLinkList")
-                .addPathPatterns("/adminMng/friendLinkMng/delete")
-                .addPathPatterns("/adminMng/categoryMng/saveOrUpdateCategory")
-                .addPathPatterns("/adminMng/categoryMng/getCategoryList")
-                .addPathPatterns("/userMng/queryAll")
-                .addPathPatterns("/userMng/userDetail")
+                .addPathPatterns("/friendLinkMng/addOrModifyFriendLink")
+                .addPathPatterns("/friendLinkMng/queryListFriendLinks")
+                .addPathPatterns("/friendLinkMng/deleteFriendLink")
+                .addPathPatterns("/categoryMng/addOrModifyCategory")
+                .addPathPatterns("/categoryMng/queryListCategories")
+                .addPathPatterns("/categoryMng/deleteCategory")
+                .addPathPatterns("/userMng/queryPageListUsers")
+                .addPathPatterns("/userMng/queryUserInfo")
                 .addPathPatterns("/userMng/freezeUserOrNot");
 
         // 检查用户的激活状态,若未激活进行拦截
         //registry.addInterceptor(userActivityInterceptor());
-               //.addPathPatterns("/adminMng/categoryMng/getCategories");
+               //.addPathPatterns("categoryMng/getCategories");
     }
 }
