@@ -96,6 +96,10 @@ public enum ResponseStatusEnum {
     FACE_VERIFY_LOGIN_ERROR(601, false, "人脸登录失败！"),
 
     /**
+     * 404
+     */
+    NOT_FOUND_ERROR(404, false, "页面找不到！ "),
+    /**
      * 系统错误，未预期的错误 555
      */
     SYSTEM_ERROR(555, false, "系统繁忙，请稍后再试！"),

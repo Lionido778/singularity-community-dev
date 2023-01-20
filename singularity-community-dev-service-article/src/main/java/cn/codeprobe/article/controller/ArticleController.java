@@ -27,6 +27,8 @@ public class ArticleController extends ApiController implements ArticleControlle
     @Resource
     private ArticleService articleService;
 
+
+
     @Override
     public JsonResult addNewArticle(NewArticleBO newArticleBO, BindingResult result) {
         // 校验BO数据
@@ -56,5 +58,19 @@ public class ArticleController extends ApiController implements ArticleControlle
         PagedGridResult pagedGridResult = articleService.pageListUsers(userId, keyword, status,
                 startDate, endDate, page, pageSize);
         return JsonResult.ok(pagedGridResult);
+    }
+
+    @Override
+    public JsonResult deleteArticle(String userId, String articleId) {
+        if (CharSequenceUtil.isNotBlank(userId)) {
+            if (CharSequenceUtil.isNotBlank(articleId)) {
+                articleService.removeArticleByArticleId(userId, articleId);
+            } else {
+                return JsonResult.errorCustom(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
+            }
+        } else {
+            return JsonResult.errorCustom(ResponseStatusEnum.UN_LOGIN);
+        }
+        return JsonResult.ok();
     }
 }

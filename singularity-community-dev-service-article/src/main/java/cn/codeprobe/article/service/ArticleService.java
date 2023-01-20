@@ -34,4 +34,12 @@ public interface ArticleService {
      */
     PagedGridResult pageListUsers(String userId, String keyword, Integer status,
                                   Date startDate, Date endDate, Integer page, Integer pageSize);
+
+    /**
+     * 通过文章ID 逻辑删除
+     *
+     * @param userId    文章作者
+     * @param articleId 文章ID
+     */
+    void removeArticleByArticleId(String userId, String articleId);
 }

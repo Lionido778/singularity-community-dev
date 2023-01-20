@@ -53,9 +53,27 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
         if (endDate != null) {
             criteria.andLessThanOrEqualTo("createTime", endDate);
         }
+        // 非逻辑删除
+        criteria.andEqualTo("isDelete", 0);
+        // 分页查询
         PageHelper.startPage(page, pageSize);
         List<ArticleDO> list = articleMapper.selectByExample(example);
         return setterPageGrid(list, page);
+    }
+
+    @Override
+    public void removeArticleByArticleId(String userId, String articleId) {
+        Example example = new Example(ArticleDO.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("publishUserId", userId)
+                .andEqualTo("id", articleId)
+                .andEqualTo("isDelete", 0);
+        ArticleDO articleDO = new ArticleDO();
+        articleDO.setIsDelete(1);
+        int result = articleMapper.updateByExampleSelective(articleDO, example);
+        if (!"1".equalsIgnoreCase(String.valueOf(result))) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
+        }
     }
 
     @Override

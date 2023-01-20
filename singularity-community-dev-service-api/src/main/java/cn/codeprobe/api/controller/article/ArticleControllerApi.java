@@ -53,4 +53,14 @@ public interface ArticleControllerApi {
                                      Integer status, Date startDate,
                                      Date endDate, Integer page, Integer pageSize);
 
+    /**
+     * 逻辑删除文章 1：删除，0: 不删除
+     *
+     * @param userId    用户ID
+     * @param articleId 文章ID
+     * @return ok
+     */
+    @ApiOperation(value = "删除文章", notes = "删除文章", httpMethod = "POST")
+    @PostMapping("/deleteArticle")
+    JsonResult deleteArticle(@RequestParam String userId, String articleId);
 }
