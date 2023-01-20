@@ -28,6 +28,15 @@ public class ApiController {
     public HttpServletResponse response;
 
 
+    ///**
+    // * 获取访问主体 Subject(本系统访问者主要是：用户、管理员) 的ID
+    // * @return UserID 或 AdminId
+    // */
+    //public String getSubjectIdFromHeader() {
+    //    request.getHeader()
+    //    return null;
+    //}
+
     /**
      * 获取前端数据校验的错误信息
      */

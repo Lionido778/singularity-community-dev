@@ -107,7 +107,13 @@ public enum ResponseStatusEnum {
     /**
      * file system
      */
-    FILE_DOWNLOAD_ERROR(701, false, "文件下载失败！");
+    FILE_DOWNLOAD_ERROR(701, false, "文件下载失败！"),
+
+    /**
+     * Auth
+     */
+    AUTH_FAILED(801, false, "登录鉴权失败！访问主体不存在"),
+    AUTH_HEADER_ID_NULL(802, false, "登录鉴权失败！id,token为空");
 
 
     /**

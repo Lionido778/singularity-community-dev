@@ -39,7 +39,7 @@ public class FileBaseService extends ApiController {
             GlobalExceptionManage.internal(ResponseStatusEnum.FILE_UPLOAD_NULL_ERROR);
         }
         String imageExcName = fileNameArr[fileNameArr.length - 1];
-        // 安全起见，只接收 PNG/JPG/JPEG 格式的文件
+        // 安全起见，限制只接收 PNG/JPG/JPEG 格式的文件
         if (!EXE_NAME_PNG.equalsIgnoreCase(imageExcName) && !EXE_NAME_JPG.equalsIgnoreCase(imageExcName)
                 && !EXE_NAME_JPEG.equalsIgnoreCase(imageExcName)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.FILE_FORMATTER_FAILED);

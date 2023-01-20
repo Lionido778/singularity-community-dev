@@ -8,6 +8,8 @@ import cn.codeprobe.pojo.bo.NewAdminBO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.hutool.core.text.CharSequenceUtil;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +35,8 @@ public class AdminMngController extends ApiController implements AdminMngControl
     }
 
     @Override
-    public JsonResult addNewAdmin(NewAdminBO newAdminBO, BindingResult result) {
+    @Transactional(rollbackFor = Exception.class)
+    public JsonResult addNewAdmin(NewAdminBO newAdminBO, @NotNull BindingResult result) {
         // 校验BO数据
         if (result.hasErrors()) {
             Map<String, String> errorMap = getErrors(result);

@@ -15,7 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface FileControllerApi {
 
     /**
-     * 用户上传头像，核通过后，将图像链接返回给前端
+     * 用户上传头像，审核核通过后，将图像访问链接返回给前端
      *
      * @param userId 用户ID
      * @param file   用户上传的头像
@@ -55,6 +55,7 @@ public interface FileControllerApi {
     JsonResult readBase64FaceFromGridFs(@RequestParam String faceId);
 
     /**
+     * 创作中心：
      * 用户上传多张图片，审核通过后，将图像链接列表返回给前端
      *
      * @param userId 用户ID

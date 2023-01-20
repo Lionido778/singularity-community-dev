@@ -3,6 +3,7 @@ package cn.codeprobe.api.aspect.log;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -26,7 +27,7 @@ public class ServiceLogAspect {
      * @Description: 环绕 切面表达式   (*任意返回参数  主包.所有微服务.微服务.Impl..所有包.所有类.所有方法（所有参数）)
      */
     @Around("execution(* cn.codeprobe.*.service.impl..*.*(..))")
-    public Object recordExecTimeOfService(ProceedingJoinPoint joinPoint) throws Throwable {
+    public Object recordExecTimeOfService(@NotNull ProceedingJoinPoint joinPoint) throws Throwable {
 
         logger.info("==== 开始执行 {} 类下的 {} 方法 ====", joinPoint.getTarget().getClass(),
                 joinPoint.getSignature().getName());
@@ -37,11 +38,11 @@ public class ServiceLogAspect {
         long end = System.currentTimeMillis();
         long consumedTime = end - start;
         if (consumedTime >= MAX_LIMIT) {
-            logger.error(DESCRIBE, joinPoint.getSignature().getName(), consumedTime);
+            logger.error("==== " + DESCRIBE, joinPoint.getSignature().getName(), consumedTime + " ====");
         } else if (consumedTime >= MEDIUM_LIMIT) {
-            logger.error(DESCRIBE, joinPoint.getSignature().getName(), consumedTime);
+            logger.warn("==== " + DESCRIBE, joinPoint.getSignature().getName(), consumedTime + " ====");
         } else {
-            logger.error(DESCRIBE, joinPoint.getSignature().getName(), consumedTime);
+            logger.info("==== " + DESCRIBE, joinPoint.getSignature().getName(), consumedTime + " ====");
         }
         return result;
     }

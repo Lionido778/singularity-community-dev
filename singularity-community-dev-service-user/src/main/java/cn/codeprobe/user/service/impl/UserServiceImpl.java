@@ -12,6 +12,7 @@ import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.json.JSONUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Date;
@@ -33,7 +34,9 @@ public class UserServiceImpl extends UserBaseService implements UserService {
         return appUserMapper.selectOneByExample(example);
     }
 
+
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AppUserDO saveAppUser(String mobile) {
         AppUserDO appUserDO = new AppUserDO();
         // 分布式架构的互联网项目，随着用户流量激增，考虑到可扩展性，需要分库分表
@@ -60,7 +63,6 @@ public class UserServiceImpl extends UserBaseService implements UserService {
         appUserMapper.insert(appUserDO);
         return appUserDO;
     }
-
 
     @Override
     public AppUserDO getUserInfo(String userId) {

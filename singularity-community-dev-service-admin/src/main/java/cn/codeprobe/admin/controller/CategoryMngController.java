@@ -5,6 +5,8 @@ import cn.codeprobe.api.controller.admin.CategoryMngControllerApi;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.pojo.bo.CategoryBO;
 import cn.codeprobe.result.JsonResult;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,7 +23,8 @@ public class CategoryMngController extends ApiController implements CategoryMngC
     private CategoryService categoryService;
 
     @Override
-    public JsonResult addOrModifyCategory(CategoryBO categoryBO, BindingResult result) {
+    @Transactional(rollbackFor = Exception.class)
+    public JsonResult addOrModifyCategory(CategoryBO categoryBO, @NotNull BindingResult result) {
         // 校验 BO 数据
         if (result.hasErrors()) {
             Map<String, String> map = getErrors(result);

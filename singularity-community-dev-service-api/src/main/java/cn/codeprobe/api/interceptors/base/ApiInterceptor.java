@@ -27,6 +27,7 @@ public class ApiInterceptor {
     @Resource
     private HttpServletResponse response;
 
+
     /**
      * sms
      */
@@ -118,13 +119,17 @@ public class ApiInterceptor {
      * @param token    令牌
      */
     public void recordInterceptLog(boolean isLogged, String role, String id, String token) {
+        // 获取请求路径
+        String requestUri = request.getRequestURI();
         System.out.println("=====================================================================");
         // 获取请求IP
         String requestIp = IpUtil.getRequestIp(request);
         if (isLogged) {
-            System.out.println("IP: " + requestIp + " 请求已被放行！");
+            System.out.println("IP: " + requestIp);
+            System.out.println("ACCESS_URL：" + requestUri + " 请求已被放行！");
         } else {
-            System.out.println("IP: " + requestIp + " 请求已被拦截！");
+            System.out.println("IP: " + requestIp);
+            System.out.println("ACCESS_URL：" + requestUri + " 请求已被拦截！");
         }
         System.out.println(role + "TokenInterceptor - " + role + "Id = " + id);
         System.out.println(role + "TokenInterceptor - " + role + "Token = " + token);

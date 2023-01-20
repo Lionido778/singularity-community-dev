@@ -37,6 +37,7 @@ public class Interceptors implements WebMvcConfigurer {
         return new UserActivityInterceptor();
     }
 
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 检查用户发送短信请求是否在限制时间内。若是，拦截请求
@@ -47,7 +48,10 @@ public class Interceptors implements WebMvcConfigurer {
                 .addPathPatterns("/user/queryAccountInfo")
                 .addPathPatterns("/user/modifyUserInfo")
                 .addPathPatterns("/file/uploadFace")
-                .addPathPatterns("/file/uploadSerialsFiles");
+                .addPathPatterns("/file/uploadSerialsFiles")
+                .addPathPatterns("/article/addNewArticle")
+                .addPathPatterns("/article/queryPageListArticles");
+
         // 检查管理员登录状态。若未登录，拦截
         registry.addInterceptor(adminTokenInterceptor())
                 .addPathPatterns("/adminMng/queryAdminIsExist")
@@ -67,6 +71,7 @@ public class Interceptors implements WebMvcConfigurer {
 
         // 检查用户的激活状态,若未激活进行拦截
         //registry.addInterceptor(userActivityInterceptor());
-               //.addPathPatterns("categoryMng/getCategories");
+        //.addPathPatterns("categoryMng/getCategories");
     }
+
 }

@@ -2,6 +2,7 @@ package cn.codeprobe.admin.service.impl;
 
 import cn.codeprobe.admin.service.AdminPassportService;
 import cn.codeprobe.admin.service.base.AdminBaseService;
+import cn.codeprobe.api.threadlocal.SubjectContext;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.po.AdminUserDO;
@@ -25,6 +26,10 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
             if (Boolean.TRUE.equals(isPasswordMatched(password, encryptedPwd))) {
                 // 登陆成功，进行token、cookie配置
                 adminLoggedSetting(adminUserDO);
+                // ThreadLocal 添加 Subject
+                if (!SubjectContext.checkHasAdmin()) {
+                    SubjectContext.setAdmin(adminUserDO);
+                }
             } else {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_NOT_EXIT_ERROR);
             }
@@ -55,6 +60,10 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
                         if (Boolean.TRUE.equals(pass)) {
                             // 人脸识别登陆成功，设置管理员登陆参数
                             adminLoggedSetting(adminUserDO);
+                            // ThreadLocal 添加 Subject
+                            if (!SubjectContext.checkHasAdmin()) {
+                                SubjectContext.setAdmin(adminUserDO);
+                            }
                         } else {
                             // 人脸识别失败
                             GlobalExceptionManage.internal(ResponseStatusEnum.FACE_VERIFY_TYPE_ERROR);
@@ -81,5 +90,7 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
         setCookie(COOKIE_NAME_ADMIN_ID, "", COOKIE_TIME_OUT, domainName);
         setCookie(COOKIE_NAME_ADMIN_TOKEN, "", COOKIE_TIME_OUT, domainName);
         setCookie(COOKIE_NAME_ADMIN_NAME, "", COOKIE_TIME_OUT, domainName);
+        // ThreadLocal移除 Subject
+        SubjectContext.removeAdmin();
     }
 }
