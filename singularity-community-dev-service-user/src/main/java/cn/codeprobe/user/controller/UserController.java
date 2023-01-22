@@ -43,8 +43,6 @@ public class UserController extends ApiController implements UserControllerApi {
 
     @Override
     public JsonResult queryUserAccountInfo(String userId) {
-        //System.out.println("Subject: " + JSONUtil.toJsonStr(SubjectContext.getUser()) + "userId: " + SubjectContext.getUser().getId());
-        //System.out.println("Subject: " + JSONUtil.toJsonStr(SubjectContext.getAdmin()) + "adminId: " + SubjectContext.getAdmin().getId());
         // 校验 userId
         if (CharSequenceUtil.isBlank(userId)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);

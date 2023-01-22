@@ -1,6 +1,7 @@
 package cn.codeprobe.article.base;
 
 import cn.codeprobe.article.mapper.ArticleMapper;
+import cn.codeprobe.article.mapper.ArticleMapperCustom;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.IdWorker;
 import com.github.pagehelper.PageInfo;
@@ -17,6 +18,8 @@ public class ArticleBaseService {
     public IdWorker idWorker;
     @Resource
     public ArticleMapper articleMapper;
+    @Resource
+    public ArticleMapperCustom articleMapperCustom;
 
 
     /**

@@ -42,4 +42,9 @@ public interface ArticleService {
      * @param articleId 文章ID
      */
     void removeArticleByArticleId(String userId, String articleId);
+
+    /**
+     * 发布预约发布文章
+     */
+    void publishAppointedArticle();
 }

@@ -4,8 +4,9 @@ import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.result.JsonResult;
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Lionido
  */
-@RestController
+@Controller
 public class NotFoundController extends AbstractErrorController {
 
     public NotFoundController(ErrorAttributes errorAttributes) {
@@ -34,10 +35,10 @@ public class NotFoundController extends AbstractErrorController {
     /**
      * 默认路径/error，可以通过server.error.path配置
      */
+    @ResponseBody
     @RequestMapping(("${server.error.path:/error}"))
     public JsonResult notFoundError(HttpServletRequest request, HttpServletResponse response) {
-        // HttpStatus 设置为200，不能设置为404  否则前端接受不了
-        //response.setStatus(HttpStatus.OK.value());
+        // response.setStatus(HttpStatus.OK.value()); 前端要求 HttpStatus 设置为200，不能设置为404
         return JsonResult.errorCustom(ResponseStatusEnum.NOT_FOUND_ERROR);
     }
 }

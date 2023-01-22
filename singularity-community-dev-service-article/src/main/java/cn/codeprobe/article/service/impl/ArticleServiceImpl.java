@@ -2,6 +2,8 @@ package cn.codeprobe.article.service.impl;
 
 import cn.codeprobe.article.base.ArticleBaseService;
 import cn.codeprobe.article.service.ArticleService;
+import cn.codeprobe.enums.Article;
+import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.NewArticleBO;
@@ -24,6 +26,11 @@ import java.util.List;
 public class ArticleServiceImpl extends ArticleBaseService implements ArticleService {
 
     @Override
+    public void publishAppointedArticle() {
+        articleMapperCustom.updateAppointToPublish();
+    }
+
+    @Override
     public PagedGridResult pageListUsers(String userId, String keyword, Integer status,
                                          Date startDate, Date endDate, Integer page, Integer pageSize) {
 
@@ -37,11 +44,13 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
         }
         // 文章状态
         if (status != null) {
-            if (status == 12) {
-                // 如果时 12 ，同时查询1和2
-                criteria.andEqualTo("articleStatus", 1)
-                        .orEqualTo("articleStatus", 2);
-            } else if (status == 3 || status == 4 || status == 5) {
+            // 如果时 12 ，同时查询1和2
+            if (status.equals(Article.STATUS_VERIFYING.type)) {
+                criteria.andEqualTo("articleStatus", Article.STATUS_MACHINE_VERIFYING.type)
+                        .orEqualTo("articleStatus", Article.STATUS_MANUAL_VERIFYING.type);
+            } else if (status.equals(Article.STATUS_APPROVED.type)
+                    || status.equals(Article.STATUS_REJECTED.type)
+                    || status.equals(Article.STATUS_RECALLED.type)) {
                 criteria.andEqualTo("articleStatus", status);
             }
         }
@@ -54,7 +63,7 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
             criteria.andLessThanOrEqualTo("createTime", endDate);
         }
         // 非逻辑删除
-        criteria.andEqualTo("isDelete", 0);
+        criteria.andEqualTo("isDelete", Article.UN_DELETED.type);
         // 分页查询
         PageHelper.startPage(page, pageSize);
         List<ArticleDO> list = articleMapper.selectByExample(example);
@@ -67,11 +76,11 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("publishUserId", userId)
                 .andEqualTo("id", articleId)
-                .andEqualTo("isDelete", 0);
+                .andEqualTo("isDelete", Article.UN_DELETED.type);
         ArticleDO articleDO = new ArticleDO();
-        articleDO.setIsDelete(1);
+        articleDO.setIsDelete(Article.DELETED.type);
         int result = articleMapper.updateByExampleSelective(articleDO, example);
-        if (!"1".equalsIgnoreCase(String.valueOf(result))) {
+        if (result != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
         }
     }
@@ -83,7 +92,7 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
         Integer articleType = newArticleBO.getArticleType();
         // 设置文章图文类型
         articleDO.setArticleType(articleType);
-        if (articleType == 1) {
+        if (articleType.equals(Article.HAS_COVER.type)) {
             // 图文类型，设置文章分面
             articleDO.setArticleCover(newArticleBO.getArticleCover());
         }
@@ -94,27 +103,27 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
         // 文章内容
         articleDO.setContent(newArticleBO.getContent());
         // 文章状态 （文章状态，1：审核中（用户已提交），2：机审结束，等待人工审核，3：审核通过（已发布），4：审核未通过；5：文章撤回（已发布的情况下才能撤回和删除）
-        articleDO.setArticleStatus(1);
+        articleDO.setArticleStatus(Article.STATUS_MACHINE_VERIFYING.type);
         // 所属分类
         articleDO.setCategoryId(newArticleBO.getCategoryId());
         // 初始化评论数量
-        articleDO.setCommentCounts(0);
+        articleDO.setCommentCounts(Article.INITIAL_COMMENT_COUNTS.type);
         // 初始化阅读数量
-        articleDO.setReadCounts(0);
+        articleDO.setReadCounts(Article.INITIAL_READ_COUNTS.type);
         // 是否删除 （逻辑删除状态，非物理删除，1：删除，0：未删除）
-        articleDO.setIsDelete(0);
+        articleDO.setIsDelete(Article.UN_DELETED.type);
         // 文章发布者
         articleDO.setPublishUserId(newArticleBO.getPublishUserId());
         // 是否预约发布  （是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布    在预约时间到点的时候，把1改为0，则发布
         articleDO.setIsAppoint(newArticleBO.getIsAppoint());
         // 及时发布
-        if (newArticleBO.getIsAppoint() == 0 && newArticleBO.getPublishTime() == null) {
+        if (newArticleBO.getIsAppoint().equals(Article.UN_APPOINTED.type) && newArticleBO.getPublishTime() == null) {
             // 发布时间与创建时间一致
             Date date = new Date();
             articleDO.setPublishTime(date);
             articleDO.setCreateTime(date);
             // 预约发布
-        } else if (newArticleBO.getIsAppoint() == 1 && newArticleBO.getPublishTime() != null) {
+        } else if (newArticleBO.getIsAppoint().equals(Article.APPOINTED.type) && newArticleBO.getPublishTime() != null) {
             // 文章创建时间
             articleDO.setPublishTime(newArticleBO.getPublishTime());
             articleDO.setCreateTime(newArticleBO.getPublishTime());
@@ -125,7 +134,7 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
 
         // 保存文章到数据库
         int result = articleMapper.insert(articleDO);
-        if (result != 1) {
+        if (result != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_CREATE_ERROR);
         }
     }
