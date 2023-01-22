@@ -70,23 +70,8 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
         return setterPageGrid(list, page);
     }
 
-    @Override
-    public void removeArticleByArticleId(String userId, String articleId) {
-        Example example = new Example(ArticleDO.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("publishUserId", userId)
-                .andEqualTo("id", articleId)
-                .andEqualTo("isDelete", Article.UN_DELETED.type);
-        ArticleDO articleDO = new ArticleDO();
-        articleDO.setIsDelete(Article.DELETED.type);
-        int result = articleMapper.updateByExampleSelective(articleDO, example);
-        if (result != MybatisResult.SUCCESS.result) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
-        }
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
+    @Override
     public void saveArticle(@NotNull NewArticleBO newArticleBO) {
         ArticleDO articleDO = new ArticleDO();
         Integer articleType = newArticleBO.getArticleType();
@@ -96,8 +81,9 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
             // 图文类型，设置文章分面
             articleDO.setArticleCover(newArticleBO.getArticleCover());
         }
+        String articleId = idWorker.nextIdStr();
         // 生成文章主键
-        articleDO.setId(idWorker.nextIdStr());
+        articleDO.setId(articleId);
         // 文章标题
         articleDO.setTitle(newArticleBO.getTitle());
         // 文章内容
@@ -131,11 +117,27 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
         // 文章更新时间
         articleDO.setUpdateTime(new Date());
 
-
         // 保存文章到数据库
         int result = articleMapper.insert(articleDO);
         if (result != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_CREATE_ERROR);
+        }
+        // 阿里云 AI 文本审核
+        scanText(articleId, newArticleBO.getContent());
+    }
+
+    @Override
+    public void removeArticleByArticleId(String userId, String articleId) {
+        Example example = new Example(ArticleDO.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("publishUserId", userId)
+                .andEqualTo("id", articleId)
+                .andEqualTo("isDelete", Article.UN_DELETED.type);
+        ArticleDO articleDO = new ArticleDO();
+        articleDO.setIsDelete(Article.DELETED.type);
+        int result = articleMapper.updateByExampleSelective(articleDO, example);
+        if (result != MybatisResult.SUCCESS.result) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
         }
     }
 }

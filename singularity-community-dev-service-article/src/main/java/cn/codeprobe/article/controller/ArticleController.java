@@ -28,7 +28,6 @@ public class ArticleController extends ApiController implements ArticleControlle
     private ArticleService articleService;
 
 
-
     @Override
     public JsonResult addNewArticle(NewArticleBO newArticleBO, BindingResult result) {
         // 校验BO数据

@@ -1,20 +1,19 @@
 package cn.codeprobe.article.task;
 
 import cn.codeprobe.article.service.ArticleService;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import javax.annotation.Resource;
 import java.time.LocalDate;
 
+
 /**
  * 文章定时发布任务
  *
  * @author Lionido
+ * @ Configuration 标记配置类
+ * @ EnableScheduling 开启定时任务
  */
-@Configuration
-@EnableScheduling
 public class ArticleAppointPublishTask {
 
     @Resource
