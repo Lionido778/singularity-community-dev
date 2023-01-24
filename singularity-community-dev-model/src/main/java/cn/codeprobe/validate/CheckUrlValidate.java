@@ -9,6 +9,7 @@ import javax.validation.ConstraintValidatorContext;
 
 /**
  * 自定义 url校验
+ *
  * @author Lionido
  */
 public class CheckUrlValidate implements ConstraintValidator<CheckUrl, String> {

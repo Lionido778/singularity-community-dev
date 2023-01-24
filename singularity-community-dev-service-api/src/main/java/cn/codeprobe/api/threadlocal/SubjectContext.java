@@ -18,16 +18,12 @@ public class SubjectContext {
     public SubjectContext() {
     }
 
-    public static void setUser(AppUserDO user) {
-        USER_DO_THREAD_LOCAL.set(user);
-    }
-
     public static AppUserDO getUser() {
         return USER_DO_THREAD_LOCAL.get();
     }
 
-    public static void setAdmin(AdminUserDO admin) {
-        ADMIN_USER_DO_THREAD_LOCAL.set(admin);
+    public static void setUser(AppUserDO user) {
+        USER_DO_THREAD_LOCAL.set(user);
     }
 
     public static boolean checkHasUser() {
@@ -42,6 +38,10 @@ public class SubjectContext {
 
     public static AdminUserDO getAdmin() {
         return ADMIN_USER_DO_THREAD_LOCAL.get();
+    }
+
+    public static void setAdmin(AdminUserDO admin) {
+        ADMIN_USER_DO_THREAD_LOCAL.set(admin);
     }
 
     public static void removeUser() {

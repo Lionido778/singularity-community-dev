@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * 自定义注解：检查url地址
+ *
  * @author Lionido
  */
 @Target(ElementType.FIELD)
@@ -17,6 +18,8 @@ import java.lang.annotation.Target;
 public @interface CheckUrl {
 
     String message() default "url格式不正确！";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
 }

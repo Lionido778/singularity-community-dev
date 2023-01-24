@@ -20,14 +20,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ApiInterceptor {
 
-    @Resource
-    public RedisUtil redisUtil;
-    @Resource
-    private HttpServletRequest request;
-    @Resource
-    private HttpServletResponse response;
-
-
     /**
      * sms
      */
@@ -49,17 +41,19 @@ public class ApiInterceptor {
     public static final String HEADER_USER_TOKEN = "headerUserToken";
     public static final String HEADER_ADMIN_ID = "adminUserId";
     public static final String HEADER_ADMIN_TOKEN = "adminUserToken";
-
     public static final String REDIS_USER_INFO = "user_info";
     public static final Integer USER_ACTIVE = UserStatus.ACTIVE.type;
-
-
     /**
      * 登录状态
      */
     public static final Boolean LOGGED = true;
     public static final Boolean UN_LOGGED = false;
-
+    @Resource
+    public RedisUtil redisUtil;
+    @Resource
+    private HttpServletRequest request;
+    @Resource
+    private HttpServletResponse response;
 
     /**
      * 登录状态检查

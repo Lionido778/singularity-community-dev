@@ -17,22 +17,20 @@ import javax.annotation.Resource;
 @RestController
 public class TestController implements TestAdminControllerApi {
 
+    static final Logger logger = LoggerFactory.getLogger("TestController");
     @Resource
     IdWorker idWorker;
-
-    static final Logger logger = LoggerFactory.getLogger("TestController");
-
-
-    @Override
-    public Object hello() {
-        System.out.println(idWorker.nextIdStr());
-        return JsonResult.ok("hello! service-admin");
-    }
 
     public static void main(String[] args) {
         String md5DigestAsHex = DigestUtils.md5DigestAsHex("admin".getBytes());
         System.out.println(md5DigestAsHex);
         String hashpw = BCrypt.hashpw(md5DigestAsHex, BCrypt.gensalt());
         System.out.println(hashpw);
+    }
+
+    @Override
+    public Object hello() {
+        System.out.println(idWorker.nextIdStr());
+        return JsonResult.ok("hello! service-admin");
     }
 }

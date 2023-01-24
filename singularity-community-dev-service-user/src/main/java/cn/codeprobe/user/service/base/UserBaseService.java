@@ -23,28 +23,12 @@ import java.util.List;
  */
 public class UserBaseService extends ApiController {
 
-    @Resource
-    public AppUserMapper appUserMapper;
-    @Resource
-    public IdWorker idWorker;
-    @Resource
-    public RedisUtil redisUtil;
-    @Resource
-    public SmsUtil smsUtil;
-
-    /**
-     * domain-name
-     */
-    @Value("${website.domain-name}")
-    public String domainName;
-
     /**
      * sms
      */
     public static final String MOBILE_SMS_CODE = "mobile_sms_code";
     public static final Long MOBILE_SMS_CODE_TIMEOUT = (long) (30 * 60);
     public static final Integer MOBILE_SMS_CODE_DIGITS = 6;
-
     /**
      * user
      */
@@ -56,7 +40,6 @@ public class UserBaseService extends ApiController {
     public static final Integer USER_SEX = UserSex.SECRET.type;
     public static final Integer USER_TOTAL_INCOME = 0;
     public static final String USER_FACE = "https://img2.baidu.com/it/u=132501275,3612619305&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500";
-
     /**
      * token & cookie
      */
@@ -67,7 +50,19 @@ public class UserBaseService extends ApiController {
     public static final String COOKIE_NAME_TOKEN = "utoken";
     public static final Integer COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
     public static final Integer COOKIE_DELETE = 0;
-
+    @Resource
+    public AppUserMapper appUserMapper;
+    @Resource
+    public IdWorker idWorker;
+    @Resource
+    public RedisUtil redisUtil;
+    @Resource
+    public SmsUtil smsUtil;
+    /**
+     * domain-name
+     */
+    @Value("${website.domain-name}")
+    public String domainName;
 
     /**
      * 获取用户

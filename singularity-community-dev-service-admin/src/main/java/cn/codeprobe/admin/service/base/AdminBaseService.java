@@ -25,6 +25,33 @@ import java.util.UUID;
  */
 public class AdminBaseService extends ApiController {
 
+    /**
+     * token
+     */
+    public static final String REDIS_ADMIN_TOKEN = "admin_token";
+    public static final String REDIS_ADMIN_INFO = "admin_info";
+    public static final String REDIS_ALL_CATEGORIES = "redis_all_categories";
+    public static final Integer REDIS_ADMIN_TOKEN_TIMEOUT = 30 * 60;
+    /**
+     * cookie
+     */
+    public static final String COOKIE_NAME_ADMIN_ID = "aid";
+    public static final String COOKIE_NAME_ADMIN_TOKEN = "atoken";
+    public static final String COOKIE_NAME_ADMIN_NAME = "aname";
+    public static final Integer COOKIE_ADMIN_MAX_AGE = 24 * 60 * 60;
+    public static final Integer COOKIE_TIME_OUT = 0;
+    /**
+     * 人脸识别
+     */
+    public static final Float TARGET_CONFIDENCE = 80F;
+    public static final String FACE_TEMP_DIR = "/workspace/compare";
+    public static final String LOGIN_FACE_NAME = "登陆头像";
+    public static final String FACE_DATA_NAME = "人脸数据";
+    public static final String EXTEND_NAME = ".png";
+    /**
+     * file url
+     */
+    public static final String FILE_SERVER_URL = "http://file.codeprobe.cn:8004/file/readBase64FromGridFS?faceId=";
     @Resource
     public AdminUserMapper adminUserMapper;
     @Resource
@@ -39,44 +66,11 @@ public class AdminBaseService extends ApiController {
     public FriendLinkRepository friendLinkRepository;
     @Resource
     public CategoryMapper categoryMapper;
-
     /**
      * domain-name
      */
     @Value("${website.domain-name}")
     public String domainName;
-
-    /**
-     * token
-     */
-    public static final String REDIS_ADMIN_TOKEN = "admin_token";
-    public static final String REDIS_ADMIN_INFO = "admin_info";
-    public static final String REDIS_ALL_CATEGORIES = "redis_all_categories";
-    public static final Integer REDIS_ADMIN_TOKEN_TIMEOUT = 30 * 60;
-
-    /**
-     * cookie
-     */
-    public static final String COOKIE_NAME_ADMIN_ID = "aid";
-    public static final String COOKIE_NAME_ADMIN_TOKEN = "atoken";
-    public static final String COOKIE_NAME_ADMIN_NAME = "aname";
-    public static final Integer COOKIE_ADMIN_MAX_AGE = 24 * 60 * 60;
-    public static final Integer COOKIE_TIME_OUT = 0;
-
-    /**
-     * 人脸识别
-     */
-    public static final Float TARGET_CONFIDENCE = 80F;
-    public static final String FACE_TEMP_DIR = "/workspace/compare";
-    public static final String LOGIN_FACE_NAME = "登陆头像";
-    public static final String FACE_DATA_NAME = "人脸数据";
-    public static final String EXTEND_NAME = ".png";
-
-    /**
-     * file url
-     */
-    public static final String FILE_SERVER_URL = "http://file.codeprobe.cn:8004/file/readBase64FromGridFS?faceId=";
-
 
     /**
      * 获取管理员用户信息

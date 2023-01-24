@@ -26,13 +26,67 @@ import java.util.List;
 public class ArticleServiceImpl extends ArticleBaseService implements ArticleService {
 
     @Override
+    public void withdrawArticle(String articleId, String userId) {
+        Example example = new Example(ArticleDO.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("publishUserId", userId);
+        criteria.andEqualTo("id", articleId);
+        int count = articleMapper.selectCountByExample(example);
+        if (count >= 1) {
+            ArticleDO articleDO = new ArticleDO();
+            articleDO.setArticleStatus(Article.STATUS_RECALLED.type);
+            int res = articleMapper.updateByExampleSelective(articleDO, example);
+            if (!MybatisResult.SUCCESS.result.equals(res)) {
+                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
+            }
+        } else {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
+        }
+    }
+
+    @Override
+    public void manualReviewArticle(String articleId, Integer passOrNot) {
+        boolean isExist = articleMapper.existsWithPrimaryKey(articleId);
+        if (isExist) {
+            ArticleDO articleDO = new ArticleDO();
+            articleDO.setId(articleId);
+            if (passOrNot.equals(Article.MANUAL_REVIEW_PASS.type)) {
+                articleDO.setArticleStatus(Article.STATUS_APPROVED.type);
+            } else if (passOrNot.equals(Article.MANUAL_REVIEW_BLOCK.type)) {
+                articleDO.setArticleStatus(Article.STATUS_REJECTED.type);
+            }
+            int result = articleMapper.updateByPrimaryKeySelective(articleDO);
+            if (!MybatisResult.SUCCESS.result.equals(result)) {
+                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
+            }
+        } else {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
+        }
+    }
+
+    @Override
+    public PagedGridResult pageListAllArticles(Integer status, Integer page, Integer pageSize) {
+        Example example = new Example(ArticleDO.class);
+        example.orderBy("createTime").desc();
+        Example.Criteria criteria = example.createCriteria();
+        // 文章状态，如果是 12（审核中） ，同时查询1（机器审核）和2（人工审核）
+        articleCriteriaStatus(status, criteria);
+        // 分页查询
+        PageHelper.startPage(page, pageSize);
+        List<ArticleDO> list = articleMapper.selectByExample(example);
+        return setterPageGrid(list, page);
+    }
+
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
     public void publishAppointedArticle() {
         articleMapperCustom.updateAppointToPublish();
     }
 
     @Override
-    public PagedGridResult pageListUsers(String userId, String keyword, Integer status,
-                                         Date startDate, Date endDate, Integer page, Integer pageSize) {
+    public PagedGridResult pageListArticles(String userId, String keyword, Integer status,
+                                            Date startDate, Date endDate, Integer page, Integer pageSize) {
 
         Example example = new Example(ArticleDO.class);
         example.orderBy("createTime").desc();
@@ -44,15 +98,8 @@ public class ArticleServiceImpl extends ArticleBaseService implements ArticleSer
         }
         // 文章状态
         if (status != null) {
-            // 如果时 12 ，同时查询1和2
-            if (status.equals(Article.STATUS_VERIFYING.type)) {
-                criteria.andEqualTo("articleStatus", Article.STATUS_MACHINE_VERIFYING.type)
-                        .orEqualTo("articleStatus", Article.STATUS_MANUAL_VERIFYING.type);
-            } else if (status.equals(Article.STATUS_APPROVED.type)
-                    || status.equals(Article.STATUS_REJECTED.type)
-                    || status.equals(Article.STATUS_RECALLED.type)) {
-                criteria.andEqualTo("articleStatus", status);
-            }
+            // 文章状态，如果是 12（审核中） ，同时查询1（机器审核）和2（人工审核）
+            articleCriteriaStatus(status, criteria);
         }
         // 起始时间
         if (startDate != null) {

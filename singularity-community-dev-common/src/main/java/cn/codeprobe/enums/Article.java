@@ -9,6 +9,7 @@ public enum Article {
     /**
      * 文章状态
      */
+    SELECT_ALL(0, "查询全部"),
     STATUS_VERIFYING(12, "审核中"),
     STATUS_MACHINE_VERIFYING(1, "机器审核中"),
     STATUS_MANUAL_VERIFYING(2, "人工审核中"),
@@ -33,6 +34,11 @@ public enum Article {
     APPOINTED(1, "预约发布"),
     UN_APPOINTED(0, "及时发布"),
 
+    /**
+     * 人工审核
+     */
+    MANUAL_REVIEW_PASS(1, "文章人工审核通过！"),
+    MANUAL_REVIEW_BLOCK(0, "文章人工审核失败！"),
 
     /**
      * 初始化设置

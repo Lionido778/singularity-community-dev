@@ -25,7 +25,6 @@ public class AdminLoginBO {
     private String img64;
 
 
-
     public String getUsername() {
         return username;
     }

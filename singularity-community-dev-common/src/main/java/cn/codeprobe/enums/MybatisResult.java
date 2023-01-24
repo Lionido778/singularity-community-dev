@@ -6,7 +6,7 @@ package cn.codeprobe.enums;
 
 public enum MybatisResult {
     /**
-     * 持久层 操作是否成功呢
+     * 持久层 操作是否成功
      */
     SUCCESS(1, "持久层操作成功！");
 

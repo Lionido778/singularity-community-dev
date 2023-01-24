@@ -31,6 +31,36 @@ public class JsonResult {
      */
     private Object data;
 
+    public JsonResult(Object data) {
+        this.status = ResponseStatusEnum.SUCCESS.status();
+        this.msg = ResponseStatusEnum.SUCCESS.msg();
+        this.success = ResponseStatusEnum.SUCCESS.success();
+        this.data = data;
+    }
+
+    public JsonResult(ResponseStatusEnum responseStatus) {
+        this.status = responseStatus.status();
+        this.msg = responseStatus.msg();
+        this.success = responseStatus.success();
+    }
+
+    public JsonResult(ResponseStatusEnum responseStatus, Object data) {
+        this.status = responseStatus.status();
+        this.msg = responseStatus.msg();
+        this.success = responseStatus.success();
+        this.data = data;
+    }
+
+
+    public JsonResult(ResponseStatusEnum responseStatus, String msg) {
+        this.status = responseStatus.status();
+        this.msg = msg;
+        this.success = responseStatus.success();
+    }
+
+    public JsonResult() {
+    }
+
     /**
      * 成功返回，不带有数据的，直接调用ok方法，data无须传入（其实就是null）
      */
@@ -44,14 +74,6 @@ public class JsonResult {
     public static JsonResult ok(Object data) {
         return new JsonResult(data);
     }
-
-    public JsonResult(Object data) {
-        this.status = ResponseStatusEnum.SUCCESS.status();
-        this.msg = ResponseStatusEnum.SUCCESS.msg();
-        this.success = ResponseStatusEnum.SUCCESS.success();
-        this.data = data;
-    }
-
 
     /**
      * 错误返回，直接调用error方法即可，当然也可以在ResponseStatusEnum中自定义错误后再返回也都可以
@@ -95,28 +117,6 @@ public class JsonResult {
 
     public static JsonResult exception(ResponseStatusEnum responseStatus) {
         return new JsonResult(responseStatus);
-    }
-
-    public JsonResult(ResponseStatusEnum responseStatus) {
-        this.status = responseStatus.status();
-        this.msg = responseStatus.msg();
-        this.success = responseStatus.success();
-    }
-
-    public JsonResult(ResponseStatusEnum responseStatus, Object data) {
-        this.status = responseStatus.status();
-        this.msg = responseStatus.msg();
-        this.success = responseStatus.success();
-        this.data = data;
-    }
-
-    public JsonResult(ResponseStatusEnum responseStatus, String msg) {
-        this.status = responseStatus.status();
-        this.msg = msg;
-        this.success = responseStatus.success();
-    }
-
-    public JsonResult() {
     }
 
     public Integer getStatus() {

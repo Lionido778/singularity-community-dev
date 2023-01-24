@@ -24,7 +24,7 @@ public class FriendLinkServiceImpl extends AdminBaseService implements FriendLin
         // 检查友情链接是否存在
         String linkName = friendLinkBO.getLinkName();
         Boolean isExist = checkFriendLinkIsExist(linkName);
-        if (Boolean.TRUE.equals(isExist)){
+        if (Boolean.TRUE.equals(isExist)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_FRIEND_LINK_IS_EXISTED);
         }
         FriendLinkDO friendLinkDO = new FriendLinkDO();

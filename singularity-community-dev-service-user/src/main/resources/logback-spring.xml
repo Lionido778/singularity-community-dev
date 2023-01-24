@@ -4,11 +4,13 @@
     <!-- 指定日志文件的存储地址，使用绝对路径 -->
     <property name="LOG_HOME" value="D:/WorkSpace/logs/singularity-community-dev/service-user"/>
 
+    <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+    <property name="CONSOLE_PATTERN"
+              value="%white(%d{mm:ss.SSS}) %green([%thread]) %cyan(%-5level) %yellow(%logger{36}) %magenta(-) %white(%msg%n)"/>
     <!-- Console 输出设置 -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
-            <pattern>%white(%d{mm:ss.SSS}) %green([%thread]) %cyan(%-5level) %yellow(%logger{36}) %magenta(-) %white(%msg%n)</pattern>
+            <pattern>${CONSOLE_PATTERN}</pattern>
             <charset>utf8</charset>
         </encoder>
     </appender>
@@ -25,7 +27,7 @@
     </appender>
 
     <!--<logger name="org.apache.ibatis.cache.decorators.LoggingCache" level="DEBUG" additivity="false">-->
-        <!--<appender-ref ref="CONSOLE"/>-->
+    <!--<appender-ref ref="CONSOLE"/>-->
     <!--</logger>-->
 
     <root level="info">

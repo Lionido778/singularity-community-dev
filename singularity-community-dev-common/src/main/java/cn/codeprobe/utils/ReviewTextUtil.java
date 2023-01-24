@@ -30,6 +30,7 @@ import java.util.Map;
 @Component
 public class ReviewTextUtil {
 
+    private static final String TEXT_ABUSE_LABEL = "abuse";
     @Resource
     private AliyunResource aliyunResource;
 
@@ -44,7 +45,7 @@ public class ReviewTextUtil {
         return new com.aliyun.imageaudit20191230.Client(config);
     }
 
-    public Map<String, String> scanText(String content, String label1) {
+    public Map<String, String> scanText(String content) {
         // "YOUR_ACCESS_KEY_ID", "YOUR_ACCESS_KEY_SECRET" 的生成请参见：https://help.aliyun.com/document_detail/175144.html
         // 如果您是用的子账号AccessKey，还需要为子账号授予权限AliyunVIAPIFullAccess，请参见：https://help.aliyun.com/document_detail/145025.html
         com.aliyun.imageaudit20191230.Client client = null;
@@ -57,8 +58,9 @@ public class ReviewTextUtil {
         ScanTextRequest.ScanTextRequestTasks tasks = new ScanTextRequest.ScanTextRequestTasks()
                 .setContent(content);
         // label
-        ScanTextRequest.ScanTextRequestLabels labels = new ScanTextRequest.ScanTextRequestLabels()
-                .setLabel(label1);
+        ScanTextRequest.ScanTextRequestLabels labels = new ScanTextRequest.ScanTextRequestLabels();
+        labels.setLabel(TEXT_ABUSE_LABEL);
+
         com.aliyun.imageaudit20191230.models.ScanTextRequest scanTextRequest = new com.aliyun.imageaudit20191230.models.ScanTextRequest()
                 .setLabels(Collections.singletonList(
                         labels

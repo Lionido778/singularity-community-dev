@@ -17,6 +17,10 @@ import javax.annotation.Resource;
 public class TestController implements TestUserControllerApi {
 
     static final Logger logger = LoggerFactory.getLogger("TestController");
+    @Resource
+    private RedisUtil redisUtil;
+    @Resource
+    private SmsUtil smsUtil;
 
     @Override
     public Object hello() {
@@ -30,17 +34,11 @@ public class TestController implements TestUserControllerApi {
         return JsonResult.ok();
     }
 
-    @Resource
-    private RedisUtil redisUtil;
-
     @Override
     public JsonResult redis() {
         redisUtil.set("test", "测试值");
         return JsonResult.ok(redisUtil.get("test"));
     }
-
-    @Resource
-    private SmsUtil smsUtil;
 
     @Override
     public Object sendSms() throws Exception {

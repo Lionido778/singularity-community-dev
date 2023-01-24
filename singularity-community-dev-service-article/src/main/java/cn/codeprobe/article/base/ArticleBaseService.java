@@ -3,6 +3,7 @@ package cn.codeprobe.article.base;
 import cn.codeprobe.article.mapper.ArticleMapper;
 import cn.codeprobe.article.mapper.ArticleMapperCustom;
 import cn.codeprobe.enums.Article;
+import cn.codeprobe.enums.ContentSecurity;
 import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
@@ -56,10 +57,12 @@ public class ArticleBaseService {
      * @param content   文章内容
      */
     public void scanText(String articleId, String content) {
-        Map<String, String> map = reviewTextUtil.scanText(content, "ad");
-        boolean block = map.containsValue("block");
-        boolean pass = map.containsValue("pass");
-        boolean review = map.containsValue("review");
+
+        // 调用 阿里云 AI 文本内容审核工具 ()
+        Map<String, String> map = reviewTextUtil.scanText(content);
+        boolean block = map.containsValue(ContentSecurity.SUGGESTION_BLOCK.label);
+        boolean pass = map.containsValue(ContentSecurity.SUGGESTION_PASS.label);
+        boolean review = map.containsValue(ContentSecurity.SUGGESTION_REVIEW.label);
         ArticleDO articleDO = new ArticleDO();
         Example example = new Example(ArticleDO.class);
         Example.Criteria criteria = example.createCriteria();
@@ -74,6 +77,25 @@ public class ArticleBaseService {
         int result = articleMapper.updateByExampleSelective(articleDO, example);
         if (result != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
+        }
+    }
+
+    /**
+     * 文章状态 查询条件构造
+     *
+     * @param status   状态
+     * @param criteria 条件
+     */
+    public void articleCriteriaStatus(Integer status, Example.Criteria criteria) {
+        if (status != null) {
+            if (status.equals(Article.STATUS_VERIFYING.type)) {
+                criteria.andEqualTo("articleStatus", Article.STATUS_MACHINE_VERIFYING.type)
+                        .orEqualTo("articleStatus", Article.STATUS_MANUAL_VERIFYING.type);
+            } else if (status.equals(Article.STATUS_APPROVED.type)
+                    || status.equals(Article.STATUS_REJECTED.type)
+                    || status.equals(Article.STATUS_RECALLED.type)) {
+                criteria.andEqualTo("articleStatus", status);
+            }
         }
     }
 }

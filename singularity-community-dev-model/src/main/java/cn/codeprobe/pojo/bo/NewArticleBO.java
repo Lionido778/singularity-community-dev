@@ -48,7 +48,6 @@ public class NewArticleBO {
     private String publishUserId;
 
 
-
     public String getTitle() {
         return title;
     }

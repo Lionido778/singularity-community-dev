@@ -2,6 +2,7 @@ package cn.codeprobe.enums;
 
 /**
  * 人脸比对类型 枚举
+ *
  * @author Lionido
  */
 public enum FaceVerifyType {

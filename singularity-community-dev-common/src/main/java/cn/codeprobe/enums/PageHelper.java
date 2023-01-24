@@ -5,7 +5,7 @@ package cn.codeprobe.enums;
  */
 public enum PageHelper {
     /**
-     *  默认 分页
+     * 默认 分页
      */
     DEFAULT_PAGE(1, 10);
 

@@ -2,6 +2,7 @@ package cn.codeprobe.pojo.vo;
 
 /**
  * 用户基本信息 VO
+ *
  * @author Lionido
  */
 public class UserInfoVO {

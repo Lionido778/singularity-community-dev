@@ -50,6 +50,7 @@ public class Interceptors implements WebMvcConfigurer {
                 .addPathPatterns("/file/uploadFace")
                 .addPathPatterns("/file/uploadSerialsFiles")
                 .addPathPatterns("/article/addNewArticle")
+                .addPathPatterns("/article/withdraw")
                 .addPathPatterns("/article/queryPageListArticles");
 
         // 检查管理员登录状态。若未登录，拦截
@@ -67,7 +68,9 @@ public class Interceptors implements WebMvcConfigurer {
                 .addPathPatterns("/categoryMng/deleteCategory")
                 .addPathPatterns("/userMng/queryPageListUsers")
                 .addPathPatterns("/userMng/queryUserInfo")
-                .addPathPatterns("/userMng/freezeUserOrNot");
+                .addPathPatterns("/userMng/freezeUserOrNot")
+                .addPathPatterns("/article/doReview")
+                .addPathPatterns("/article/queryAllPageListArticles");
 
         // 检查用户的激活状态,若未激活进行拦截
         //registry.addInterceptor(userActivityInterceptor());
