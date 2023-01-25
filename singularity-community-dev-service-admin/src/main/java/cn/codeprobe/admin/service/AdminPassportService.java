@@ -16,7 +16,7 @@ public interface AdminPassportService {
     /**
      * 人脸识别登录
      *
-     * @param username  用户名
+     * @param username 用户名
      * @param img64Face 人脸登录图片
      */
     void loginByFace(String username, String img64Face);

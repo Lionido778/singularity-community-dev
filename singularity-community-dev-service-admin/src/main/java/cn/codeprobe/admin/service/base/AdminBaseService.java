@@ -1,24 +1,30 @@
 package cn.codeprobe.admin.service.base;
 
+import java.util.List;
+import java.util.UUID;
+
+import javax.annotation.Resource;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCrypt;
+import org.springframework.util.DigestUtils;
+import org.springframework.web.client.RestTemplate;
+
+import com.github.pagehelper.PageInfo;
+
 import cn.codeprobe.admin.mapper.AdminUserMapper;
 import cn.codeprobe.admin.mapper.CategoryMapper;
 import cn.codeprobe.admin.repository.FriendLinkRepository;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.pojo.po.AdminUserDO;
+import cn.codeprobe.pojo.po.CategoryDO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.FaceVerifyUtil;
 import cn.codeprobe.utils.IdWorker;
 import cn.codeprobe.utils.RedisUtil;
-import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.bcrypt.BCrypt;
-import org.springframework.util.DigestUtils;
-import org.springframework.web.client.RestTemplate;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.json.JSONUtil;
 import tk.mybatis.mapper.entity.Example;
-
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Lionido
@@ -51,7 +57,8 @@ public class AdminBaseService extends ApiController {
     /**
      * file url
      */
-    public static final String FILE_SERVER_URL = "http://file.codeprobe.cn:8004/file/readBase64FromGridFS?faceId=";
+    public static final String FILE_SERVER_URL =
+        "http://file.codeprobe.cn:8004/admin/file/readBase64FromGridFS?faceId=";
     @Resource
     public AdminUserMapper adminUserMapper;
     @Resource
@@ -132,6 +139,22 @@ public class AdminBaseService extends ApiController {
         gridResult.setTotal(pageInfo.getPages());
         gridResult.setRecords(pageInfo.getTotal());
         return gridResult;
+    }
+
+    /**
+     * 门户、创作中心 获取分类列表
+     *
+     * @return List<CategoryDO>
+     */
+    public List<CategoryDO> getCategoryDOList() {
+        String jsonCategoriesList = redisUtil.get(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES);
+        if (CharSequenceUtil.isNotBlank(jsonCategoriesList)) {
+            return JSONUtil.toList(jsonCategoriesList, CategoryDO.class);
+        } else {
+            List<CategoryDO> list = categoryMapper.selectAll();
+            redisUtil.set(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES, JSONUtil.toJsonStr(list));
+            return list;
+        }
     }
 
 }

@@ -1,18 +1,20 @@
 package cn.codeprobe.file.service.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+
+import org.bson.types.ObjectId;
+import org.springframework.stereotype.Service;
+
+import com.mongodb.client.gridfs.GridFSFindIterable;
+import com.mongodb.client.gridfs.model.GridFSFile;
+import com.mongodb.client.model.Filters;
+
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.file.service.FileDownloadService;
 import cn.codeprobe.file.service.base.FileBaseService;
-import com.mongodb.client.gridfs.GridFSFindIterable;
-import com.mongodb.client.gridfs.model.GridFSFile;
-import com.mongodb.client.model.Filters;
-import org.bson.types.ObjectId;
-import org.springframework.stereotype.Service;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 
 /**
  * @author Lionido
@@ -22,8 +24,7 @@ public class FileDownloadServiceImpl extends FileBaseService implements FileDown
     @Override
     public File downloadFileFromGridFs(String faceId) {
 
-        GridFSFindIterable gridFsFindIterable = gridFsBucket
-                .find(Filters.eq("_id", new ObjectId(faceId)));
+        GridFSFindIterable gridFsFindIterable = gridFsBucket.find(Filters.eq("_id", new ObjectId(faceId)));
         // 获取文件
         GridFSFile gridFsFile = gridFsFindIterable.first();
         String filename = "null";
@@ -40,7 +41,7 @@ public class FileDownloadServiceImpl extends FileBaseService implements FileDown
         }
         File file = new File(FILE_TEMP + filename);
         try {
-            //  创建文件输出流
+            // 创建文件输出流
             FileOutputStream os = new FileOutputStream(file);
             // 将文件输出到临时目录
             gridFsBucket.downloadToStream(new ObjectId(faceId), os);

@@ -1,9 +1,10 @@
 package cn.codeprobe.pojo.po;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 /**
  * @author Lionido
@@ -37,7 +38,7 @@ public class ArticleDO {
     private String articleCover;
 
     /**
-     * 是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布    在预约时间到点的时候，把1改为0，则发布
+     * 是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布 在预约时间到点的时候，把1改为0，则发布
      */
     @Column(name = "is_appoint")
     private Integer isAppoint;
@@ -185,18 +186,18 @@ public class ArticleDO {
     }
 
     /**
-     * 获取是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布    在预约时间到点的时候，把1改为0，则发布
+     * 获取是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布 在预约时间到点的时候，把1改为0，则发布
      *
-     * @return is_appoint - 是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布    在预约时间到点的时候，把1改为0，则发布
+     * @return is_appoint - 是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布 在预约时间到点的时候，把1改为0，则发布
      */
     public Integer getIsAppoint() {
         return isAppoint;
     }
 
     /**
-     * 设置是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布    在预约时间到点的时候，把1改为0，则发布
+     * 设置是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布 在预约时间到点的时候，把1改为0，则发布
      *
-     * @param isAppoint 是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布    在预约时间到点的时候，把1改为0，则发布
+     * @param isAppoint 是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布 在预约时间到点的时候，把1改为0，则发布
      */
     public void setIsAppoint(Integer isAppoint) {
         this.isAppoint = isAppoint;
@@ -380,23 +381,11 @@ public class ArticleDO {
 
     @Override
     public String toString() {
-        return "ArticleDO{" +
-                "id='" + id + '\'' +
-                ", title='" + title + '\'' +
-                ", categoryId=" + categoryId +
-                ", articleType=" + articleType +
-                ", articleCover='" + articleCover + '\'' +
-                ", isAppoint=" + isAppoint +
-                ", articleStatus=" + articleStatus +
-                ", publishUserId='" + publishUserId + '\'' +
-                ", publishTime=" + publishTime +
-                ", readCounts=" + readCounts +
-                ", commentCounts=" + commentCounts +
-                ", mongoFileId='" + mongoFileId + '\'' +
-                ", isDelete=" + isDelete +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", content='" + content + '\'' +
-                '}';
+        return "ArticleDO{" + "id='" + id + '\'' + ", title='" + title + '\'' + ", categoryId=" + categoryId
+            + ", articleType=" + articleType + ", articleCover='" + articleCover + '\'' + ", isAppoint=" + isAppoint
+            + ", articleStatus=" + articleStatus + ", publishUserId='" + publishUserId + '\'' + ", publishTime="
+            + publishTime + ", readCounts=" + readCounts + ", commentCounts=" + commentCounts + ", mongoFileId='"
+            + mongoFileId + '\'' + ", isDelete=" + isDelete + ", createTime=" + createTime + ", updateTime="
+            + updateTime + ", content='" + content + '\'' + '}';
     }
 }

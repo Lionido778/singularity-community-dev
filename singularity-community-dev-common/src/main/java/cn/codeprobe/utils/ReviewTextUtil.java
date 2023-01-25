@@ -1,27 +1,26 @@
 package cn.codeprobe.utils;
 
-import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.utils.extend.AliyunResource;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Component;
+
 import com.aliyun.imageaudit20191230.models.ScanTextRequest;
 import com.aliyun.imageaudit20191230.models.ScanTextResponse;
 import com.aliyun.imageaudit20191230.models.ScanTextResponseBody;
 import com.aliyun.tea.TeaException;
 import com.aliyun.tea.TeaModel;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import cn.codeprobe.enums.ResponseStatusEnum;
+import cn.codeprobe.exception.GlobalExceptionManage;
+import cn.codeprobe.utils.extend.AliyunResource;
 
 /**
- * 引入依赖包
- * <dependency>
- * <groupId>com.aliyun</groupId>
- * <artifactId>imageaudit20191230</artifactId>
- * <version>${aliyun.imageaudit.version}</version>
- * </dependency>
+ * 引入依赖包 <dependency> <groupId>com.aliyun</groupId> <artifactId>imageaudit20191230</artifactId>
+ * <version>${aliyun.imageaudit.version}</version> </dependency>
  * <p>
  * 阿里云AI文本内容审核
  *
@@ -34,12 +33,13 @@ public class ReviewTextUtil {
     @Resource
     private AliyunResource aliyunResource;
 
-    public com.aliyun.imageaudit20191230.Client createClient(String accessKeyId, String accessKeySecret) throws Exception {
+    public com.aliyun.imageaudit20191230.Client createClient(String accessKeyId, String accessKeySecret)
+        throws Exception {
         com.aliyun.teaopenapi.models.Config config = new com.aliyun.teaopenapi.models.Config()
-                // 必填，您的 AccessKey ID
-                .setAccessKeyId(accessKeyId)
-                // 必填，您的 AccessKey Secret
-                .setAccessKeySecret(accessKeySecret);
+            // 必填，您的 AccessKey ID
+            .setAccessKeyId(accessKeyId)
+            // 必填，您的 AccessKey Secret
+            .setAccessKeySecret(accessKeySecret);
         // 访问的域名
         config.endpoint = "imageaudit.cn-shanghai.aliyuncs.com";
         return new com.aliyun.imageaudit20191230.Client(config);
@@ -55,19 +55,14 @@ public class ReviewTextUtil {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
         }
         // content
-        ScanTextRequest.ScanTextRequestTasks tasks = new ScanTextRequest.ScanTextRequestTasks()
-                .setContent(content);
+        ScanTextRequest.ScanTextRequestTasks tasks = new ScanTextRequest.ScanTextRequestTasks().setContent(content);
         // label
         ScanTextRequest.ScanTextRequestLabels labels = new ScanTextRequest.ScanTextRequestLabels();
         labels.setLabel(TEXT_ABUSE_LABEL);
 
-        com.aliyun.imageaudit20191230.models.ScanTextRequest scanTextRequest = new com.aliyun.imageaudit20191230.models.ScanTextRequest()
-                .setLabels(Collections.singletonList(
-                        labels
-                ))
-                .setTasks(Collections.singletonList(
-                        tasks
-                ));
+        com.aliyun.imageaudit20191230.models.ScanTextRequest scanTextRequest =
+            new com.aliyun.imageaudit20191230.models.ScanTextRequest().setLabels(Collections.singletonList(labels))
+                .setTasks(Collections.singletonList(tasks));
         com.aliyun.teautil.models.RuntimeOptions runtime = new com.aliyun.teautil.models.RuntimeOptions();
 
         ScanTextResponse response = null;
@@ -85,7 +80,8 @@ public class ReviewTextUtil {
         }
         // Suggestion Map
         Map<String, String> map = new HashMap<>(0);
-        for (ScanTextResponseBody.ScanTextResponseBodyDataElements element : response.getBody().getData().getElements()) {
+        for (ScanTextResponseBody.ScanTextResponseBodyDataElements element : response.getBody().getData()
+            .getElements()) {
             for (ScanTextResponseBody.ScanTextResponseBodyDataElementsResults result : element.getResults()) {
                 String suggestion = result.getSuggestion();
                 String label = result.getLabel();

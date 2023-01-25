@@ -1,5 +1,12 @@
 package cn.codeprobe.article.base;
 
+import java.util.List;
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import com.github.pagehelper.PageInfo;
+
 import cn.codeprobe.article.mapper.ArticleMapper;
 import cn.codeprobe.article.mapper.ArticleMapperCustom;
 import cn.codeprobe.enums.Article;
@@ -11,12 +18,7 @@ import cn.codeprobe.pojo.po.ArticleDO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.IdWorker;
 import cn.codeprobe.utils.ReviewTextUtil;
-import com.github.pagehelper.PageInfo;
 import tk.mybatis.mapper.entity.Example;
-
-import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Lionido
@@ -31,7 +33,6 @@ public class ArticleBaseService {
     public ArticleMapperCustom articleMapperCustom;
     @Resource
     public ReviewTextUtil reviewTextUtil;
-
 
     /**
      * 查询分页配置
@@ -54,7 +55,7 @@ public class ArticleBaseService {
      * 文章文本内容审核
      *
      * @param articleId 文章ID
-     * @param content   文章内容
+     * @param content 文章内容
      */
     public void scanText(String articleId, String content) {
 
@@ -83,17 +84,16 @@ public class ArticleBaseService {
     /**
      * 文章状态 查询条件构造
      *
-     * @param status   状态
+     * @param status 状态
      * @param criteria 条件
      */
     public void articleCriteriaStatus(Integer status, Example.Criteria criteria) {
         if (status != null) {
             if (status.equals(Article.STATUS_VERIFYING.type)) {
-                criteria.andEqualTo("articleStatus", Article.STATUS_MACHINE_VERIFYING.type)
-                        .orEqualTo("articleStatus", Article.STATUS_MANUAL_VERIFYING.type);
-            } else if (status.equals(Article.STATUS_APPROVED.type)
-                    || status.equals(Article.STATUS_REJECTED.type)
-                    || status.equals(Article.STATUS_RECALLED.type)) {
+                criteria.andEqualTo("articleStatus", Article.STATUS_MACHINE_VERIFYING.type).orEqualTo("articleStatus",
+                    Article.STATUS_MANUAL_VERIFYING.type);
+            } else if (status.equals(Article.STATUS_APPROVED.type) || status.equals(Article.STATUS_REJECTED.type)
+                || status.equals(Article.STATUS_RECALLED.type)) {
                 criteria.andEqualTo("articleStatus", status);
             }
         }

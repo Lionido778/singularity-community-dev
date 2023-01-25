@@ -1,16 +1,14 @@
 package cn.codeprobe.result;
 
-import cn.codeprobe.enums.ResponseStatusEnum;
-
 import java.util.Map;
+
+import cn.codeprobe.enums.ResponseStatusEnum;
 
 /**
  * 自定义响应数据类型枚举
  *
  * @author Lionido
- * @Description: 自定义响应数据结构
- * 本类可提供给 H5/ios/安卓/公众号/小程序 使用
- * 前端接受此类数据（json object)后，可自行根据业务去实现相关功能
+ * @Description: 自定义响应数据结构 本类可提供给 H5/ios/安卓/公众号/小程序 使用 前端接受此类数据（json object)后，可自行根据业务去实现相关功能
  */
 public class JsonResult {
 
@@ -51,15 +49,13 @@ public class JsonResult {
         this.data = data;
     }
 
-
     public JsonResult(ResponseStatusEnum responseStatus, String msg) {
         this.status = responseStatus.status();
         this.msg = msg;
         this.success = responseStatus.success();
     }
 
-    public JsonResult() {
-    }
+    public JsonResult() {}
 
     /**
      * 成功返回，不带有数据的，直接调用ok方法，data无须传入（其实就是null）

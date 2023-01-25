@@ -1,41 +1,39 @@
 package cn.codeprobe.api.controller.base;
 
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+
 /**
- * 这是一个基础 Controller
- * 目的：提供一些常量和属性，方便解耦
+ * 这是一个基础 Controller 目的：提供一些常量和属性，方便解耦
  *
  * @author Lionido
  */
 public class ApiController {
-
 
     @Resource
     public HttpServletRequest request;
     @Resource
     public HttpServletResponse response;
 
-
-    ///**
+    /// **
     // * 获取访问主体 Subject(本系统访问者主要是：用户、管理员) 的ID
     // * @return UserID 或 AdminId
     // */
-    //public String getSubjectIdFromHeader() {
-    //    request.getHeader()
-    //    return null;
-    //}
+    // public String getSubjectIdFromHeader() {
+    // request.getHeader()
+    // return null;
+    // }
 
     /**
      * 获取前端数据校验的错误信息
@@ -50,7 +48,6 @@ public class ApiController {
         }
         return map;
     }
-
 
     /**
      * 登录成功后设置 cookie

@@ -1,5 +1,12 @@
 package cn.codeprobe.user.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.github.pagehelper.page.PageMethod;
+
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.enums.UserStatus;
 import cn.codeprobe.exception.GlobalExceptionManage;
@@ -8,12 +15,7 @@ import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.service.UserMngService;
 import cn.codeprobe.user.service.base.UserBaseService;
 import cn.hutool.core.text.CharSequenceUtil;
-import com.github.pagehelper.page.PageMethod;
-import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
-
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author Lionido
@@ -21,7 +23,8 @@ import java.util.List;
 @Service
 public class UserMngServiceImpl extends UserBaseService implements UserMngService {
     @Override
-    public PagedGridResult pageListUsers(String nickname, Integer activeStatus, Date startTime, Date endTime, Integer page, Integer pageSize) {
+    public PagedGridResult pageListUsers(String nickname, Integer activeStatus, Date startTime, Date endTime,
+        Integer page, Integer pageSize) {
         Example example = new Example(AppUserDO.class);
         example.orderBy("createdTime").desc();
         Example.Criteria criteria = example.createCriteria();

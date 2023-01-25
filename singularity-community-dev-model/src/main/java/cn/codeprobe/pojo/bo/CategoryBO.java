@@ -65,10 +65,6 @@ public class CategoryBO {
 
     @Override
     public String toString() {
-        return "CategoryBO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", tagColor='" + tagColor + '\'' +
-                '}';
+        return "CategoryBO{" + "id=" + id + ", name='" + name + '\'' + ", tagColor='" + tagColor + '\'' + '}';
     }
 }

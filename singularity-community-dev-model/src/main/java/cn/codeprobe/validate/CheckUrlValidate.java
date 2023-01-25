@@ -1,11 +1,9 @@
 package cn.codeprobe.validate;
 
-
-import cn.codeprobe.utils.UrlUtil;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
+import cn.codeprobe.utils.UrlUtil;
 
 /**
  * 自定义 url校验

@@ -76,10 +76,6 @@ public class CategoryDO {
 
     @Override
     public String toString() {
-        return "CategoryDO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", tagColor='" + tagColor + '\'' +
-                '}';
+        return "CategoryDO{" + "id=" + id + ", name='" + name + '\'' + ", tagColor='" + tagColor + '\'' + '}';
     }
 }

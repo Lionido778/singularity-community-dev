@@ -1,5 +1,11 @@
 package cn.codeprobe.user.controller;
 
+import java.util.Date;
+
+import javax.annotation.Resource;
+
+import org.springframework.web.bind.annotation.RestController;
+
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.api.controller.user.UserMngControllerApi;
 import cn.codeprobe.enums.PageHelper;
@@ -8,15 +14,11 @@ import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.service.UserMngService;
-import cn.codeprobe.user.service.UserService;
+import cn.codeprobe.user.service.UserWriterService;
 import cn.hutool.core.text.CharSequenceUtil;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
-import java.util.Date;
 
 /**
- * admin 用户管理
+ * 管理中兴： 用户管理相关接口
  *
  * @author Lionido
  */
@@ -26,10 +28,11 @@ public class UserMngController extends ApiController implements UserMngControlle
     @Resource
     private UserMngService userMngService;
     @Resource
-    private UserService userService;
+    private UserWriterService userWriterService;
 
     @Override
-    public JsonResult queryPageListUsers(String nickname, Integer status, Date startDate, Date endDate, Integer page, Integer pageSize) {
+    public JsonResult queryPageListUsers(String nickname, Integer status, Date startDate, Date endDate, Integer page,
+        Integer pageSize) {
         if (page == null) {
             page = PageHelper.DEFAULT_PAGE.page;
         }
@@ -37,8 +40,8 @@ public class UserMngController extends ApiController implements UserMngControlle
             pageSize = PageHelper.DEFAULT_PAGE.pageSize;
         }
         // 调用service 获取用户列表
-        PagedGridResult pagedGridResult = userMngService.pageListUsers(
-                nickname, status, startDate, endDate, page, pageSize);
+        PagedGridResult pagedGridResult =
+            userMngService.pageListUsers(nickname, status, startDate, endDate, page, pageSize);
         return JsonResult.ok(pagedGridResult);
     }
 
@@ -49,7 +52,7 @@ public class UserMngController extends ApiController implements UserMngControlle
             return JsonResult.errorCustom(ResponseStatusEnum.USER_QUERY_ERROR);
         }
         // 调用service 获取用户信息
-        AppUserDO userInfo = userService.getUserInfo(userId);
+        AppUserDO userInfo = userWriterService.getUserInfo(userId);
         return JsonResult.ok(userInfo);
     }
 

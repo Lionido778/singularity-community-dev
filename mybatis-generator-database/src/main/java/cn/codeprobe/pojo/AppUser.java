@@ -1,9 +1,10 @@
 package cn.codeprobe.pojo;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 /**
  * @author Lionido
@@ -39,7 +40,7 @@ public class AppUser {
     private String email;
 
     /**
-     * 性别 1:男  0:女  2:保密
+     * 性别 1:男 0:女 2:保密
      */
     private Integer sex;
 
@@ -192,18 +193,18 @@ public class AppUser {
     }
 
     /**
-     * 获取性别 1:男  0:女  2:保密
+     * 获取性别 1:男 0:女 2:保密
      *
-     * @return sex - 性别 1:男  0:女  2:保密
+     * @return sex - 性别 1:男 0:女 2:保密
      */
     public Integer getSex() {
         return sex;
     }
 
     /**
-     * 设置性别 1:男  0:女  2:保密
+     * 设置性别 1:男 0:女 2:保密
      *
-     * @param sex 性别 1:男  0:女  2:保密
+     * @param sex 性别 1:男 0:女 2:保密
      */
     public void setSex(Integer sex) {
         this.sex = sex;

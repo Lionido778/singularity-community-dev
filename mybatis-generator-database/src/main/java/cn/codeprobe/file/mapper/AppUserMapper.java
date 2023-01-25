@@ -6,5 +6,4 @@ import cn.codeprobe.pojo.AppUser;
 /**
  * @author Lionido
  */
-public interface AppUserMapper extends MyMapper<AppUser> {
-}
+public interface AppUserMapper extends MyMapper<AppUser> {}

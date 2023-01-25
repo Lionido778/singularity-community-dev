@@ -1,13 +1,15 @@
 package cn.codeprobe.pojo.bo;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.validator.constraints.Length;
+import java.util.Date;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 用户新增文章的BO
@@ -46,7 +48,6 @@ public class NewArticleBO {
 
     @NotBlank(message = "用户未登录")
     private String publishUserId;
-
 
     public String getTitle() {
         return title;
@@ -114,15 +115,8 @@ public class NewArticleBO {
 
     @Override
     public String toString() {
-        return "NewArticleBO{" +
-                "title='" + title + '\'' +
-                ", content='" + content + '\'' +
-                ", categoryId=" + categoryId +
-                ", articleType=" + articleType +
-                ", articleCover='" + articleCover + '\'' +
-                ", isAppoint=" + isAppoint +
-                ", publishTime=" + publishTime +
-                ", publishUserId='" + publishUserId + '\'' +
-                '}';
+        return "NewArticleBO{" + "title='" + title + '\'' + ", content='" + content + '\'' + ", categoryId="
+            + categoryId + ", articleType=" + articleType + ", articleCover='" + articleCover + '\'' + ", isAppoint="
+            + isAppoint + ", publishTime=" + publishTime + ", publishUserId='" + publishUserId + '\'' + '}';
     }
 }

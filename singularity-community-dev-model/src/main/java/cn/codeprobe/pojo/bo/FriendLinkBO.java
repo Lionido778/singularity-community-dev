@@ -1,11 +1,11 @@
 package cn.codeprobe.pojo.bo;
 
-import cn.codeprobe.validate.CheckUrl;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import cn.codeprobe.validate.CheckUrl;
 
 /**
  * @author Lionido
@@ -57,11 +57,7 @@ public class FriendLinkBO {
 
     @Override
     public String toString() {
-        return "FriendLinkMO{" +
-                "id='" + id + '\'' +
-                ", linkName='" + linkName + '\'' +
-                ", linkUrl='" + linkUrl + '\'' +
-                ", isDelete=" + isDelete +
-                '}';
+        return "FriendLinkMO{" + "id='" + id + '\'' + ", linkName='" + linkName + '\'' + ", linkUrl='" + linkUrl + '\''
+            + ", isDelete=" + isDelete + '}';
     }
 }

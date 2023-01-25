@@ -1,5 +1,10 @@
 package cn.codeprobe.utils;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
@@ -7,11 +12,6 @@ import org.springframework.data.redis.connection.StringRedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Redis 工具类
@@ -163,13 +163,13 @@ public class RedisUtil {
      */
     public List<Object> batchGet(List<String> keys) {
 
-//		nginx -> keepalive
-//		redis -> pipeline
+        // nginx -> keepalive
+        // redis -> pipeline
 
         return redisTemplate.executePipelined(new RedisCallback<String>() {
             @Override
             public String doInRedis(RedisConnection connection) throws DataAccessException {
-                StringRedisConnection src = (StringRedisConnection) connection;
+                StringRedisConnection src = (StringRedisConnection)connection;
 
                 for (String k : keys) {
                     src.get(k);
@@ -178,7 +178,6 @@ public class RedisUtil {
             }
         });
     }
-
 
     // Hash（哈希表）
 
@@ -201,7 +200,7 @@ public class RedisUtil {
      * @return
      */
     public String hget(String key, String field) {
-        return (String) redisTemplate.opsForHash().get(key, field);
+        return (String)redisTemplate.opsForHash().get(key, field);
     }
 
     /**

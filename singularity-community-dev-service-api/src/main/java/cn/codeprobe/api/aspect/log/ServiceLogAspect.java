@@ -24,13 +24,13 @@ public class ServiceLogAspect {
     private static final int MEDIUM_LIMIT = 2000;
 
     /**
-     * @Description: 环绕 切面表达式   (*任意返回参数  主包.所有微服务.微服务.Impl..所有包.所有类.所有方法（所有参数）)
+     * @Description: 环绕 切面表达式 (*任意返回参数 主包.所有微服务.微服务.Impl..所有包.所有类.所有方法（所有参数）)
      */
     @Around("execution(* cn.codeprobe.*.service.impl..*.*(..))")
     public Object recordExecTimeOfService(@NotNull ProceedingJoinPoint joinPoint) throws Throwable {
 
         logger.info("==== 开始执行 {} 类下的 {} 方法 ====", joinPoint.getTarget().getClass(),
-                joinPoint.getSignature().getName());
+            joinPoint.getSignature().getName());
 
         long start = System.currentTimeMillis();
         // 执行原方法并返回结果

@@ -1,19 +1,21 @@
 package cn.codeprobe.user.service.impl;
 
+import java.util.UUID;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
 import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.user.service.UserPassportService;
-import cn.codeprobe.user.service.UserService;
+import cn.codeprobe.user.service.UserWriterService;
 import cn.codeprobe.user.service.base.UserBaseService;
 import cn.codeprobe.utils.IpUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.RandomUtil;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.UUID;
 
 /**
  * @author Lionido
@@ -22,7 +24,7 @@ import java.util.UUID;
 public class UserPassportServiceImpl extends UserBaseService implements UserPassportService {
 
     @Resource
-    private UserService userService;
+    private UserWriterService userWriterService;
 
     @Override
     public void getSmsCode(String mobile) {
@@ -55,7 +57,7 @@ public class UserPassportServiceImpl extends UserBaseService implements UserPass
             GlobalExceptionManage.internal(ResponseStatusEnum.USER_FROZEN);
         } else if (appUserDO == null) {
             // 注册新用户
-            appUserDO = userService.saveAppUser(registerLoginBO.getMobile());
+            appUserDO = userWriterService.saveAppUser(registerLoginBO.getMobile());
         }
         // 登陆成功 配置 token 和 cookie
         userLoginSetting(appUserDO);

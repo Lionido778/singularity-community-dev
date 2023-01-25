@@ -1,5 +1,10 @@
 package cn.codeprobe.api.interceptors.base;
 
+import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.enums.UserStatus;
 import cn.codeprobe.exception.GlobalExceptionManage;
@@ -7,14 +12,8 @@ import cn.codeprobe.utils.IpUtil;
 import cn.codeprobe.utils.RedisUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 
-import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 /**
- * 公用拦截器
- * 自定义拦截器的属性，常量
+ * 公用拦截器 自定义拦截器的属性，常量
  *
  * @author Lionido
  */
@@ -58,9 +57,9 @@ public class ApiInterceptor {
     /**
      * 登录状态检查
      *
-     * @param id    用户、管理员id
+     * @param id 用户、管理员id
      * @param token 令牌
-     * @param role  用户或管理员
+     * @param role 用户或管理员
      * @return true 放行请求；false 拦截请求
      */
     public void checkLoginStatus(String id, String token, String role) {
@@ -70,9 +69,9 @@ public class ApiInterceptor {
     /**
      * 验证 token
      *
-     * @param id    用户、管理员id
+     * @param id 用户、管理员id
      * @param token 令牌
-     * @param role  用户或管理员
+     * @param role 用户或管理员
      */
     public void verifyIdAndToken(String id, String token, String role) {
         // 检查header中 id 或 token 是否为空
@@ -103,14 +102,13 @@ public class ApiInterceptor {
         }
     }
 
-
     /**
      * 记录打印 拦截放行日记
      *
      * @param isLogged 是否是登录状态
-     * @param role     角色（管理员、用户）
-     * @param id       主键ID
-     * @param token    令牌
+     * @param role 角色（管理员、用户）
+     * @param id 主键ID
+     * @param token 令牌
      */
     public void recordInterceptLog(boolean isLogged, String role, String id, String token) {
         // 获取请求路径
@@ -134,7 +132,7 @@ public class ApiInterceptor {
      * 从cookie中取值
      *
      * @param request 请求
-     * @param key     cookie name
+     * @param key cookie name
      * @return
      */
     public String getCookie(HttpServletRequest request, String key) {

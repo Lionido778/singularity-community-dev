@@ -12,9 +12,7 @@ public class IpUtil {
     private static final String IP_ADDR_STATUS = "unknown";
 
     /**
-     * 获取请求IP:
-     * 用户的真实IP不能使用request.getRemoteAddr()
-     * 这是因为可能会使用一些代理软件，这样ip获取就不准确了
+     * 获取请求IP: 用户的真实IP不能使用request.getRemoteAddr() 这是因为可能会使用一些代理软件，这样ip获取就不准确了
      * 此外我们如果使用了多级（LVS/Nginx）反向代理的话，ip需要从X-Forwarded-For中获得第一个非unknown的IP才是用户的有效ip。
      *
      * @param request 前端请求

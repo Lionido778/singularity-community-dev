@@ -6,5 +6,4 @@ import cn.codeprobe.pojo.po.ArticleDO;
 /**
  * @author Lionido
  */
-public interface ArticleMapper extends MyMapper<ArticleDO> {
-}
+public interface ArticleMapper extends MyMapper<ArticleDO> {}

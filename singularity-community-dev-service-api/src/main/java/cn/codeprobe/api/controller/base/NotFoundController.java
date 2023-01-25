@@ -1,15 +1,16 @@
 package cn.codeprobe.api.controller.base;
 
-import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.result.JsonResult;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.boot.autoconfigure.web.servlet.error.AbstractErrorController;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import cn.codeprobe.enums.ResponseStatusEnum;
+import cn.codeprobe.result.JsonResult;
 
 /**
  * 前后端分离了模式下，重写 /error 的请求

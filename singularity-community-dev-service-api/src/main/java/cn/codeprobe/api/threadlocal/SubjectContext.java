@@ -15,8 +15,7 @@ public class SubjectContext {
 
     private static final ThreadLocal<AdminUserDO> ADMIN_USER_DO_THREAD_LOCAL = new ThreadLocal<>();
 
-    public SubjectContext() {
-    }
+    public SubjectContext() {}
 
     public static AppUserDO getUser() {
         return USER_DO_THREAD_LOCAL.get();

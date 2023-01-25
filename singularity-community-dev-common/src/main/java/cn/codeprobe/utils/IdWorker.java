@@ -1,8 +1,9 @@
 package cn.codeprobe.utils;
 
+import org.springframework.stereotype.Component;
+
 import cn.hutool.core.lang.Snowflake;
 import cn.hutool.core.util.IdUtil;
-import org.springframework.stereotype.Component;
 
 /**
  * 雪花算法 生成分布式ID (全局唯一)
@@ -15,7 +16,6 @@ public class IdWorker {
     private static final long WORKER_ID = 1L;
     private static final long DATACENTER_ID = 1L;
     private Snowflake snowflake = IdUtil.getSnowflake(WORKER_ID, DATACENTER_ID);
-
 
     public synchronized long nextId() {
         return snowflake.nextId();
@@ -33,4 +33,3 @@ public class IdWorker {
         this.snowflake = snowflake;
     }
 }
-

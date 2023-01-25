@@ -111,18 +111,9 @@ public class UserAccountInfoVO {
 
     @Override
     public String toString() {
-        return "UserAccountInfoVO{" +
-                "id='" + id + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", face='" + face + '\'' +
-                ", realname='" + realname + '\'' +
-                ", email='" + email + '\'' +
-                ", sex=" + sex +
-                ", birthday=" + birthday +
-                ", province='" + province + '\'' +
-                ", city='" + city + '\'' +
-                ", district='" + district + '\'' +
-                '}';
+        return "UserAccountInfoVO{" + "id='" + id + '\'' + ", mobile='" + mobile + '\'' + ", nickname='" + nickname
+            + '\'' + ", face='" + face + '\'' + ", realname='" + realname + '\'' + ", email='" + email + '\'' + ", sex="
+            + sex + ", birthday=" + birthday + ", province='" + province + '\'' + ", city='" + city + '\''
+            + ", district='" + district + '\'' + '}';
     }
 }

@@ -1,5 +1,8 @@
 package cn.codeprobe.admin.service.impl;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
 import cn.codeprobe.admin.service.AdminPassportService;
 import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.api.threadlocal.SubjectContext;
@@ -9,8 +12,6 @@ import cn.codeprobe.pojo.po.AdminUserDO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.utils.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 
 /**
  * @author Lionido
@@ -46,12 +47,14 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
             if (CharSequenceUtil.isNotBlank(faceId)) {
                 // 暂时使用 RestTemplate 调用 file 服务的下载保存在GridFS中的人脸数据（Base64）
                 String accessFileServerUrl = FILE_SERVER_URL + faceId;
-                ResponseEntity<JsonResult> responseEntity = restTemplate.getForEntity(accessFileServerUrl, JsonResult.class);
+                ResponseEntity<JsonResult> responseEntity =
+                    restTemplate.getForEntity(accessFileServerUrl, JsonResult.class);
                 JsonResult body = responseEntity.getBody();
                 if (body != null) {
-                    String img64FaceGridFs = (String) body.getData();
+                    String img64FaceGridFs = (String)body.getData();
                     FileUtil.base64ToFile(FACE_TEMP_DIR + "/" + username, img64Face, LOGIN_FACE_NAME + EXTEND_NAME);
-                    FileUtil.base64ToFile(FACE_TEMP_DIR + "/" + username, img64FaceGridFs, FACE_DATA_NAME + EXTEND_NAME);
+                    FileUtil.base64ToFile(FACE_TEMP_DIR + "/" + username, img64FaceGridFs,
+                        FACE_DATA_NAME + EXTEND_NAME);
                     String faceFile = FACE_TEMP_DIR + "/" + username + "/" + LOGIN_FACE_NAME + EXTEND_NAME;
                     String dataFile = FACE_TEMP_DIR + "/" + username + "/" + FACE_DATA_NAME + EXTEND_NAME;
                     try {

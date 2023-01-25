@@ -1,9 +1,9 @@
 package cn.codeprobe.pojo.bo;
 
+import javax.validation.constraints.NotBlank;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-
-import javax.validation.constraints.NotBlank;
 
 /**
  * 管理员登录 BO
@@ -23,7 +23,6 @@ public class AdminLoginBO {
 
     @ApiModelProperty(notes = "人脸识别")
     private String img64;
-
 
     public String getUsername() {
         return username;
@@ -51,10 +50,7 @@ public class AdminLoginBO {
 
     @Override
     public String toString() {
-        return "AdminLoginBO{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", img64='" + img64 + '\'' +
-                '}';
+        return "AdminLoginBO{" + "username='" + username + '\'' + ", password='" + password + '\'' + ", img64='" + img64
+            + '\'' + '}';
     }
 }

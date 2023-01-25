@@ -1,11 +1,11 @@
 package cn.codeprobe.utils;
 
-import cn.hutool.core.text.CharSequenceUtil;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import cn.hutool.core.text.CharSequenceUtil;
 
 /**
  * 验证是否是URL
@@ -21,7 +21,8 @@ public class UrlUtil {
      * @return true or false
      */
     public static boolean verifyUrl(String url) {
-        String regEx = "^([hH][tT]{2}[pP]:/*|[hH][tT]{2}[pP][sS]:/*|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\??(([A-Za-z0-9-~]+\\=?)([A-Za-z0-9-~]*)\\&?)*)$";
+        String regEx =
+            "^([hH][tT]{2}[pP]:/*|[hH][tT]{2}[pP][sS]:/*|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\??(([A-Za-z0-9-~]+\\=?)([A-Za-z0-9-~]*)\\&?)*)$";
         // 编译正则表达式
         Pattern pattern = Pattern.compile(regEx);
         Matcher matcher = pattern.matcher(url);
@@ -36,7 +37,8 @@ public class UrlUtil {
      * @return true / false
      */
     public static boolean verifyUrlCaseInsensitive(String url) {
-        String regEx = "^([hH][tT]{2}[pP]:/*|[hH][tT]{2}[pP][sS]:/*|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\??(([A-Za-z0-9-~]+\\=?)([A-Za-z0-9-~]*)\\&?)*)$";
+        String regEx =
+            "^([hH][tT]{2}[pP]:/*|[hH][tT]{2}[pP][sS]:/*|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+(\\??(([A-Za-z0-9-~]+\\=?)([A-Za-z0-9-~]*)\\&?)*)$";
         // 忽略大小写的写法
         Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
         Matcher matcher = pattern.matcher(url);
@@ -77,7 +79,6 @@ public class UrlUtil {
         }
         return !CharSequenceUtil.isBlank(host);
     }
-
 
     public static void main(String[] args) {
         boolean res = verifyUrl("https://admin.codeprobe.cn:8080/singularity-community/admin/friendLinks.html");

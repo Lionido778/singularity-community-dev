@@ -167,14 +167,8 @@ public class FansDO {
 
     @Override
     public String toString() {
-        return "FansDO{" +
-                "id='" + id + '\'' +
-                ", writerId='" + writerId + '\'' +
-                ", fanId='" + fanId + '\'' +
-                ", face='" + face + '\'' +
-                ", fanNickname='" + fanNickname + '\'' +
-                ", sex=" + sex +
-                ", province='" + province + '\'' +
-                '}';
+        return "FansDO{" + "id='" + id + '\'' + ", writerId='" + writerId + '\'' + ", fanId='" + fanId + '\''
+            + ", face='" + face + '\'' + ", fanNickname='" + fanNickname + '\'' + ", sex=" + sex + ", province='"
+            + province + '\'' + '}';
     }
 }

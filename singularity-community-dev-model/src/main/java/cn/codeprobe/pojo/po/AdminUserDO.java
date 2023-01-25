@@ -1,9 +1,10 @@
 package cn.codeprobe.pojo.po;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 /**
  * @author Lionido
@@ -171,14 +172,8 @@ public class AdminUserDO {
 
     @Override
     public String toString() {
-        return "AdminUserDO{" +
-                "id='" + id + '\'' +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", faceId='" + faceId + '\'' +
-                ", adminName='" + adminName + '\'' +
-                ", createdTime=" + createdTime +
-                ", updatedTime=" + updatedTime +
-                '}';
+        return "AdminUserDO{" + "id='" + id + '\'' + ", username='" + username + '\'' + ", password='" + password + '\''
+            + ", faceId='" + faceId + '\'' + ", adminName='" + adminName + '\'' + ", createdTime=" + createdTime
+            + ", updatedTime=" + updatedTime + '}';
     }
 }

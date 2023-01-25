@@ -1,20 +1,22 @@
 package cn.codeprobe.admin.controller;
 
+import java.util.Map;
+
+import javax.annotation.Resource;
+
+import org.jetbrains.annotations.NotNull;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.RestController;
+
 import cn.codeprobe.admin.service.AdminService;
-import cn.codeprobe.api.controller.admin.AdminMngControllerApi;
+import cn.codeprobe.api.controller.admin.user.AdminMngControllerApi;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.pojo.bo.NewAdminBO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.hutool.core.text.CharSequenceUtil;
-import org.jetbrains.annotations.NotNull;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * @author Lionido
@@ -63,7 +65,8 @@ public class AdminMngController extends ApiController implements AdminMngControl
             JsonResult.errorCustom(ResponseStatusEnum.ADMIN_PAGE_NULL_ERROR);
         }
         // 封装 分页数据
-        PagedGridResult pagedGridResult = adminService.pageListAdminUsers(Integer.parseInt(page), Integer.parseInt(pageSize));
+        PagedGridResult pagedGridResult =
+            adminService.pageListAdminUsers(Integer.parseInt(page), Integer.parseInt(pageSize));
         return JsonResult.ok(pagedGridResult);
     }
 }

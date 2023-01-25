@@ -1,11 +1,14 @@
 package cn.codeprobe.pojo.bo;
 
-import cn.codeprobe.validate.CheckUrl;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import org.hibernate.validator.constraints.Length;
+import java.util.Date;
 
 import javax.validation.constraints.*;
-import java.util.Date;
+
+import org.hibernate.validator.constraints.Length;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import cn.codeprobe.validate.CheckUrl;
 
 /**
  * 用户账户信息更新表单
@@ -136,17 +139,8 @@ public class UpdateUserInfoBO {
 
     @Override
     public String toString() {
-        return "UpdateUserInfoBO{" +
-                "id='" + id + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", face='" + face + '\'' +
-                ", realname='" + realname + '\'' +
-                ", email='" + email + '\'' +
-                ", sex=" + sex +
-                ", birthday=" + birthday +
-                ", province='" + province + '\'' +
-                ", city='" + city + '\'' +
-                ", district='" + district + '\'' +
-                '}';
+        return "UpdateUserInfoBO{" + "id='" + id + '\'' + ", nickname='" + nickname + '\'' + ", face='" + face + '\''
+            + ", realname='" + realname + '\'' + ", email='" + email + '\'' + ", sex=" + sex + ", birthday=" + birthday
+            + ", province='" + province + '\'' + ", city='" + city + '\'' + ", district='" + district + '\'' + '}';
     }
 }

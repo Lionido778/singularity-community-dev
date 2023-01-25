@@ -6,5 +6,4 @@ import cn.codeprobe.pojo.po.FansDO;
 /**
  * @author Lionido
  */
-public interface FansMapper extends MyMapper<FansDO> {
-}
+public interface FansMapper extends MyMapper<FansDO> {}

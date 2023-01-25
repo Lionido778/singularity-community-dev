@@ -1,8 +1,9 @@
 package cn.codeprobe.pojo;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
-import java.util.Date;
 
 /**
  * @author Lionido

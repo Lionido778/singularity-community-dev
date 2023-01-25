@@ -1,16 +1,16 @@
 package cn.codeprobe.api.config;
 
-
-import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.exception.GlobalExceptionManage;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+
+import cn.codeprobe.enums.ResponseStatusEnum;
+import cn.codeprobe.exception.GlobalExceptionManage;
 
 /**
  * 解决 请求路径url中的字符串类型的日期参数，进行时间日期类型的转换，（String字符串 -> Date日期）
@@ -52,7 +52,7 @@ public class DateConverterConfig implements Converter<String, Date> {
     /**
      * 日期转换方法
      *
-     * @param dateStr   日期字符串
+     * @param dateStr 日期字符串
      * @param formatter 格式
      * @return 格式化处理后的
      */

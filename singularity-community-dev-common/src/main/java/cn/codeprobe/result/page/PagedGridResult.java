@@ -3,8 +3,7 @@ package cn.codeprobe.result.page;
 import java.util.List;
 
 /**
- * @author Lionido
- * 用来返回分页Grid的数据格式
+ * @author Lionido 用来返回分页Grid的数据格式
  */
 public class PagedGridResult {
     /**

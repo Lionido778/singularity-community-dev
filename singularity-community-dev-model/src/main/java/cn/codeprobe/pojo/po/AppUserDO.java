@@ -1,9 +1,10 @@
 package cn.codeprobe.pojo.po;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
 
 /**
  * @author Lionido
@@ -39,7 +40,7 @@ public class AppUserDO {
     private String email;
 
     /**
-     * 性别 1:男  0:女  2:保密
+     * 性别 1:男 0:女 2:保密
      */
     private Integer sex;
 
@@ -192,18 +193,18 @@ public class AppUserDO {
     }
 
     /**
-     * 获取性别 1:男  0:女  2:保密
+     * 获取性别 1:男 0:女 2:保密
      *
-     * @return sex - 性别 1:男  0:女  2:保密
+     * @return sex - 性别 1:男 0:女 2:保密
      */
     public Integer getSex() {
         return sex;
     }
 
     /**
-     * 设置性别 1:男  0:女  2:保密
+     * 设置性别 1:男 0:女 2:保密
      *
-     * @param sex 性别 1:男  0:女  2:保密
+     * @param sex 性别 1:男 0:女 2:保密
      */
     public void setSex(Integer sex) {
         this.sex = sex;
@@ -355,22 +356,10 @@ public class AppUserDO {
 
     @Override
     public String toString() {
-        return "AppUserDO{" +
-                "id='" + id + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", face='" + face + '\'' +
-                ", realname='" + realname + '\'' +
-                ", email='" + email + '\'' +
-                ", sex=" + sex +
-                ", birthday=" + birthday +
-                ", province='" + province + '\'' +
-                ", city='" + city + '\'' +
-                ", district='" + district + '\'' +
-                ", activeStatus=" + activeStatus +
-                ", totalIncome=" + totalIncome +
-                ", createdTime=" + createdTime +
-                ", updatedTime=" + updatedTime +
-                '}';
+        return "AppUserDO{" + "id='" + id + '\'' + ", mobile='" + mobile + '\'' + ", nickname='" + nickname + '\''
+            + ", face='" + face + '\'' + ", realname='" + realname + '\'' + ", email='" + email + '\'' + ", sex=" + sex
+            + ", birthday=" + birthday + ", province='" + province + '\'' + ", city='" + city + '\'' + ", district='"
+            + district + '\'' + ", activeStatus=" + activeStatus + ", totalIncome=" + totalIncome + ", createdTime="
+            + createdTime + ", updatedTime=" + updatedTime + '}';
     }
 }

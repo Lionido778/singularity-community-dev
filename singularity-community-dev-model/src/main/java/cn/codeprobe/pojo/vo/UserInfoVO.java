@@ -46,11 +46,7 @@ public class UserInfoVO {
 
     @Override
     public String toString() {
-        return "UserInfoVO{" +
-                "id='" + id + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", face='" + face + '\'' +
-                ", activeStatus=" + activeStatus +
-                '}';
+        return "UserInfoVO{" + "id='" + id + '\'' + ", nickname='" + nickname + '\'' + ", face='" + face + '\''
+            + ", activeStatus=" + activeStatus + '}';
     }
 }

@@ -26,7 +26,7 @@ public interface AdminService {
     /**
      * 分页获取所有管理员账户
      *
-     * @param page     当前页
+     * @param page 当前页
      * @param pageSize 当前查询页记录数
      * @return 分页结果
      */

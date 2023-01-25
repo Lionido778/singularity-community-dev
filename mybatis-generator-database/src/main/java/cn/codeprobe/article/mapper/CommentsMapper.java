@@ -6,5 +6,4 @@ import cn.codeprobe.pojo.Comments;
 /**
  * @author Lionido
  */
-public interface CommentsMapper extends MyMapper<Comments> {
-}
+public interface CommentsMapper extends MyMapper<Comments> {}

@@ -53,11 +53,7 @@ public class FriendLinkDO {
 
     @Override
     public String toString() {
-        return "FriendLinkMO{" +
-                "id='" + id + '\'' +
-                ", linkName='" + linkName + '\'' +
-                ", linkUrl='" + linkUrl + '\'' +
-                ", isDelete=" + isDelete +
-                '}';
+        return "FriendLinkMO{" + "id='" + id + '\'' + ", linkName='" + linkName + '\'' + ", linkUrl='" + linkUrl + '\''
+            + ", isDelete=" + isDelete + '}';
     }
 }

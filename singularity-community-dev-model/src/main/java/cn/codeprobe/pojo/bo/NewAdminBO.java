@@ -70,13 +70,8 @@ public class NewAdminBO {
 
     @Override
     public String toString() {
-        return "NewAdminBO{" +
-                "username='" + username + '\'' +
-                ", adminName='" + adminName + '\'' +
-                ", password='" + password + '\'' +
-                ", confirmPassword='" + confirmPassword + '\'' +
-                ", img64='" + img64 + '\'' +
-                ", faceId='" + faceId + '\'' +
-                '}';
+        return "NewAdminBO{" + "username='" + username + '\'' + ", adminName='" + adminName + '\'' + ", password='"
+            + password + '\'' + ", confirmPassword='" + confirmPassword + '\'' + ", img64='" + img64 + '\''
+            + ", faceId='" + faceId + '\'' + '}';
     }
 }

@@ -10,7 +10,6 @@ public enum MybatisResult {
      */
     SUCCESS(1, "持久层操作成功！");
 
-
     public final Integer result;
     public final String desc;
 
@@ -18,6 +17,5 @@ public enum MybatisResult {
         this.result = result;
         this.desc = desc;
     }
-
 
 }
