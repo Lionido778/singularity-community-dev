@@ -26,7 +26,7 @@ public enum ResponseStatusEnum {
     FILE_FORMATTER_FAILED(512, false, "文件图片格式不支持！"), FILE_MAX_SIZE_ERROR(513, false, "仅支持500kb大小以下的图片上传！"),
     FILE_NOT_EXIST_ERROR(514, false, "你所查看的文件不存在！"), USER_STATUS_ERROR(515, false, "用户状态参数出错！"),
     USER_NOT_EXIST_ERROR(516, false, "用户不存在！"), USER_QUERY_ERROR(517, false, "获取用户信息失败！"),
-    USER_OPERATION_ERROR(518, false, "操作失败！"),
+    USER_OPERATION_ERROR(518, false, "操作失败！"), USER_LOGIN_FAILED_COOKIE_ERROR(518, false, "用户登陆失败！cookie 失败！"),
 
     /**
      * 自定义系统级别异常 54x
@@ -88,7 +88,13 @@ public enum ResponseStatusEnum {
     /**
      * Auth
      */
-    ARTICLE_PUBLISH_USER_ERROR(901, false, "文章用户信息获取失败");
+    ARTICLE_PUBLISH_USER_ERROR(901, false, "文章用户信息获取失败"),
+
+    /**
+     * Fans
+     */
+    FANS_FOLLOW_PARAMENT_ERROR(1001, false, "粉丝关注参数错误！"), FANS_UN_FOLLOW_PARAMENT_ERROR(1002, false, "粉丝取消关注参数错误！"),
+    FANS_FOLLOW_FAILED(1003, false, "粉丝关注失败！"), FANS_UN_FOLLOW_FAILED(1004, false, "粉丝取消关注失败！");
 
     /**
      * 业务响应状态码

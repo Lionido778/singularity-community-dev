@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 
+import cn.codeprobe.enums.ResponseStatusEnum;
+import cn.codeprobe.exception.GlobalExceptionManage;
+
 /**
  * 这是一个基础 Controller 目的：提供一些常量和属性，方便解耦
  *
@@ -61,12 +64,13 @@ public class ApiController {
      */
     public void setCookie(String cookieName, String cookieValue, Integer maxAge, String domainName) {
         try {
+            // 对cookie进行编码，解决cookies存放中文，导致前台乱码
             String encodeCookieValue = URLEncoder.encode(cookieValue, "UTF-8");
             System.out.println(cookieName + ":" + cookieValue + "-" + encodeCookieValue);
             // 生成cookie
             createCookie(cookieName, encodeCookieValue, maxAge, domainName);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            GlobalExceptionManage.internal(ResponseStatusEnum.USER_LOGIN_FAILED_COOKIE_ERROR);
         }
     }
 

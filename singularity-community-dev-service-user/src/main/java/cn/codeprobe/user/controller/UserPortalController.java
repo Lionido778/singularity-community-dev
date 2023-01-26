@@ -2,17 +2,15 @@ package cn.codeprobe.user.controller;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.api.controller.user.UserPortalControllerApi;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 import cn.codeprobe.result.JsonResult;
-import cn.codeprobe.user.service.impl.UserPortalServiceImpl;
+import cn.codeprobe.user.service.UserPortalService;
 import cn.hutool.core.text.CharSequenceUtil;
 
 /**
@@ -22,7 +20,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 public class UserPortalController extends ApiController implements UserPortalControllerApi {
 
     @Resource
-    private UserPortalServiceImpl userPortalService;
+    private UserPortalService userPortalService;
 
     @Override
     public JsonResult queryUserBasicInfo(String userId) {
@@ -30,11 +28,8 @@ public class UserPortalController extends ApiController implements UserPortalCon
         if (CharSequenceUtil.isBlank(userId)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
         }
-        // 执行查询操作
-        AppUserDO user = userPortalService.getUserInfo(userId);
-        UserBasicInfoVO userBasicInfoVO = new UserBasicInfoVO();
-        // pojo -> vo
-        BeanUtils.copyProperties(user, userBasicInfoVO);
+        // 调用service
+        UserBasicInfoVO userBasicInfoVO = userPortalService.getBasicUserInfo(userId);
         return JsonResult.ok(userBasicInfoVO);
     }
 

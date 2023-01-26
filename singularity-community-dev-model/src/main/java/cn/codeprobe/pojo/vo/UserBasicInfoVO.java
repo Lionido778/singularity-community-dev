@@ -12,6 +12,25 @@ public class UserBasicInfoVO {
     private String face;
     private Integer activeStatus;
 
+    private String followCounts;
+    private String fansCounts;
+
+    public String getFollowCounts() {
+        return followCounts;
+    }
+
+    public void setFollowCounts(String followCounts) {
+        this.followCounts = followCounts;
+    }
+
+    public String getFansCounts() {
+        return fansCounts;
+    }
+
+    public void setFansCounts(String fansCounts) {
+        this.fansCounts = fansCounts;
+    }
+
     public String getId() {
         return id;
     }

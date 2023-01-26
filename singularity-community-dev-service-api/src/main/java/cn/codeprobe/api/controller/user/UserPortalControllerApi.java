@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiOperation;
  *
  * @author Lionido
  */
-@Api(value = "创作中心:用户信息相关接口", tags = "用户信息相关接口")
+@Api(value = "用户信息相关接口", tags = "用户信息相关接口")
 @RequestMapping("/portal/user")
 public interface UserPortalControllerApi {
 

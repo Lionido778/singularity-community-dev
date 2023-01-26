@@ -14,6 +14,7 @@ import cn.codeprobe.enums.UserStatus;
 import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.mapper.AppUserMapper;
+import cn.codeprobe.user.mapper.FansMapper;
 import cn.codeprobe.utils.IdWorker;
 import cn.codeprobe.utils.RedisUtil;
 import cn.codeprobe.utils.SmsUtil;
@@ -56,8 +57,17 @@ public class UserBaseService extends ApiController {
     public static final String COOKIE_NAME_TOKEN = "utoken";
     public static final Integer COOKIE_MAX_AGE = 7 * 24 * 60 * 60;
     public static final Integer COOKIE_DELETE = 0;
+
+    /**
+     * fans
+     */
+    public static final String REDIS_WRITER_FOLLOWED_COUNT = "writer_followed_count";
+    public static final String REDIS_WRITER_FANS_COUNT = "writer_fans_count";
+
     @Resource
     public AppUserMapper appUserMapper;
+    @Resource
+    public FansMapper fansMapper;
     @Resource
     public IdWorker idWorker;
     @Resource

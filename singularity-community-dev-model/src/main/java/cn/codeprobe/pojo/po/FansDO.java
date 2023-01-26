@@ -2,11 +2,14 @@ package cn.codeprobe.pojo.po;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author Lionido
  */
+@Table(name = "fans")
 public class FansDO {
+
     @Id
     private String id;
 
