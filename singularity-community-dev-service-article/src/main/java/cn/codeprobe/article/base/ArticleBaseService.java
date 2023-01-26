@@ -46,6 +46,25 @@ public class ArticleBaseService {
     public RestTemplate restTemplate;
 
     /**
+     * 门户文章列表 查询条件设置
+     *
+     * @param example example
+     * @return Example.Criteria
+     */
+    @NotNull
+    public static Example.Criteria getPortalCriteria(Example example) {
+        example.orderBy("createTime").desc();
+        Example.Criteria criteria = example.createCriteria();
+        // 文章必须：非逻辑删除
+        criteria.andEqualTo("isDelete", Article.UN_DELETED.type);
+        // 文章必须：及时发布
+        criteria.andEqualTo("isAppoint", Article.UN_APPOINTED.type);
+        // 文章必须：审核通过
+        criteria.andEqualTo("articleStatus", Article.STATUS_APPROVED.type);
+        return criteria;
+    }
+
+    /**
      * 查询分页配置
      *
      * @param list 查询数据（每页）
@@ -112,7 +131,7 @@ public class ArticleBaseService {
 
     /**
      * ArticleDO 拼接 UserBasicInfo 形成 IndexArticleVO 返回给前端
-     * 
+     *
      * @param articleDOList 原始ArticleDO
      * @return 拼接好的 IndexArticleVO
      */
@@ -149,4 +168,5 @@ public class ArticleBaseService {
         }
         return articleVOList;
     }
+
 }

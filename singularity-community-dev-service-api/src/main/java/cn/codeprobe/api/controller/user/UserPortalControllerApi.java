@@ -1,6 +1,6 @@
 package cn.codeprobe.api.controller.user;
 
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -23,8 +23,8 @@ public interface UserPortalControllerApi {
      * @param userId 用户ID
      * @return yes / no
      */
-    @ApiOperation(value = "获取用户基本信息", notes = "用户基本信息", httpMethod = "POST")
-    @PostMapping("/queryUserBasicInfo")
+    @ApiOperation(value = "获取用户基本信息", notes = "用户基本信息", httpMethod = "GET")
+    @GetMapping("/queryUserBasicInfo")
     JsonResult queryUserBasicInfo(@RequestParam String userId);
 
 }
