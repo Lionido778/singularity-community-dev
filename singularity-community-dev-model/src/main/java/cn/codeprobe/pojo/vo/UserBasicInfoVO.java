@@ -5,7 +5,7 @@ package cn.codeprobe.pojo.vo;
  *
  * @author Lionido
  */
-public class UserInfoVO {
+public class UserBasicInfoVO {
 
     private String id;
     private String nickname;

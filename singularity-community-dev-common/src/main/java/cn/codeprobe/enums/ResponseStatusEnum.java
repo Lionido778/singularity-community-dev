@@ -83,7 +83,12 @@ public enum ResponseStatusEnum {
     /**
      * Auth
      */
-    AUTH_FAILED(801, false, "登录鉴权失败！访问主体不存在"), AUTH_HEADER_ID_NULL(802, false, "登录鉴权失败！id,token为空");
+    AUTH_FAILED(801, false, "登录鉴权失败！访问主体不存在"), AUTH_HEADER_ID_NULL(802, false, "登录鉴权失败！id,token为空"),
+
+    /**
+     * Auth
+     */
+    ARTICLE_PUBLISH_USER_ERROR(901, false, "文章用户信息获取失败");
 
     /**
      * 业务响应状态码

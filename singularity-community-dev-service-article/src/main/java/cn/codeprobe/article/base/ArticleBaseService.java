@@ -1,9 +1,13 @@
 package cn.codeprobe.article.base;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.annotation.Resource;
+
+import org.jetbrains.annotations.NotNull;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import com.github.pagehelper.PageInfo;
 
@@ -15,9 +19,14 @@ import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.po.ArticleDO;
+import cn.codeprobe.pojo.vo.IndexArticleVO;
+import cn.codeprobe.pojo.vo.UserBasicInfoVO;
+import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.IdWorker;
 import cn.codeprobe.utils.ReviewTextUtil;
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.json.JSONUtil;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -33,6 +42,8 @@ public class ArticleBaseService {
     public ArticleMapperCustom articleMapperCustom;
     @Resource
     public ReviewTextUtil reviewTextUtil;
+    @Resource
+    public RestTemplate restTemplate;
 
     /**
      * 查询分页配置
@@ -97,5 +108,45 @@ public class ArticleBaseService {
                 criteria.andEqualTo("articleStatus", status);
             }
         }
+    }
+
+    /**
+     * ArticleDO 拼接 UserBasicInfo 形成 IndexArticleVO 返回给前端
+     * 
+     * @param articleDOList 原始ArticleDO
+     * @return 拼接好的 IndexArticleVO
+     */
+    @NotNull
+    public List<IndexArticleVO> getIndexArticleVOList(List<ArticleDO> articleDOList) {
+        // 通过Set 获得 文章列表的所有去重发布用户id
+        Set<String> idSet = new HashSet<>();
+        for (ArticleDO articleDO : articleDOList) {
+            String publishUserId = articleDO.getPublishUserId();
+            idSet.add(publishUserId);
+        }
+        // 远程调用 user service 通过idSet查询用户list
+        HashMap<String, UserBasicInfoVO> map = new HashMap<>(0);
+        for (String id : idSet) {
+            String userServerUrl = "http://writer.codeprobe.cn:8003/writer/user/queryUserBasicInfo?userId=" + id;
+            ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServerUrl, JsonResult.class);
+            if (entity.getStatusCode() == HttpStatus.OK) {
+                Object data = Objects.requireNonNull(entity.getBody()).getData();
+                String jsonStr = JSONUtil.toJsonStr(data);
+                UserBasicInfoVO userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
+                map.put(id, userBasicInfoVO);
+            } else {
+                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_PUBLISH_USER_ERROR);
+            }
+        }
+        List<IndexArticleVO> articleVOList = BeanUtil.copyToList(articleDOList, IndexArticleVO.class);
+
+        // 将 userBasicInfoVO 插入 articleVO
+        for (IndexArticleVO articleVO : articleVOList) {
+            UserBasicInfoVO userBasicInfoVO = map.get(articleVO.getPublishUserId());
+            if (userBasicInfoVO != null) {
+                articleVO.setPublisherVO(userBasicInfoVO);
+            }
+        }
+        return articleVOList;
     }
 }

@@ -10,7 +10,7 @@ import cn.codeprobe.api.controller.user.UserPortalControllerApi;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.po.AppUserDO;
-import cn.codeprobe.pojo.vo.UserInfoVO;
+import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.user.service.impl.UserPortalServiceImpl;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -32,10 +32,10 @@ public class UserPortalController extends ApiController implements UserPortalCon
         }
         // 执行查询操作
         AppUserDO user = userPortalService.getUserInfo(userId);
-        UserInfoVO userInfoVO = new UserInfoVO();
+        UserBasicInfoVO userBasicInfoVO = new UserBasicInfoVO();
         // pojo -> vo
-        BeanUtils.copyProperties(user, userInfoVO);
-        return JsonResult.ok(userInfoVO);
+        BeanUtils.copyProperties(user, userBasicInfoVO);
+        return JsonResult.ok(userBasicInfoVO);
     }
 
 }

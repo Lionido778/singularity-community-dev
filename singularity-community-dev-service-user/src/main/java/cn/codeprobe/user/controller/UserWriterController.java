@@ -15,7 +15,7 @@ import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
 import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.pojo.vo.UserAccountInfoVO;
-import cn.codeprobe.pojo.vo.UserInfoVO;
+import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.user.service.impl.UserWriterServiceImpl;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -37,10 +37,10 @@ public class UserWriterController extends ApiController implements UserWriterCon
         }
         // 执行查询操作
         AppUserDO user = userWriterService.getUserInfo(userId);
-        UserInfoVO userInfoVO = new UserInfoVO();
+        UserBasicInfoVO userBasicInfoVO = new UserBasicInfoVO();
         // pojo -> vo
-        BeanUtils.copyProperties(user, userInfoVO);
-        return JsonResult.ok(userInfoVO);
+        BeanUtils.copyProperties(user, userBasicInfoVO);
+        return JsonResult.ok(userBasicInfoVO);
     }
 
     @Override
