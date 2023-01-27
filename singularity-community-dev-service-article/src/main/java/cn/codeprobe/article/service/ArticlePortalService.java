@@ -59,4 +59,10 @@ public interface ArticlePortalService {
      */
     ArticleDetailVO getArticleDetail(String articleId);
 
+    /**
+     * 统计文章浏览量
+     * 
+     * @param articleId 文章ID
+     */
+    void countArticleView(String articleId);
 }

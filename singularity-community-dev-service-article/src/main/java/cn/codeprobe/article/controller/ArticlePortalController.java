@@ -67,6 +67,18 @@ public class ArticlePortalController extends ApiController implements ArticlePor
     }
 
     @Override
+    public JsonResult queryPageListGoodArticleOfWriter(String writerId) {
+        // 校验数据并初始化
+        if (CharSequenceUtil.isBlank(writerId)) {
+            return JsonResult.errorCustom(ResponseStatusEnum.ARTICLE_QUERY_PARAMS_ERROR);
+        }
+        // 调用 service 查询用户文章列表
+        PagedGridResult pagedGridResult = articlePortalService.pageListGoodArticlesOfWriter(writerId,
+            PageHelper.ARTICLE_HOT_DEFAULT_PAGE.page, PageHelper.ARTICLE_HOT_DEFAULT_PAGE.pageSize);
+        return JsonResult.ok(pagedGridResult);
+    }
+
+    @Override
     public JsonResult detail(String articleId) {
         // 校验数据并初始化
         if (CharSequenceUtil.isBlank(articleId)) {
@@ -78,14 +90,13 @@ public class ArticlePortalController extends ApiController implements ArticlePor
     }
 
     @Override
-    public JsonResult queryPageListGoodArticleOfWriter(String writerId) {
+    public JsonResult readArticle(String articleId) {
         // 校验数据并初始化
-        if (CharSequenceUtil.isBlank(writerId)) {
+        if (CharSequenceUtil.isBlank(articleId)) {
             return JsonResult.errorCustom(ResponseStatusEnum.ARTICLE_QUERY_PARAMS_ERROR);
         }
-        // 调用 service 查询用户文章列表
-        PagedGridResult pagedGridResult = articlePortalService.pageListGoodArticlesOfWriter(writerId,
-            PageHelper.ARTICLE_HOT_DEFAULT_PAGE.page, PageHelper.ARTICLE_HOT_DEFAULT_PAGE.pageSize);
-        return JsonResult.ok(pagedGridResult);
+        // 调用service 统计文章浏览量
+        articlePortalService.countArticleView(articleId);
+        return JsonResult.ok();
     }
 }

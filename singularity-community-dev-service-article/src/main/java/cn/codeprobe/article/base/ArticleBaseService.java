@@ -3,6 +3,7 @@ package cn.codeprobe.article.base;
 import java.util.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.IdWorker;
+import cn.codeprobe.utils.RedisUtil;
 import cn.codeprobe.utils.ReviewTextUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.json.JSONUtil;
@@ -33,6 +35,9 @@ import tk.mybatis.mapper.entity.Example;
  */
 public class ArticleBaseService {
 
+    public static final String REDIS_ARTICLE_VIEWS = "article_views";
+    public static final String REDIS_ARTICLE_VIEWED = "article_viewed";
+    public static final Long EXPIRED_TIME = (long)24 * 60 * 3600;
     @Resource
     public IdWorker idWorker;
     @Resource
@@ -43,6 +48,10 @@ public class ArticleBaseService {
     public ReviewTextUtil reviewTextUtil;
     @Resource
     public RestTemplate restTemplate;
+    @Resource
+    public RedisUtil redisUtil;
+    @Resource
+    public HttpServletRequest request;
 
     /**
      * 门户文章列表 查询条件设置

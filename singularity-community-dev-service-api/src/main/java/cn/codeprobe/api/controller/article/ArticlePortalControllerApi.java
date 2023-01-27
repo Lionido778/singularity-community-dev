@@ -1,6 +1,7 @@
 package cn.codeprobe.api.controller.article;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -70,5 +71,15 @@ public interface ArticlePortalControllerApi {
     @ApiOperation(value = "查看文章详细", notes = "查看文章详细内容", httpMethod = "GET")
     @GetMapping("/detail")
     JsonResult detail(@RequestParam String articleId);
+
+    /**
+     * 门户：统计文章阅读数量
+     *
+     * @param articleId 作者ID
+     * @return JsonResult
+     */
+    @ApiOperation(value = "统计文章阅读数量", notes = "统计文章阅读数量", httpMethod = "POST")
+    @PostMapping("/readArticle")
+    JsonResult readArticle(@RequestParam String articleId);
 
 }

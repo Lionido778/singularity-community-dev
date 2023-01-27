@@ -20,6 +20,7 @@ import cn.codeprobe.pojo.vo.IndexArticleVO;
 import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
+import cn.codeprobe.utils.IpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
@@ -126,9 +127,36 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_PUBLISH_USER_ERROR);
         }
-        // articleDetailVO 拼接 publishUserName
+        // articleDetailVO 拼接 publishUserName(发布者昵称) 和 ReadCounts(浏览量)
         articleDetailVO.setPublishUserName(userBasicInfoVO.getNickname());
+        String value = redisUtil.get(REDIS_ARTICLE_VIEWS + ":" + articleId);
+        Integer views = null;
+        if (CharSequenceUtil.isBlank(value)) {
+            views = 0;
+        } else {
+            views = Integer.parseInt(value);
+        }
+        articleDetailVO.setReadCounts(views);
         return articleDetailVO;
+    }
+
+    @Override
+    public void countArticleView(String articleId) {
+        Article article = new Article();
+        article.setId(articleId);
+        int count = articleMapper.selectCount(article);
+        if (count >= 0) {
+            // 获取请求IP，防刷浏览量
+            String requestIp = IpUtil.getRequestIp(request);
+            boolean isExist = redisUtil.keyIsExist(REDIS_ARTICLE_VIEWED + ":" + requestIp + ":" + articleId);
+            if (!isExist) {
+                // view ++
+                redisUtil.increment(REDIS_ARTICLE_VIEWS + ":" + articleId, 1);
+                // 防刷限制时间为24小时
+                redisUtil.set(REDIS_ARTICLE_VIEWED + ":" + requestIp + ":" + articleId, articleId, EXPIRED_TIME);
+            }
+        }
+
     }
 
 }
