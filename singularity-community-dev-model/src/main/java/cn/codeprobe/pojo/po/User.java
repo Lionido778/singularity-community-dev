@@ -9,8 +9,8 @@ import javax.persistence.Table;
 /**
  * @author Lionido
  */
-@Table(name = "app_user")
-public class AppUserDO {
+@Table(name = "user")
+public class User {
     @Id
     private String id;
 

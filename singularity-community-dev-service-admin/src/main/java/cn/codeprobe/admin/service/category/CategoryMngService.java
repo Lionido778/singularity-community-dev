@@ -3,7 +3,7 @@ package cn.codeprobe.admin.service.category;
 import java.util.List;
 
 import cn.codeprobe.pojo.bo.CategoryBO;
-import cn.codeprobe.pojo.po.CategoryDO;
+import cn.codeprobe.pojo.po.Category;
 
 /**
  * @author Lionido
@@ -23,7 +23,7 @@ public interface CategoryMngService {
      *
      * @return list
      */
-    List<CategoryDO> listCategories();
+    List<Category> listCategories();
 
     /**
      * 删除 分类

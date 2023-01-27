@@ -4,7 +4,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,7 +12,6 @@ import cn.codeprobe.api.controller.user.UserWriterControllerApi;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
-import cn.codeprobe.pojo.po.AppUserDO;
 import cn.codeprobe.pojo.vo.UserAccountInfoVO;
 import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 import cn.codeprobe.result.JsonResult;
@@ -35,11 +33,8 @@ public class UserWriterController extends ApiController implements UserWriterCon
         if (CharSequenceUtil.isBlank(userId)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
         }
-        // 执行查询操作
-        AppUserDO user = userWriterService.getUserInfo(userId);
-        UserBasicInfoVO userBasicInfoVO = new UserBasicInfoVO();
-        // pojo -> vo
-        BeanUtils.copyProperties(user, userBasicInfoVO);
+        // 调用 service 执行查询操作
+        UserBasicInfoVO userBasicInfoVO = userWriterService.getUserBasicInfo(userId);
         return JsonResult.ok(userBasicInfoVO);
     }
 
@@ -49,11 +44,9 @@ public class UserWriterController extends ApiController implements UserWriterCon
         if (CharSequenceUtil.isBlank(userId)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
         }
-        // 执行查询操作
-        AppUserDO user = userWriterService.getUserInfo(userId);
-        // pojo -> vo
-        UserAccountInfoVO userAccountInfoVO = new UserAccountInfoVO();
-        BeanUtils.copyProperties(user, userAccountInfoVO);
+        // 调用 service 执行查询操作
+        UserAccountInfoVO userAccountInfoVO = userWriterService.getUserAccountInfo(userId);
+
         return JsonResult.ok(userAccountInfoVO);
     }
 

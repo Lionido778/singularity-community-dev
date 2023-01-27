@@ -3,7 +3,7 @@ package cn.codeprobe.admin.service.friendlink;
 import java.util.List;
 
 import cn.codeprobe.pojo.bo.FriendLinkBO;
-import cn.codeprobe.pojo.mo.FriendLinkDO;
+import cn.codeprobe.pojo.mo.FriendLink;
 
 /**
  * 管理中心: 友情链接管理service
@@ -24,7 +24,7 @@ public interface FriendLinkMngService {
      *
      * @return list
      */
-    List<FriendLinkDO> listFriendLinks();
+    List<FriendLink> listFriendLinks();
 
     /**
      * 删除 友情链接

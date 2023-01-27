@@ -8,7 +8,7 @@ import javax.persistence.Table;
  * @author Lionido
  */
 @Table(name = "category")
-public class CategoryDO {
+public class Category {
     @Id
     private Integer id;
 

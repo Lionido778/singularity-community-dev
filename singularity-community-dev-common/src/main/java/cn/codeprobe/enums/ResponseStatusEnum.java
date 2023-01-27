@@ -59,6 +59,7 @@ public enum ResponseStatusEnum {
     ARTICLE_QUERY_PARAMS_ERROR(593, false, "文章列表查询参数错误！"), ARTICLE_DELETE_ERROR(594, false, "文章删除失败！"),
     ARTICLE_WITHDRAW_ERROR(595, false, "文章撤回失败！"), ARTICLE_REVIEW_ERROR(596, false, "文章审核出错！"),
     ARTICLE_ALREADY_READ_ERROR(597, false, "文章重复阅读！"), FANS_PARAMENT_ERROR(598, false, "查看粉丝参数出错！"),
+    ARTICLE_VIEW_DETAIL_FAILED(599, false, "查看文章详细内容失败！"),
 
     /**
      * 人脸识别错误代码

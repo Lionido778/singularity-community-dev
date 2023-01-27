@@ -11,7 +11,7 @@ import com.github.pagehelper.PageInfo;
 import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.enums.UserSex;
 import cn.codeprobe.enums.UserStatus;
-import cn.codeprobe.pojo.po.AppUserDO;
+import cn.codeprobe.pojo.po.User;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.mapper.AppUserMapper;
 import cn.codeprobe.user.mapper.FansMapper;
@@ -85,16 +85,16 @@ public class UserBaseService extends ApiController {
     @Value("${website.domain-name}")
     public String domainName;
 
-    /**
-     * 获取用户
-     */
-    public AppUserDO getUser(String userId) {
-        return appUserMapper.selectByPrimaryKey(userId);
-    }
+    /// **
+    // * 获取用户PO
+    // */
+    // public AppUserDO getUser(String userId) {
+    // return appUserMapper.selectByPrimaryKey(userId);
+    // }
 
-    public AppUserDO queryAppUserByMobile(String mobile) {
+    public User queryAppUserByMobile(String mobile) {
         // 构建example
-        Example example = new Example(AppUserDO.class);
+        Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
         // 查询条件
         criteria.andEqualTo("mobile", mobile);
@@ -103,7 +103,7 @@ public class UserBaseService extends ApiController {
     }
 
     /**
-     * 查询分页配置
+     * 配置分页
      *
      * @param list 查询数据（每页）
      * @param page 当前页
@@ -125,15 +125,15 @@ public class UserBaseService extends ApiController {
      * @param userId 用户ID
      * @return AppUserDO
      */
-    public AppUserDO getAppUserDO(String userId) {
+    public User getAppUserDO(String userId) {
         // 先从缓存redis中查找user
         String jsonUser = redisUtil.get(REDIS_USER_INFO + ":" + userId);
         if (CharSequenceUtil.isNotBlank(jsonUser)) {
             // 如果有，返回
-            return JSONUtil.toBean(jsonUser, AppUserDO.class);
+            return JSONUtil.toBean(jsonUser, User.class);
         }
         // 如果没有，从数据库中查找user
-        AppUserDO user = getUser(userId);
+        User user = appUserMapper.selectByPrimaryKey(userId);
         // 并写入缓存redis
         redisUtil.set(REDIS_USER_INFO + ":" + userId, JSONUtil.toJsonStr(user));
         return user;

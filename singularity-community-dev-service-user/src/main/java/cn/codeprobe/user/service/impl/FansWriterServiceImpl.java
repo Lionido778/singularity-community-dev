@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 
-import cn.codeprobe.pojo.po.FansDO;
+import cn.codeprobe.pojo.po.Fans;
 import cn.codeprobe.pojo.vo.FansRegionRatioVO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.service.FansWriterService;
@@ -21,20 +21,20 @@ public class FansWriterServiceImpl extends UserBaseService implements FansWriter
 
     @Override
     public PagedGridResult pageListFans(String writerId, Integer page, Integer pageSize) {
-        FansDO fansDO = new FansDO();
-        fansDO.setWriterId(writerId);
+        Fans fans = new Fans();
+        fans.setWriterId(writerId);
         // 查询粉丝(宽表)分页列表
         PageHelper.startPage(page, pageSize);
-        List<FansDO> list = fansMapper.select(fansDO);
+        List<Fans> list = fansMapper.select(fans);
         return setterPageGrid(list, page);
     }
 
     @Override
     public Long countFansBySex(String writerId, Integer sex) {
-        FansDO fansDO = new FansDO();
-        fansDO.setWriterId(writerId);
-        fansDO.setSex(sex);
-        int count = fansMapper.selectCount(fansDO);
+        Fans fans = new Fans();
+        fans.setWriterId(writerId);
+        fans.setSex(sex);
+        int count = fansMapper.selectCount(fans);
         return Long.parseLong(String.valueOf(count));
     }
 
@@ -42,10 +42,10 @@ public class FansWriterServiceImpl extends UserBaseService implements FansWriter
     public List<FansRegionRatioVO> countFansByRegion(String writerId) {
         ArrayList<FansRegionRatioVO> list = new ArrayList<>();
         for (String region : REGIONS) {
-            FansDO fansDO = new FansDO();
-            fansDO.setWriterId(writerId);
-            fansDO.setProvince(region);
-            int count = fansMapper.selectCount(fansDO);
+            Fans fans = new Fans();
+            fans.setWriterId(writerId);
+            fans.setProvince(region);
+            int count = fansMapper.selectCount(fans);
             FansRegionRatioVO fansRegionRatioVO = new FansRegionRatioVO();
             fansRegionRatioVO.setName(region);
             fansRegionRatioVO.setValue(Long.parseLong(String.valueOf(count)));

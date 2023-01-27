@@ -9,7 +9,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import cn.codeprobe.api.interceptors.base.ApiInterceptor;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.po.AppUserDO;
+import cn.codeprobe.pojo.po.User;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 
@@ -30,9 +30,9 @@ public class UserActivityInterceptor extends ApiInterceptor implements HandlerIn
             GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
             return false;
         }
-        AppUserDO appUserDO = JSONUtil.toBean(userJson, AppUserDO.class);
-        if (appUserDO != null) {
-            if (!appUserDO.getActiveStatus().equals(USER_ACTIVE)) {
+        User user = JSONUtil.toBean(userJson, User.class);
+        if (user != null) {
+            if (!user.getActiveStatus().equals(USER_ACTIVE)) {
                 // 用户未激活，拦截
                 GlobalExceptionManage.internal(ResponseStatusEnum.USER_INACTIVE_ERROR);
                 return false;

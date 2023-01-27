@@ -10,7 +10,7 @@ import cn.codeprobe.admin.service.category.CategoryMngService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.CategoryBO;
-import cn.codeprobe.pojo.po.CategoryDO;
+import cn.codeprobe.pojo.po.Category;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -29,15 +29,15 @@ public class CategoryMngServiceImpl extends AdminBaseService implements Category
         }
         // 判断 更新或者是新添加
         Integer id = categoryBO.getId();
-        CategoryDO categoryDO = new CategoryDO();
-        BeanUtils.copyProperties(categoryBO, categoryDO);
+        Category category = new Category();
+        BeanUtils.copyProperties(categoryBO, category);
         int result;
         if (id == null) {
             // 添加
-            result = categoryMapper.insert(categoryDO);
+            result = categoryMapper.insert(category);
         } else {
             // 更新
-            result = categoryMapper.updateByPrimaryKeySelective(categoryDO);
+            result = categoryMapper.updateByPrimaryKeySelective(category);
         }
         if (result != 1) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CATEGORY_ADD_FAILED);
@@ -47,7 +47,7 @@ public class CategoryMngServiceImpl extends AdminBaseService implements Category
     }
 
     @Override
-    public List<CategoryDO> listCategories() {
+    public List<Category> listCategories() {
         return categoryMapper.selectAll();
     }
 
@@ -63,11 +63,11 @@ public class CategoryMngServiceImpl extends AdminBaseService implements Category
 
     @Override
     public Boolean checkCategoryIsExist(String categoryName) {
-        Example example = new Example(CategoryDO.class);
+        Example example = new Example(Category.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("name", categoryName);
-        CategoryDO categoryDO = categoryMapper.selectOneByExample(example);
-        return categoryDO != null;
+        Category category = categoryMapper.selectOneByExample(example);
+        return category != null;
     }
 
 }

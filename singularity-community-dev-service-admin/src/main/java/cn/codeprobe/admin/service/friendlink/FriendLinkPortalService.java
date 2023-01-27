@@ -2,7 +2,7 @@ package cn.codeprobe.admin.service.friendlink;
 
 import java.util.List;
 
-import cn.codeprobe.pojo.mo.FriendLinkDO;
+import cn.codeprobe.pojo.mo.FriendLink;
 
 /**
  * 门户: 友情链接相关接口
@@ -17,6 +17,6 @@ public interface FriendLinkPortalService {
      * @param isDelete 未删除
      * @return List<FriendLinkDO>
      */
-    List<FriendLinkDO> listFriendLinks(Integer isDelete);
+    List<FriendLink> listFriendLinks(Integer isDelete);
 
 }

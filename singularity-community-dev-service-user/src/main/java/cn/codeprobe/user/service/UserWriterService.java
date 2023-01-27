@@ -1,7 +1,8 @@
 package cn.codeprobe.user.service;
 
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
-import cn.codeprobe.pojo.po.AppUserDO;
+import cn.codeprobe.pojo.po.User;
+import cn.codeprobe.pojo.vo.UserAccountInfoVO;
 
 /**
  * 创作中心：用户相关服务
@@ -16,23 +17,23 @@ public interface UserWriterService {
      * @param mobile 手机号
      * @return AppUser
      */
-    AppUserDO queryAppUserIsExist(String mobile);
+    User queryAppUserIsExist(String mobile);
 
     /**
      * 创作中心：注册用户
      *
      * @param mobile 手机号
-     * @return AppUser
+     * @return AppUserDO
      */
-    AppUserDO saveAppUser(String mobile);
+    User saveAppUser(String mobile);
 
     /**
      * 创作中心：获取用户 (缓存,数据库) 由于该接口调用量巨大，为了缓解数据库压力，设计了缓存
      *
      * @param userId 用户ID
-     * @return AppUser
+     * @return UserAccountInfoVO
      */
-    AppUserDO getUserInfo(String userId);
+    UserAccountInfoVO getUserAccountInfo(String userId);
 
     /**
      * 创作中心：更新用户账户信息

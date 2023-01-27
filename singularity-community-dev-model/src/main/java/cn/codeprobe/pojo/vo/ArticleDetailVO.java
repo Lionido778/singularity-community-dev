@@ -17,6 +17,7 @@ public class ArticleDetailVO {
     private String publishUserId;
     private Date publishTime;
     private String content;
+
     private String publishUserName;
     private Integer readCounts;
 

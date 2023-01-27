@@ -8,7 +8,7 @@ import javax.persistence.Table;
  * @author Lionido
  */
 @Table(name = "fans")
-public class FansDO {
+public class Fans {
 
     @Id
     private String id;

@@ -12,7 +12,7 @@ import cn.codeprobe.admin.service.friendlink.FriendLinkMngService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.FriendLinkBO;
-import cn.codeprobe.pojo.mo.FriendLinkDO;
+import cn.codeprobe.pojo.mo.FriendLink;
 
 /**
  * @author Lionido
@@ -28,14 +28,14 @@ public class FriendLinkMngServiceImpl extends AdminBaseService implements Friend
         if (Boolean.TRUE.equals(isExist)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_FRIEND_LINK_IS_EXISTED);
         }
-        FriendLinkDO friendLinkDO = new FriendLinkDO();
-        BeanUtils.copyProperties(friendLinkBO, friendLinkDO);
+        FriendLink friendLink = new FriendLink();
+        BeanUtils.copyProperties(friendLinkBO, friendLink);
         // 保存或更新
-        friendLinkRepository.save(friendLinkDO);
+        friendLinkRepository.save(friendLink);
     }
 
     @Override
-    public List<FriendLinkDO> listFriendLinks() {
+    public List<FriendLink> listFriendLinks() {
         return friendLinkRepository.findAll();
     }
 
@@ -46,10 +46,10 @@ public class FriendLinkMngServiceImpl extends AdminBaseService implements Friend
 
     @Override
     public Boolean checkFriendLinkIsExist(String linkName) {
-        FriendLinkDO friendLinkDO = new FriendLinkDO();
-        friendLinkDO.setLinkName(linkName);
-        Example<FriendLinkDO> example = Example.of(friendLinkDO);
-        Optional<FriendLinkDO> one = friendLinkRepository.findOne(example);
+        FriendLink friendLink = new FriendLink();
+        friendLink.setLinkName(linkName);
+        Example<FriendLink> example = Example.of(friendLink);
+        Optional<FriendLink> one = friendLinkRepository.findOne(example);
         return one.isPresent();
     }
 

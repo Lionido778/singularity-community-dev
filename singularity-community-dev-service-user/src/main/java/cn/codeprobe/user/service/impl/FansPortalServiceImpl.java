@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.po.AppUserDO;
-import cn.codeprobe.pojo.po.FansDO;
+import cn.codeprobe.pojo.po.Fans;
+import cn.codeprobe.pojo.po.User;
 import cn.codeprobe.user.service.FansPortalService;
 import cn.codeprobe.user.service.UserWriterService;
 import cn.codeprobe.user.service.base.UserBaseService;
@@ -26,32 +26,32 @@ public class FansPortalServiceImpl extends UserBaseService implements FansPortal
 
     @Override
     public Boolean queryIsFollowed(String writerId, String fanId) {
-        FansDO fansDO = new FansDO();
-        fansDO.setFanId(fanId);
-        fansDO.setWriterId(writerId);
-        int count = fansMapper.selectCount(fansDO);
+        Fans fans = new Fans();
+        fans.setFanId(fanId);
+        fans.setWriterId(writerId);
+        int count = fansMapper.selectCount(fans);
         return count > 0;
     }
 
     @Override
     public void followWriter(String writerId, String fanId) {
-        AppUserDO fanUserInfo = userWriterService.getUserInfo(fanId);
+        User fanUserInfo = getAppUserDO(fanId);
         String id = idWorker.nextIdStr();
-        FansDO fansDO = new FansDO();
-        fansDO.setId(id);
-        fansDO.setFanId(fanId);
-        fansDO.setWriterId(writerId);
+        Fans fans = new Fans();
+        fans.setId(id);
+        fans.setFanId(fanId);
+        fans.setWriterId(writerId);
         // 设置冗余信息
         if (fanUserInfo != null) {
-            fansDO.setFace(fanUserInfo.getFace());
-            fansDO.setFanNickname(fanUserInfo.getNickname());
-            fansDO.setProvince(fanUserInfo.getProvince());
-            fansDO.setSex(fanUserInfo.getSex());
+            fans.setFace(fanUserInfo.getFace());
+            fans.setFanNickname(fanUserInfo.getNickname());
+            fans.setProvince(fanUserInfo.getProvince());
+            fans.setSex(fanUserInfo.getSex());
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.FANS_FOLLOW_FAILED);
         }
         // 数据库插入记录
-        int res = fansMapper.insert(fansDO);
+        int res = fansMapper.insert(fans);
         if (res != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.FANS_FOLLOW_FAILED);
         }
@@ -65,10 +65,10 @@ public class FansPortalServiceImpl extends UserBaseService implements FansPortal
 
     @Override
     public void unFollowWriter(String writerId, String fanId) {
-        FansDO fansDO = new FansDO();
-        fansDO.setWriterId(writerId);
-        fansDO.setFanId(fanId);
-        int res = fansMapper.delete(fansDO);
+        Fans fans = new Fans();
+        fans.setWriterId(writerId);
+        fans.setFanId(fanId);
+        int res = fansMapper.delete(fans);
         if (res != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.FANS_UN_FOLLOW_FAILED);
         }

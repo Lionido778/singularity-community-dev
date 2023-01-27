@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.admin.service.friendlink.FriendLinkPortalService;
-import cn.codeprobe.pojo.mo.FriendLinkDO;
+import cn.codeprobe.pojo.mo.FriendLink;
 
 /**
  * @author Lionido
@@ -15,7 +15,7 @@ import cn.codeprobe.pojo.mo.FriendLinkDO;
 public class FriendLinkPortalServiceImpl extends AdminBaseService implements FriendLinkPortalService {
 
     @Override
-    public List<FriendLinkDO> listFriendLinks(Integer isDelete) {
+    public List<FriendLink> listFriendLinks(Integer isDelete) {
         return friendLinkRepository.getAllByIsDelete(isDelete);
     }
 

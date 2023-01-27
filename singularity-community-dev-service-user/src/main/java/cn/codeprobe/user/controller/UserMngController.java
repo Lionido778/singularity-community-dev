@@ -10,7 +10,7 @@ import cn.codeprobe.api.controller.base.ApiController;
 import cn.codeprobe.api.controller.user.UserMngControllerApi;
 import cn.codeprobe.enums.PageHelper;
 import cn.codeprobe.enums.ResponseStatusEnum;
-import cn.codeprobe.pojo.po.AppUserDO;
+import cn.codeprobe.pojo.vo.UserAccountInfoVO;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.user.service.UserMngService;
@@ -52,8 +52,8 @@ public class UserMngController extends ApiController implements UserMngControlle
             return JsonResult.errorCustom(ResponseStatusEnum.USER_QUERY_ERROR);
         }
         // 调用service 获取用户信息
-        AppUserDO userInfo = userWriterService.getUserInfo(userId);
-        return JsonResult.ok(userInfo);
+        UserAccountInfoVO userAccountInfoVO = userWriterService.getUserAccountInfo(userId);
+        return JsonResult.ok(userAccountInfoVO);
     }
 
     @Override

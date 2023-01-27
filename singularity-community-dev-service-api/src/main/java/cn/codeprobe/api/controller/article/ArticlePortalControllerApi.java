@@ -62,12 +62,13 @@ public interface ArticlePortalControllerApi {
     JsonResult queryPageListGoodArticleOfWriter(@RequestParam String writerId);
 
     /**
-     * 门户：查看文章详细信息
+     * 门户：查看文章详细内容
      *
      * @param articleId 作者ID
-     * @return
+     * @return JsonResult
      */
-    @ApiOperation(value = "查看文章详细信息", notes = "查看文章详细信息", httpMethod = "GET")
+    @ApiOperation(value = "查看文章详细", notes = "查看文章详细内容", httpMethod = "GET")
     @GetMapping("/detail")
     JsonResult detail(@RequestParam String articleId);
+
 }

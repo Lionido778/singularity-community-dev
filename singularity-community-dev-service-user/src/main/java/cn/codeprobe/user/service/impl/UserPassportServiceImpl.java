@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
-import cn.codeprobe.pojo.po.AppUserDO;
+import cn.codeprobe.pojo.po.User;
 import cn.codeprobe.user.service.UserPassportService;
 import cn.codeprobe.user.service.UserWriterService;
 import cn.codeprobe.user.service.base.UserBaseService;
@@ -44,26 +44,26 @@ public class UserPassportServiceImpl extends UserBaseService implements UserPass
     }
 
     @Override
-    public AppUserDO registerLogin(RegisterLoginBO registerLoginBO) {
+    public User registerLogin(RegisterLoginBO registerLoginBO) {
         // 校验验证码
         String redisSmsCode = redisUtil.get(MOBILE_SMS_CODE + ":" + registerLoginBO.getMobile());
         if (CharSequenceUtil.isBlank(redisSmsCode) || !redisSmsCode.equals(registerLoginBO.getSmsCode())) {
             GlobalExceptionManage.internal(ResponseStatusEnum.SMS_CODE_ERROR);
         }
         // 通过手机号查询用户是否已经注册
-        AppUserDO appUserDO = queryAppUserByMobile(registerLoginBO.getMobile());
+        User user = queryAppUserByMobile(registerLoginBO.getMobile());
         // 判断用户是否被冻结
-        if (appUserDO != null && appUserDO.getActiveStatus().equals(USER_FROZEN)) {
+        if (user != null && user.getActiveStatus().equals(USER_FROZEN)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.USER_FROZEN);
-        } else if (appUserDO == null) {
+        } else if (user == null) {
             // 注册新用户
-            appUserDO = userWriterService.saveAppUser(registerLoginBO.getMobile());
+            user = userWriterService.saveAppUser(registerLoginBO.getMobile());
         }
         // 登陆成功 配置 token 和 cookie
-        userLoginSetting(appUserDO);
+        userLoginSetting(user);
         // 短信验证码有效次数一次，用户成功注册或登陆时，短信验证码作废
         redisUtil.del(MOBILE_SMS_CODE + ":" + registerLoginBO.getMobile());
-        return appUserDO;
+        return user;
     }
 
     @Override
@@ -75,9 +75,9 @@ public class UserPassportServiceImpl extends UserBaseService implements UserPass
         setCookie(COOKIE_NAME_TOKEN, "", COOKIE_DELETE);
     }
 
-    private void userLoginSetting(AppUserDO appUserDO) {
+    private void userLoginSetting(User user) {
         UUID uToken = UUID.randomUUID();
-        String uId = appUserDO.getId();
+        String uId = user.getId();
         // 保存分布式会话信息Cookie到redis(有效期一个小时)，并响应保存到前端
         redisUtil.set(REDIS_USER_TOKEN + ":" + uId, uToken.toString().trim(), REDIS_USER_TOKEN_TIMEOUT);
         setCookie(COOKIE_NAME_ID, uId, COOKIE_MAX_AGE, domainName);

@@ -3,10 +3,10 @@ package cn.codeprobe.user.mapper;
 import org.springframework.stereotype.Repository;
 
 import cn.codeprobe.mapper.MyMapper;
-import cn.codeprobe.pojo.po.AppUserDO;
+import cn.codeprobe.pojo.po.User;
 
 /**
  * @author Lionido
  */
 @Repository
-public interface AppUserMapper extends MyMapper<AppUserDO> {}
+public interface AppUserMapper extends MyMapper<User> {}

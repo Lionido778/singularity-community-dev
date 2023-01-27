@@ -2,7 +2,7 @@ package cn.codeprobe.admin.service.category;
 
 import java.util.List;
 
-import cn.codeprobe.pojo.po.CategoryDO;
+import cn.codeprobe.pojo.po.Category;
 
 /**
  * @author Lionido
@@ -15,6 +15,6 @@ public interface CategoryWriterService {
      *
      * @return list
      */
-    List<CategoryDO> getCategories();
+    List<Category> getCategories();
 
 }

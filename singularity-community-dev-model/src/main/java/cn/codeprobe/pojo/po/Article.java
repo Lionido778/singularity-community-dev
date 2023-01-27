@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * @author Lionido
  */
 @Table(name = "article")
-public class ArticleDO {
+public class Article {
     @Id
     private String id;
 

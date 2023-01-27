@@ -8,7 +8,7 @@ import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.api.threadlocal.SubjectContext;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.po.AdminUserDO;
+import cn.codeprobe.pojo.po.Admin;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.utils.FileUtil;
 import cn.hutool.core.text.CharSequenceUtil;
@@ -21,15 +21,15 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
 
     @Override
     public void loginByUsernameAndPwd(String username, String password) {
-        AdminUserDO adminUserDO = queryAdminByUsername(username);
-        if (adminUserDO != null) {
-            String encryptedPwd = adminUserDO.getPassword();
+        Admin admin = queryAdminByUsername(username);
+        if (admin != null) {
+            String encryptedPwd = admin.getPassword();
             if (Boolean.TRUE.equals(isPasswordMatched(password, encryptedPwd))) {
                 // 登陆成功，进行token、cookie配置
-                adminLoggedSetting(adminUserDO);
+                adminLoggedSetting(admin);
                 // ThreadLocal 添加 Subject
                 if (!SubjectContext.checkHasAdmin()) {
-                    SubjectContext.setAdmin(adminUserDO);
+                    SubjectContext.setAdmin(admin);
                 }
             } else {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_NOT_EXIT_ERROR);
@@ -41,9 +41,9 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
 
     @Override
     public void loginByFace(String username, String img64Face) {
-        AdminUserDO adminUserDO = queryAdminByUsername(username);
-        if (adminUserDO != null) {
-            String faceId = adminUserDO.getFaceId();
+        Admin admin = queryAdminByUsername(username);
+        if (admin != null) {
+            String faceId = admin.getFaceId();
             if (CharSequenceUtil.isNotBlank(faceId)) {
                 // 暂时使用 RestTemplate 调用 file 服务的下载保存在GridFS中的人脸数据（Base64）
                 String accessFileServerUrl = FILE_SERVER_URL + faceId;
@@ -62,10 +62,10 @@ public class AdminPassportServiceImpl extends AdminBaseService implements AdminP
                         Boolean pass = faceVerifyUtil.verifyFace(TARGET_CONFIDENCE, faceFile, dataFile);
                         if (Boolean.TRUE.equals(pass)) {
                             // 人脸识别登陆成功，设置管理员登陆参数
-                            adminLoggedSetting(adminUserDO);
+                            adminLoggedSetting(admin);
                             // ThreadLocal 添加 Subject
                             if (!SubjectContext.checkHasAdmin()) {
-                                SubjectContext.setAdmin(adminUserDO);
+                                SubjectContext.setAdmin(admin);
                             }
                         } else {
                             // 人脸识别失败

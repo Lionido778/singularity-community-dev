@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.admin.service.category.CategoryWriterService;
-import cn.codeprobe.pojo.po.CategoryDO;
+import cn.codeprobe.pojo.po.Category;
 
 /**
  * @author Lionido
@@ -15,7 +15,7 @@ import cn.codeprobe.pojo.po.CategoryDO;
 public class CategoryWriterServiceImpl extends AdminBaseService implements CategoryWriterService {
 
     @Override
-    public List<CategoryDO> getCategories() {
+    public List<Category> getCategories() {
         return getCategoryDOList();
     }
 

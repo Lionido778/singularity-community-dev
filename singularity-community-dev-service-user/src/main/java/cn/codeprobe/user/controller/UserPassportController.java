@@ -12,7 +12,7 @@ import cn.codeprobe.api.controller.user.UserPassportControllerApi;
 import cn.codeprobe.api.threadlocal.SubjectContext;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
-import cn.codeprobe.pojo.po.AppUserDO;
+import cn.codeprobe.pojo.po.User;
 import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.user.service.UserPassportService;
 import cn.codeprobe.utils.RegexUtil;
@@ -49,13 +49,13 @@ public class UserPassportController extends ApiController implements UserPasspor
             return JsonResult.errorMap(errorMap);
         }
         // 调用 service 执行注册登陆
-        AppUserDO appUserDO = userPassportService.registerLogin(registerLoginBO);
+        User user = userPassportService.registerLogin(registerLoginBO);
         // 保存 Subject 到 ThreadLocal 异步线程
         if (!SubjectContext.checkHasUser()) {
-            SubjectContext.setUser(appUserDO);
+            SubjectContext.setUser(user);
         }
         System.out.println(SubjectContext.getUser());
-        return JsonResult.ok(appUserDO.getActiveStatus());
+        return JsonResult.ok(user.getActiveStatus());
     }
 
     @Override

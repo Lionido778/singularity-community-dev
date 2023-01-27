@@ -13,12 +13,11 @@ import com.github.pagehelper.PageInfo;
 
 import cn.codeprobe.article.mapper.ArticleMapper;
 import cn.codeprobe.article.mapper.ArticleMapperCustom;
-import cn.codeprobe.enums.Article;
 import cn.codeprobe.enums.ContentSecurity;
 import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.po.ArticleDO;
+import cn.codeprobe.pojo.po.Article;
 import cn.codeprobe.pojo.vo.IndexArticleVO;
 import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 import cn.codeprobe.result.JsonResult;
@@ -53,14 +52,13 @@ public class ArticleBaseService {
      */
     @NotNull
     public static Example.Criteria getPortalCriteria(Example example) {
-        example.orderBy("createTime").desc();
         Example.Criteria criteria = example.createCriteria();
         // 文章必须：非逻辑删除
-        criteria.andEqualTo("isDelete", Article.UN_DELETED.type);
+        criteria.andEqualTo("isDelete", cn.codeprobe.enums.Article.UN_DELETED.type);
         // 文章必须：及时发布
-        criteria.andEqualTo("isAppoint", Article.UN_APPOINTED.type);
+        criteria.andEqualTo("isAppoint", cn.codeprobe.enums.Article.UN_APPOINTED.type);
         // 文章必须：审核通过
-        criteria.andEqualTo("articleStatus", Article.STATUS_APPROVED.type);
+        criteria.andEqualTo("articleStatus", cn.codeprobe.enums.Article.STATUS_APPROVED.type);
         return criteria;
     }
 
@@ -94,18 +92,18 @@ public class ArticleBaseService {
         boolean block = map.containsValue(ContentSecurity.SUGGESTION_BLOCK.label);
         boolean pass = map.containsValue(ContentSecurity.SUGGESTION_PASS.label);
         boolean review = map.containsValue(ContentSecurity.SUGGESTION_REVIEW.label);
-        ArticleDO articleDO = new ArticleDO();
-        Example example = new Example(ArticleDO.class);
+        Article article = new Article();
+        Example example = new Example(Article.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("id", articleId);
         if (block) {
-            articleDO.setArticleStatus(Article.STATUS_REJECTED.type);
+            article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_REJECTED.type);
         } else if (review) {
-            articleDO.setArticleStatus(Article.STATUS_MANUAL_VERIFYING.type);
+            article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_MANUAL_VERIFYING.type);
         } else if (pass) {
-            articleDO.setArticleStatus(Article.STATUS_APPROVED.type);
+            article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_APPROVED.type);
         }
-        int result = articleMapper.updateByExampleSelective(articleDO, example);
+        int result = articleMapper.updateByExampleSelective(article, example);
         if (result != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
         }
@@ -119,11 +117,12 @@ public class ArticleBaseService {
      */
     public void articleCriteriaStatus(Integer status, Example.Criteria criteria) {
         if (status != null) {
-            if (status.equals(Article.STATUS_VERIFYING.type)) {
-                criteria.andEqualTo("articleStatus", Article.STATUS_MACHINE_VERIFYING.type).orEqualTo("articleStatus",
-                    Article.STATUS_MANUAL_VERIFYING.type);
-            } else if (status.equals(Article.STATUS_APPROVED.type) || status.equals(Article.STATUS_REJECTED.type)
-                || status.equals(Article.STATUS_RECALLED.type)) {
+            if (status.equals(cn.codeprobe.enums.Article.STATUS_VERIFYING.type)) {
+                criteria.andEqualTo("articleStatus", cn.codeprobe.enums.Article.STATUS_MACHINE_VERIFYING.type)
+                    .orEqualTo("articleStatus", cn.codeprobe.enums.Article.STATUS_MANUAL_VERIFYING.type);
+            } else if (status.equals(cn.codeprobe.enums.Article.STATUS_APPROVED.type)
+                || status.equals(cn.codeprobe.enums.Article.STATUS_REJECTED.type)
+                || status.equals(cn.codeprobe.enums.Article.STATUS_RECALLED.type)) {
                 criteria.andEqualTo("articleStatus", status);
             }
         }
@@ -132,15 +131,15 @@ public class ArticleBaseService {
     /**
      * ArticleDO 拼接 UserBasicInfo 形成 IndexArticleVO 返回给前端
      *
-     * @param articleDOList 原始ArticleDO
+     * @param articleList 原始ArticleDO
      * @return 拼接好的 IndexArticleVO
      */
     @NotNull
-    public List<IndexArticleVO> getIndexArticleVOList(List<ArticleDO> articleDOList) {
+    public List<IndexArticleVO> getIndexArticleVOList(List<Article> articleList) {
         // 通过Set 获得 文章列表的所有去重发布用户id
         Set<String> idSet = new HashSet<>();
-        for (ArticleDO articleDO : articleDOList) {
-            String publishUserId = articleDO.getPublishUserId();
+        for (Article article : articleList) {
+            String publishUserId = article.getPublishUserId();
             idSet.add(publishUserId);
         }
         // 远程调用 user service 通过idSet查询用户list
@@ -157,7 +156,7 @@ public class ArticleBaseService {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_PUBLISH_USER_ERROR);
             }
         }
-        List<IndexArticleVO> articleVOList = BeanUtil.copyToList(articleDOList, IndexArticleVO.class);
+        List<IndexArticleVO> articleVOList = BeanUtil.copyToList(articleList, IndexArticleVO.class);
 
         // 将 userBasicInfoVO 插入 articleVO
         for (IndexArticleVO articleVO : articleVOList) {

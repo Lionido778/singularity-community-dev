@@ -52,7 +52,7 @@ public interface ArticlePortalService {
     PagedGridResult pageListGoodArticlesOfWriter(String writerId, Integer page, Integer pageSize);
 
     /**
-     * 获取文章详细内容
+     * 获取文章
      * 
      * @param articleId 文章ID
      * @return ArticleDetailVO

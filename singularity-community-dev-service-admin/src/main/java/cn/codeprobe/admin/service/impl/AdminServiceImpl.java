@@ -12,7 +12,7 @@ import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.bo.NewAdminBO;
-import cn.codeprobe.pojo.po.AdminUserDO;
+import cn.codeprobe.pojo.po.Admin;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.hutool.core.text.CharSequenceUtil;
 import tk.mybatis.mapper.entity.Example;
@@ -24,28 +24,28 @@ import tk.mybatis.mapper.entity.Example;
 public class AdminServiceImpl extends AdminBaseService implements AdminService {
     @Override
     public Boolean checkAdminIsExist(String username) {
-        AdminUserDO adminUserDO = queryAdminByUsername(username);
-        return adminUserDO != null;
+        Admin admin = queryAdminByUsername(username);
+        return admin != null;
     }
 
     @Override
     public void saveAdminUser(NewAdminBO newAdminBO) {
-        AdminUserDO adminUserDO = new AdminUserDO();
-        adminUserDO.setId(idWorker.nextIdStr());
-        adminUserDO.setUsername(newAdminBO.getUsername());
-        adminUserDO.setAdminName(newAdminBO.getAdminName());
+        Admin admin = new Admin();
+        admin.setId(idWorker.nextIdStr());
+        admin.setUsername(newAdminBO.getUsername());
+        admin.setAdminName(newAdminBO.getAdminName());
         // 密码加密
         String encryptPassword = encryptPassword(newAdminBO.getPassword());
-        adminUserDO.setPassword(encryptPassword);
+        admin.setPassword(encryptPassword);
         String faceId = newAdminBO.getFaceId();
         // 如果上传了人脸识别则会有 faceId
         if (CharSequenceUtil.isNotBlank(faceId)) {
-            adminUserDO.setFaceId(faceId);
+            admin.setFaceId(faceId);
         }
-        adminUserDO.setCreatedTime(new Date());
-        adminUserDO.setUpdatedTime(new Date());
+        admin.setCreatedTime(new Date());
+        admin.setUpdatedTime(new Date());
 
-        int result = adminUserMapper.insertSelective(adminUserDO);
+        int result = adminUserMapper.insertSelective(admin);
         if (result != 1) {
             // 管理员添加失败
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CREATE_ERROR);
@@ -54,14 +54,14 @@ public class AdminServiceImpl extends AdminBaseService implements AdminService {
 
     @Override
     public PagedGridResult pageListAdminUsers(int page, int pageSize) {
-        Example example = new Example(AdminUserDO.class);
+        Example example = new Example(Admin.class);
         example.orderBy("createdTime").desc();
 
         PageMethod.startPage(page, pageSize);
-        List<AdminUserDO> adminUserDOList = adminUserMapper.selectByExample(example);
-        if (adminUserDOList.isEmpty()) {
+        List<Admin> adminList = adminUserMapper.selectByExample(example);
+        if (adminList.isEmpty()) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_QUERY_ERROR);
         }
-        return setterPageGrid(adminUserDOList, page);
+        return setterPageGrid(adminList, page);
     }
 }

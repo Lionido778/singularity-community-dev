@@ -9,8 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import cn.codeprobe.admin.service.friendlink.FriendLinkPortalService;
 import cn.codeprobe.api.controller.admin.friendlink.FriendLinkPortalControllerApi;
 import cn.codeprobe.api.controller.base.ApiController;
-import cn.codeprobe.enums.FriendLink;
-import cn.codeprobe.pojo.mo.FriendLinkDO;
+import cn.codeprobe.pojo.mo.FriendLink;
 import cn.codeprobe.result.JsonResult;
 
 /**
@@ -24,7 +23,7 @@ public class FriendLinPortalController extends ApiController implements FriendLi
 
     @Override
     public JsonResult queryListFriendLinks() {
-        List<FriendLinkDO> list = friendLinkPortalService.listFriendLinks(FriendLink.UN_DELETED.type);
+        List<FriendLink> list = friendLinkPortalService.listFriendLinks(cn.codeprobe.enums.FriendLink.UN_DELETED.type);
         return JsonResult.ok(list);
     }
 

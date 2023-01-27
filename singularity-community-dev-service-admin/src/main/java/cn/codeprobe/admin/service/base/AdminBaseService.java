@@ -16,8 +16,8 @@ import cn.codeprobe.admin.mapper.AdminUserMapper;
 import cn.codeprobe.admin.mapper.CategoryMapper;
 import cn.codeprobe.admin.repository.FriendLinkRepository;
 import cn.codeprobe.api.controller.base.ApiController;
-import cn.codeprobe.pojo.po.AdminUserDO;
-import cn.codeprobe.pojo.po.CategoryDO;
+import cn.codeprobe.pojo.po.Admin;
+import cn.codeprobe.pojo.po.Category;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.FaceVerifyUtil;
 import cn.codeprobe.utils.IdWorker;
@@ -82,8 +82,8 @@ public class AdminBaseService extends ApiController {
     /**
      * 获取管理员用户信息
      */
-    public AdminUserDO queryAdminByUsername(String username) {
-        Example example = new Example(AdminUserDO.class);
+    public Admin queryAdminByUsername(String username) {
+        Example example = new Example(Admin.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("username", username);
         return adminUserMapper.selectOneByExample(example);
@@ -111,11 +111,11 @@ public class AdminBaseService extends ApiController {
     /**
      * admin 登录后成功后 生成token、cookie
      */
-    public void adminLoggedSetting(AdminUserDO adminUserDO) {
-        String adminId = adminUserDO.getId();
+    public void adminLoggedSetting(Admin admin) {
+        String adminId = admin.getId();
         UUID uuid = UUID.randomUUID();
         String adminToken = uuid.toString();
-        String adminName = adminUserDO.getUsername();
+        String adminName = admin.getUsername();
         // 将adminToken写入redis
         redisUtil.set(REDIS_ADMIN_TOKEN + ":" + adminId, adminToken, REDIS_ADMIN_TOKEN_TIMEOUT);
         // 设置cookie
@@ -146,12 +146,12 @@ public class AdminBaseService extends ApiController {
      *
      * @return List<CategoryDO>
      */
-    public List<CategoryDO> getCategoryDOList() {
+    public List<Category> getCategoryDOList() {
         String jsonCategoriesList = redisUtil.get(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES);
         if (CharSequenceUtil.isNotBlank(jsonCategoriesList)) {
-            return JSONUtil.toList(jsonCategoriesList, CategoryDO.class);
+            return JSONUtil.toList(jsonCategoriesList, Category.class);
         } else {
-            List<CategoryDO> list = categoryMapper.selectAll();
+            List<Category> list = categoryMapper.selectAll();
             redisUtil.set(REDIS_ALL_CATEGORIES + ":" + REDIS_ALL_CATEGORIES, JSONUtil.toJsonStr(list));
             return list;
         }

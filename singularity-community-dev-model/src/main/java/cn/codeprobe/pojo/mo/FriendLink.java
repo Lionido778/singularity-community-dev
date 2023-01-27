@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
  * @author Lionido
  */
 @Document(value = "friend_link")
-public class FriendLinkDO {
+public class FriendLink {
 
     private String id;
     @Field(value = "link_name")
