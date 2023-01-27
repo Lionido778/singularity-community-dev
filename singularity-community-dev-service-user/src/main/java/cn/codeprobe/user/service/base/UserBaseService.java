@@ -63,6 +63,11 @@ public class UserBaseService extends ApiController {
      */
     public static final String REDIS_WRITER_FOLLOWED_COUNT = "writer_followed_count";
     public static final String REDIS_WRITER_FANS_COUNT = "writer_fans_count";
+    public static final String FANS_DEFAULT_COUNT = "0";
+    public static final String FOLLOWED_DEFAULT_COUNT = "0";
+    public static final String[] REGIONS =
+        {"北京", "天津", "上海", "重庆", "河北", "山西", "辽宁", "吉林", "黑龙江", "江苏", "浙江", "安徽", "福建", "江西", "山东", "河南", "湖北", "湖南",
+            "广东", "海南", "四川", "贵州", "云南", "陕西", "甘肃", "青海", "台湾", "内蒙古", "广西", "西藏", "宁夏", "新疆", "香港", "澳门"};
 
     @Resource
     public AppUserMapper appUserMapper;
@@ -104,7 +109,7 @@ public class UserBaseService extends ApiController {
      * @param page 当前页
      * @return 封装分页查询结果
      */
-    public PagedGridResult setPageGrid(List<?> list, int page) {
+    public PagedGridResult setterPageGrid(List<?> list, int page) {
         PageInfo<?> pageInfo = new PageInfo<>(list);
         PagedGridResult gridResult = new PagedGridResult();
         gridResult.setRows(list);

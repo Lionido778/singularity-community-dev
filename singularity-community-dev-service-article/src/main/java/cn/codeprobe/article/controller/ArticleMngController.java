@@ -1,5 +1,7 @@
 package cn.codeprobe.article.controller;
 
+import java.util.Date;
+
 import javax.annotation.Resource;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -46,7 +48,8 @@ public class ArticleMngController extends ApiController implements ArticleMngCon
     }
 
     @Override
-    public JsonResult queryAllPageListArticles(Integer status, Integer page, Integer pageSize) {
+    public JsonResult queryAllPageListArticles(Integer status, Integer page, Integer pageSize, String keyword,
+        Date startDate, Date endDate) {
         // 校验数据并初始化
         if (page == null) {
             page = PageHelper.DEFAULT_PAGE.page;
@@ -61,7 +64,8 @@ public class ArticleMngController extends ApiController implements ArticleMngCon
             return JsonResult.errorCustom(ResponseStatusEnum.ARTICLE_QUERY_PARAMS_ERROR);
         }
         // 调用 service 查询文章列表
-        PagedGridResult pagedGridResult = articleMngService.pageListAllArticles(status, page, pageSize);
+        PagedGridResult pagedGridResult =
+            articleMngService.pageListAllArticles(status, page, pageSize, keyword, startDate, endDate);
         return JsonResult.ok(pagedGridResult);
     }
 }

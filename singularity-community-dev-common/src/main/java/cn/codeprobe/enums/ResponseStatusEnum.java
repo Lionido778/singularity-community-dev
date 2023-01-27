@@ -58,7 +58,7 @@ public enum ResponseStatusEnum {
     ARTICLE_CATEGORY_NOT_EXIST_ERROR(591, false, "请选择正确的文章领域！"), ARTICLE_CREATE_ERROR(592, false, "创建文章失败，请重试或联系管理员！"),
     ARTICLE_QUERY_PARAMS_ERROR(593, false, "文章列表查询参数错误！"), ARTICLE_DELETE_ERROR(594, false, "文章删除失败！"),
     ARTICLE_WITHDRAW_ERROR(595, false, "文章撤回失败！"), ARTICLE_REVIEW_ERROR(596, false, "文章审核出错！"),
-    ARTICLE_ALREADY_READ_ERROR(597, false, "文章重复阅读！"),
+    ARTICLE_ALREADY_READ_ERROR(597, false, "文章重复阅读！"), FANS_PARAMENT_ERROR(598, false, "查看粉丝参数出错！"),
 
     /**
      * 人脸识别错误代码

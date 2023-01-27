@@ -1,5 +1,7 @@
 package cn.codeprobe.api.controller.article;
 
+import java.util.Date;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,14 +22,18 @@ public interface ArticleMngControllerApi {
     /**
      * 管理中心：查询所有文章分页列表
      *
-     * @param status 文章状态
+     * @param keyword 关键词
+     * @param status 状态
+     * @param startDate 开始时间
+     * @param endDate 结束时间
      * @param page 当前页
      * @param pageSize 当前页数量
      * @return PageGridResult
      */
     @ApiOperation(value = "查询所有文章分页列表", notes = "查询所有文章分页列表", httpMethod = "POST")
     @PostMapping("/queryAllPageListArticles")
-    JsonResult queryAllPageListArticles(@RequestParam Integer status, Integer page, Integer pageSize);
+    JsonResult queryAllPageListArticles(@RequestParam Integer status, Integer page, Integer pageSize, String keyword,
+        Date startDate, Date endDate);
 
     /**
      * 管理中心：审核文章 1：通过，0: 不通过

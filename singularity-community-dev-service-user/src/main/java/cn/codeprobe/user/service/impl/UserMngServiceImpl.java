@@ -42,7 +42,7 @@ public class UserMngServiceImpl extends UserBaseService implements UserMngServic
         }
         PageMethod.startPage(page, pageSize);
         List<AppUserDO> list = appUserMapper.selectByExample(example);
-        return setPageGrid(list, page);
+        return setterPageGrid(list, page);
     }
 
     @Override

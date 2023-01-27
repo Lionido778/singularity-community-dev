@@ -1,5 +1,6 @@
 package cn.codeprobe.article.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.po.ArticleDO;
 import cn.codeprobe.result.page.PagedGridResult;
+import cn.hutool.core.text.CharSequenceUtil;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -43,12 +45,25 @@ public class ArticleMngServiceImpl extends ArticleBaseService implements Article
     }
 
     @Override
-    public PagedGridResult pageListAllArticles(Integer status, Integer page, Integer pageSize) {
+    public PagedGridResult pageListAllArticles(Integer status, Integer page, Integer pageSize, String keyword,
+        Date startDate, Date endDate) {
         Example example = new Example(ArticleDO.class);
         example.orderBy("createTime").desc();
         Example.Criteria criteria = example.createCriteria();
         // 文章状态，如果是 12（审核中） ，同时查询1（机器审核）和2（人工审核）
         articleCriteriaStatus(status, criteria);
+        // 关键词查询
+        if (CharSequenceUtil.isNotBlank(keyword)) {
+            criteria.andLike("title", "%" + keyword + "%");
+        }
+        // 起始时间
+        if (startDate != null) {
+            criteria.andGreaterThanOrEqualTo("createTime", startDate);
+        }
+        // 结束时间
+        if (endDate != null) {
+            criteria.andLessThanOrEqualTo("createTime", endDate);
+        }
         // 分页查询
         PageHelper.startPage(page, pageSize);
         List<ArticleDO> list = articleMapper.selectByExample(example);
