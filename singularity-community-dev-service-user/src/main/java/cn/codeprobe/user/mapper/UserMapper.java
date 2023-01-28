@@ -9,4 +9,4 @@ import cn.codeprobe.pojo.po.User;
  * @author Lionido
  */
 @Repository
-public interface AppUserMapper extends MyMapper<User> {}
+public interface UserMapper extends MyMapper<User> {}

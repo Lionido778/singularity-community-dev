@@ -15,6 +15,8 @@ public class UserBasicInfoVO {
     private String followCounts;
     private String fansCounts;
 
+    public UserBasicInfoVO() {}
+
     public String getFollowCounts() {
         return followCounts;
     }

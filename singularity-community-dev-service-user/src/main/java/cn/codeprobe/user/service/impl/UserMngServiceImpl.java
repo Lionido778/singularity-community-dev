@@ -42,14 +42,14 @@ public class UserMngServiceImpl extends UserBaseService implements UserMngServic
             criteria.andLessThanOrEqualTo("createdTime", endTime);
         }
         PageMethod.startPage(page, pageSize);
-        List<User> list = appUserMapper.selectByExample(example);
+        List<User> list = userMapper.selectByExample(example);
         return setterPageGrid(list, page);
     }
 
     @Override
     public void freezeUserOrNot(String userId, Integer doStatus) {
         // 校验
-        User user = appUserMapper.selectByPrimaryKey(userId);
+        User user = userMapper.selectByPrimaryKey(userId);
         if (user == null) {
             GlobalExceptionManage.internal(ResponseStatusEnum.USER_NOT_EXIST_ERROR);
         }
@@ -57,7 +57,7 @@ public class UserMngServiceImpl extends UserBaseService implements UserMngServic
         user.setId(userId);
         user.setActiveStatus(doStatus);
         // 更新用户状态（冻结或解冻）
-        int result = appUserMapper.updateByPrimaryKeySelective(user);
+        int result = userMapper.updateByPrimaryKeySelective(user);
         if (result != 1) {
             GlobalExceptionManage.internal(ResponseStatusEnum.USER_OPERATION_ERROR);
         }

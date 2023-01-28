@@ -13,8 +13,8 @@ import cn.codeprobe.enums.UserSex;
 import cn.codeprobe.enums.UserStatus;
 import cn.codeprobe.pojo.po.User;
 import cn.codeprobe.result.page.PagedGridResult;
-import cn.codeprobe.user.mapper.AppUserMapper;
 import cn.codeprobe.user.mapper.FansMapper;
+import cn.codeprobe.user.mapper.UserMapper;
 import cn.codeprobe.utils.IdWorker;
 import cn.codeprobe.utils.RedisUtil;
 import cn.codeprobe.utils.SmsUtil;
@@ -70,7 +70,7 @@ public class UserBaseService extends ApiController {
             "广东", "海南", "四川", "贵州", "云南", "陕西", "甘肃", "青海", "台湾", "内蒙古", "广西", "西藏", "宁夏", "新疆", "香港", "澳门"};
 
     @Resource
-    public AppUserMapper appUserMapper;
+    public UserMapper userMapper;
     @Resource
     public FansMapper fansMapper;
     @Resource
@@ -85,21 +85,20 @@ public class UserBaseService extends ApiController {
     @Value("${website.domain-name}")
     public String domainName;
 
-    /// **
-    // * 获取用户PO
-    // */
-    // public AppUserDO getUser(String userId) {
-    // return appUserMapper.selectByPrimaryKey(userId);
-    // }
-
-    public User queryAppUserByMobile(String mobile) {
+    /**
+     * 通过手机查询用户
+     * 
+     * @param mobile 手机号
+     * @return user
+     */
+    public User queryUserByMobile(String mobile) {
         // 构建example
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
         // 查询条件
         criteria.andEqualTo("mobile", mobile);
         // 查询用户
-        return appUserMapper.selectOneByExample(example);
+        return userMapper.selectOneByExample(example);
     }
 
     /**
@@ -120,12 +119,12 @@ public class UserBaseService extends ApiController {
     }
 
     /**
-     * 获取用户账户信息
+     * 获取用户信息
      *
      * @param userId 用户ID
-     * @return AppUserDO
+     * @return user
      */
-    public User getAppUserDO(String userId) {
+    public User getUser(String userId) {
         // 先从缓存redis中查找user
         String jsonUser = redisUtil.get(REDIS_USER_INFO + ":" + userId);
         if (CharSequenceUtil.isNotBlank(jsonUser)) {
@@ -133,7 +132,7 @@ public class UserBaseService extends ApiController {
             return JSONUtil.toBean(jsonUser, User.class);
         }
         // 如果没有，从数据库中查找user
-        User user = appUserMapper.selectByPrimaryKey(userId);
+        User user = userMapper.selectByPrimaryKey(userId);
         // 并写入缓存redis
         redisUtil.set(REDIS_USER_INFO + ":" + userId, JSONUtil.toJsonStr(user));
         return user;

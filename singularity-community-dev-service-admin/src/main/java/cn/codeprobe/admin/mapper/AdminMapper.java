@@ -6,11 +6,11 @@ import cn.codeprobe.mapper.MyMapper;
 import cn.codeprobe.pojo.po.Admin;
 
 /**
- * AdminUserMapper.xml 对应的java映射
+ * AdminMapper.xml 对应的java映射
  *
  * @author Lionido
  */
 @Repository
-public interface AdminUserMapper extends MyMapper<Admin> {
+public interface AdminMapper extends MyMapper<Admin> {
 
 }

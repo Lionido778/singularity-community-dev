@@ -45,7 +45,7 @@ public class AdminServiceImpl extends AdminBaseService implements AdminService {
         admin.setCreatedTime(new Date());
         admin.setUpdatedTime(new Date());
 
-        int result = adminUserMapper.insertSelective(admin);
+        int result = adminMapper.insertSelective(admin);
         if (result != 1) {
             // 管理员添加失败
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CREATE_ERROR);
@@ -58,7 +58,7 @@ public class AdminServiceImpl extends AdminBaseService implements AdminService {
         example.orderBy("createdTime").desc();
 
         PageMethod.startPage(page, pageSize);
-        List<Admin> adminList = adminUserMapper.selectByExample(example);
+        List<Admin> adminList = adminMapper.selectByExample(example);
         if (adminList.isEmpty()) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_QUERY_ERROR);
         }

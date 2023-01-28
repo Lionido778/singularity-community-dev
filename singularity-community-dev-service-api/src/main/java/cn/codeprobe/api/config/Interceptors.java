@@ -50,7 +50,8 @@ public class Interceptors implements WebMvcConfigurer {
             .addPathPatterns("/writer/file/uploadSerialsFiles").addPathPatterns("/writer/article/addNewArticle")
             .addPathPatterns("/writer/article/withdraw").addPathPatterns("/writer/article/delete")
             .addPathPatterns("/writer/article/queryPageListArticles").addPathPatterns("/portal/fans/unfollow")
-            .addPathPatterns("/portal/fans/follow").addPathPatterns("/writer/fans/queryPageListFans");
+            .addPathPatterns("/portal/fans/follow").addPathPatterns("/writer/fans/queryPageListFans")
+            .addPathPatterns("/writer/fans/queryRatioBySex").addPathPatterns("/writer/fans/queryRatioByRegion");
 
         // 检查管理员登录状态。若未登录，拦截
         registry.addInterceptor(adminTokenInterceptor()).addPathPatterns("/admin/adminMng/queryAdminIsExist")
@@ -67,7 +68,8 @@ public class Interceptors implements WebMvcConfigurer {
         // 检查用户的激活状态,若未激活进行拦截
         registry.addInterceptor(userActivityInterceptor()).addPathPatterns("/writer/file/uploadSerialsFiles")
             .addPathPatterns("/portal/fans/follow").addPathPatterns("/portal/fans/unfollow")
-            .addPathPatterns("/writer/fans/queryPageListFans");
+            .addPathPatterns("/writer/fans/queryPageListFans").addPathPatterns("/writer/fans/queryRatioBySex")
+            .addPathPatterns("/writer/fans/queryRatioByRegion");
     }
 
 }

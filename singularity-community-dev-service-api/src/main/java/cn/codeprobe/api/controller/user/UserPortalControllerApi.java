@@ -27,4 +27,14 @@ public interface UserPortalControllerApi {
     @GetMapping("/queryUserBasicInfo")
     JsonResult queryUserBasicInfo(@RequestParam String userId);
 
+    /**
+     * 获取用户信息 map
+     *
+     * @param userIds 用户 idSetStr
+     * @return JsonResult
+     */
+    @ApiOperation(value = "获取用户基本信息", notes = "用户基本信息", httpMethod = "GET")
+    @GetMapping("/queryUserBasicInfoBySet")
+    JsonResult queryUserBasicInfoBySet(@RequestParam String userIds);
+
 }

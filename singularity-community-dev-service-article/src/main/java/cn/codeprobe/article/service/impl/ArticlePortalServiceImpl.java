@@ -49,6 +49,9 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
         // 分页查询
         PageHelper.startPage(page, pageSize);
         List<Article> articleList = articleMapper.selectByExample(example);
+        if (articleList.isEmpty()) {
+            return new PagedGridResult();
+        }
         // 分页封装
         PagedGridResult pagedGridResult = setterPageGrid(articleList, page);
         // 拼接 IndexArticleVO
@@ -128,20 +131,16 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_PUBLISH_USER_ERROR);
         }
         // articleDetailVO 拼接 publishUserName(发布者昵称) 和 ReadCounts(浏览量)
-        articleDetailVO.setPublishUserName(userBasicInfoVO.getNickname());
-        String value = redisUtil.get(REDIS_ARTICLE_VIEWS + ":" + articleId);
-        Integer views = null;
-        if (CharSequenceUtil.isBlank(value)) {
-            views = 0;
-        } else {
-            views = Integer.parseInt(value);
-        }
+        String nickname = userBasicInfoVO.getNickname();
+        articleDetailVO.setPublishUserName(nickname);
+        Integer views = getViewsOfArticle(articleId);
         articleDetailVO.setReadCounts(views);
         return articleDetailVO;
     }
 
     @Override
     public void countArticleView(String articleId) {
+        // 判断articleId是否有效
         Article article = new Article();
         article.setId(articleId);
         int count = articleMapper.selectCount(article);
@@ -156,7 +155,5 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
                 redisUtil.set(REDIS_ARTICLE_VIEWED + ":" + requestIp + ":" + articleId, articleId, EXPIRED_TIME);
             }
         }
-
     }
-
 }

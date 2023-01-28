@@ -51,7 +51,7 @@ public class UserPassportServiceImpl extends UserBaseService implements UserPass
             GlobalExceptionManage.internal(ResponseStatusEnum.SMS_CODE_ERROR);
         }
         // 通过手机号查询用户是否已经注册
-        User user = queryAppUserByMobile(registerLoginBO.getMobile());
+        User user = queryUserByMobile(registerLoginBO.getMobile());
         // 判断用户是否被冻结
         if (user != null && user.getActiveStatus().equals(USER_FROZEN)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.USER_FROZEN);

@@ -12,14 +12,6 @@ import cn.codeprobe.pojo.vo.UserAccountInfoVO;
 public interface UserWriterService {
 
     /**
-     * 创作中心：根据手机号查询用户是否存在
-     *
-     * @param mobile 手机号
-     * @return AppUser
-     */
-    User queryAppUserIsExist(String mobile);
-
-    /**
      * 创作中心：注册用户
      *
      * @param mobile 手机号

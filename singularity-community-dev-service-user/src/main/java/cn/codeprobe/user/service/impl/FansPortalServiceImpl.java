@@ -35,7 +35,7 @@ public class FansPortalServiceImpl extends UserBaseService implements FansPortal
 
     @Override
     public void followWriter(String writerId, String fanId) {
-        User fanUserInfo = getAppUserDO(fanId);
+        User fanUserInfo = getUser(fanId);
         String id = idWorker.nextIdStr();
         Fans fans = new Fans();
         fans.setId(id);

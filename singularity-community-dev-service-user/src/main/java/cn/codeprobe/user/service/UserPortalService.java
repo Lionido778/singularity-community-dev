@@ -1,5 +1,8 @@
 package cn.codeprobe.user.service;
 
+import java.util.List;
+import java.util.Map;
+
 import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 
 /**
@@ -16,4 +19,13 @@ public interface UserPortalService {
      * @return AppUser
      */
     UserBasicInfoVO getBasicUserInfo(String userId);
+
+    /**
+     * 通过Set获取用户map
+     * 
+     * @param idList 用户ID set
+     * @return Map<String, UserBasicInfoVO>
+     */
+    Map<String, UserBasicInfoVO> getUserInfoMapByIdSet(List<String> idList);
+
 }

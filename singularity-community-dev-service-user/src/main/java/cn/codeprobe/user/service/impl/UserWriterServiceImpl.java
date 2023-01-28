@@ -17,24 +17,12 @@ import cn.codeprobe.user.service.base.UserBaseService;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.DesensitizedUtil;
 import cn.hutool.json.JSONUtil;
-import tk.mybatis.mapper.entity.Example;
 
 /**
  * @author Lionido
  */
 @Service
 public class UserWriterServiceImpl extends UserBaseService implements UserWriterService {
-
-    @Override
-    public User queryAppUserIsExist(String mobile) {
-        // 构建example
-        Example example = new Example(User.class);
-        Example.Criteria criteria = example.createCriteria();
-        // 查询条件
-        criteria.andEqualTo("mobile", mobile);
-        // 查询用户
-        return appUserMapper.selectOneByExample(example);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -61,7 +49,7 @@ public class UserWriterServiceImpl extends UserBaseService implements UserWriter
         user.setUpdatedTime(new Date());
 
         // 创建用户，并往数据库表里插入记录
-        appUserMapper.insert(user);
+        userMapper.insert(user);
         return user;
     }
 
@@ -76,12 +64,12 @@ public class UserWriterServiceImpl extends UserBaseService implements UserWriter
         // 缓存数据双写（最新数据写入数据库和redis）一致。更新前删除缓存中原有的userInfo
         redisUtil.del(REDIS_USER_INFO + ":" + updateUserInfoBO.getId());
         // 有选择的更新数据库记录，为空的属性不会影响数据库记录
-        int result = appUserMapper.updateByPrimaryKeySelective(user);
+        int result = userMapper.updateByPrimaryKeySelective(user);
         if (result != 1) {
             GlobalExceptionManage.internal(ResponseStatusEnum.USER_UPDATE_ERROR);
         }
         // 更新后将最新的 user 写入缓存
-        User updatedUser = getAppUserDO(updateUserInfoBO.getId());
+        User updatedUser = getUser(updateUserInfoBO.getId());
         redisUtil.set(REDIS_USER_INFO + ":" + updateUserInfoBO.getId(), JSONUtil.toJsonStr(updatedUser));
         try {
             Thread.sleep(100);
@@ -93,7 +81,7 @@ public class UserWriterServiceImpl extends UserBaseService implements UserWriter
     }
 
     public UserBasicInfoVO getUserBasicInfo(String userId) {
-        User user = getAppUserDO(userId);
+        User user = getUser(userId);
         UserBasicInfoVO userBasicInfoVO = new UserBasicInfoVO();
         // po -> vo
         BeanUtils.copyProperties(user, userBasicInfoVO);
@@ -102,7 +90,7 @@ public class UserWriterServiceImpl extends UserBaseService implements UserWriter
 
     @Override
     public UserAccountInfoVO getUserAccountInfo(String userId) {
-        User user = getAppUserDO(userId);
+        User user = getUser(userId);
         // po -> vo
         UserAccountInfoVO userAccountInfoVO = new UserAccountInfoVO();
         BeanUtils.copyProperties(user, userAccountInfoVO);

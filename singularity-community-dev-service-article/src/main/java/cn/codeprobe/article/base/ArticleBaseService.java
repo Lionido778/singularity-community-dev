@@ -6,10 +6,12 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageInfo;
 
 import cn.codeprobe.article.mapper.ArticleMapper;
@@ -26,7 +28,7 @@ import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.IdWorker;
 import cn.codeprobe.utils.RedisUtil;
 import cn.codeprobe.utils.ReviewTextUtil;
-import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 import tk.mybatis.mapper.entity.Example;
 
@@ -143,38 +145,98 @@ public class ArticleBaseService {
      * @param articleList 原始ArticleDO
      * @return 拼接好的 IndexArticleVO
      */
-    @NotNull
     public List<IndexArticleVO> getIndexArticleVOList(List<Article> articleList) {
-        // 通过Set 获得 文章列表的所有去重发布用户id
+        if (articleList.isEmpty()) {
+            return null;
+        }
+        // 文章发布用户ID列表(去重)
         Set<String> idSet = new HashSet<>();
+        // redis 浏览量Key 列表
+        List<String> viewsKeyList = new ArrayList<>();
         for (Article article : articleList) {
             String publishUserId = article.getPublishUserId();
+            String articleId = article.getId();
+            viewsKeyList.add(REDIS_ARTICLE_VIEWS + ":" + articleId);
             idSet.add(publishUserId);
         }
-        // 远程调用 user service 通过idSet查询用户list
-        HashMap<String, UserBasicInfoVO> map = new HashMap<>(0);
-        for (String id : idSet) {
-            String userServerUrl = "http://writer.codeprobe.cn:8003/writer/user/queryUserBasicInfo?userId=" + id;
-            ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServerUrl, JsonResult.class);
-            if (entity.getStatusCode() == HttpStatus.OK) {
-                Object data = Objects.requireNonNull(entity.getBody()).getData();
-                String jsonStr = JSONUtil.toJsonStr(data);
-                UserBasicInfoVO userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
-                map.put(id, userBasicInfoVO);
-            } else {
-                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_PUBLISH_USER_ERROR);
-            }
-        }
-        List<IndexArticleVO> articleVOList = BeanUtil.copyToList(articleList, IndexArticleVO.class);
+        // 批量获取各文章对应的浏览量
+        List<Integer> viewsList = getViewsList(viewsKeyList);
 
-        // 将 userBasicInfoVO 插入 articleVO
-        for (IndexArticleVO articleVO : articleVOList) {
-            UserBasicInfoVO userBasicInfoVO = map.get(articleVO.getPublishUserId());
-            if (userBasicInfoVO != null) {
-                articleVO.setPublisherVO(userBasicInfoVO);
+        // 远程调用 user service 通过idSetStr查询用户list
+        String idSetStr = JSONUtil.toJsonStr(idSet);
+        String userServerUrl =
+            "http://writer.codeprobe.cn:8003/portal/user/queryUserBasicInfoBySet?userIds=" + idSetStr;
+        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServerUrl, JsonResult.class);
+        JsonResult body = entity.getBody();
+        if (body != null && body.getStatus() == HttpStatus.OK.value() && body.getData() != null) {
+            try {
+                String jsonStr = (String)body.getData();
+                Map map = JSON.parseObject(jsonStr, Map.class);
+                // articleList -> indexArticleVOList
+                ArrayList<IndexArticleVO> indexArticleVOList = new ArrayList<>();
+                for (int i = 0; i < articleList.size(); i++) {
+                    // article -> indexArticleVO
+                    Article article = articleList.get(i);
+                    IndexArticleVO indexArticleVO = new IndexArticleVO();
+                    BeanUtils.copyProperties(article, indexArticleVO);
+                    // 拼接 userBasicInfoVO
+                    UserBasicInfoVO userBasicInfoVO =
+                        JSON.to(UserBasicInfoVO.class, map.get(article.getPublishUserId()));
+                    if (userBasicInfoVO != null) {
+                        indexArticleVO.setPublisherVO(userBasicInfoVO);
+                    }
+                    // 拼接 ReadCounts
+                    Integer views = viewsList.get(i);
+                    indexArticleVO.setReadCounts(views);
+                    indexArticleVOList.add(indexArticleVO);
+                }
+                return indexArticleVOList;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
             }
+        } else {
+            return null;
         }
-        return articleVOList;
+    }
+
+    /**
+     * redis中获取文章浏览量
+     * 
+     * @param articleId 文章ID
+     * @return views
+     */
+    @NotNull
+    public Integer getViewsOfArticle(String articleId) {
+        String value = redisUtil.get(REDIS_ARTICLE_VIEWS + ":" + articleId);
+        int views;
+        if (CharSequenceUtil.isBlank(value)) {
+            views = 0;
+        } else {
+            views = Integer.parseInt(value);
+        }
+        return views;
+    }
+
+    /**
+     * 批量获取文章浏览量
+     * 
+     * @param keys redis key
+     * @return viewsIntList
+     */
+    @NotNull
+    public List<Integer> getViewsList(List<String> keys) {
+        // mget 批量获取redis中相对应的值（相比较get优化）
+        List<String> viewsStrList = redisUtil.mget(keys);
+        ArrayList<Integer> viewsIntList = new ArrayList<>();
+        for (String views : viewsStrList) {
+            int readCount = 0;
+            if (CharSequenceUtil.isNotBlank(views)) {
+                readCount = Integer.parseInt(views);
+            }
+            viewsIntList.add(readCount);
+        }
+        return viewsIntList;
     }
 
 }

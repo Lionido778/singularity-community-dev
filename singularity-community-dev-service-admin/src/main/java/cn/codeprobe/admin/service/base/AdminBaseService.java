@@ -12,7 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.github.pagehelper.PageInfo;
 
-import cn.codeprobe.admin.mapper.AdminUserMapper;
+import cn.codeprobe.admin.mapper.AdminMapper;
 import cn.codeprobe.admin.mapper.CategoryMapper;
 import cn.codeprobe.admin.repository.FriendLinkRepository;
 import cn.codeprobe.api.controller.base.ApiController;
@@ -60,7 +60,7 @@ public class AdminBaseService extends ApiController {
     public static final String FILE_SERVER_URL =
         "http://file.codeprobe.cn:8004/admin/file/readBase64FromGridFS?faceId=";
     @Resource
-    public AdminUserMapper adminUserMapper;
+    public AdminMapper adminMapper;
     @Resource
     public IdWorker idWorker;
     @Resource
@@ -86,7 +86,7 @@ public class AdminBaseService extends ApiController {
         Example example = new Example(Admin.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("username", username);
-        return adminUserMapper.selectOneByExample(example);
+        return adminMapper.selectOneByExample(example);
     }
 
     /**
