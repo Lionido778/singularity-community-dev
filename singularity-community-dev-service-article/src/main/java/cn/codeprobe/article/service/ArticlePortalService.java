@@ -22,7 +22,7 @@ public interface ArticlePortalService {
      * @param pageSize 每页数量
      * @return 文章分页列表
      */
-    PagedGridResult pageListArticles(String keyword, Integer category, Integer page, Integer pageSize);
+    PagedGridResult pageListIndexArticles(String keyword, Integer category, Integer page, Integer pageSize);
 
     /**
      * 门户：获取热门文章列表

@@ -38,7 +38,7 @@ public class ArticlePortalController extends ApiController implements ArticlePor
             pageSize = PageHelper.DEFAULT_PAGE.pageSize;
         }
         // 调用 service 查询文章列表
-        PagedGridResult pagedGridResult = articlePortalService.pageListArticles(keyword, category, page, pageSize);
+        PagedGridResult pagedGridResult = articlePortalService.pageListIndexArticles(keyword, category, page, pageSize);
         return JsonResult.ok(pagedGridResult);
     }
 

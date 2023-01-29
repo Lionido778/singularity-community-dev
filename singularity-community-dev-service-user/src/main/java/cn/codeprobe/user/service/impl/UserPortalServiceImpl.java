@@ -36,7 +36,7 @@ public class UserPortalServiceImpl extends UserBaseService implements UserPortal
             userBasicInfoVO.setFollowCounts(String.valueOf(FOLLOWED_DEFAULT_COUNT));
         }
         userBasicInfoVO.setFansCounts(fansCounts);
-        userBasicInfoVO.setFollowCounts(String.valueOf(followCounts));
+        userBasicInfoVO.setFollowCounts(followCounts);
         return userBasicInfoVO;
     }
 

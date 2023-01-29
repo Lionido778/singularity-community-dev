@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cn.codeprobe.pojo.bo.CategoryBO;
+import cn.codeprobe.pojo.bo.NewCategoryBO;
 import cn.codeprobe.result.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,13 +25,13 @@ public interface CategoryMngControllerApi {
     /**
      * 新增/更新分类
      *
-     * @param categoryBO 分类表单
+     * @param newCategoryBO 分类表单
      * @param result 表单验证结果
      * @return yes / no
      */
     @PostMapping("/addOrModifyCategory")
     @ApiOperation(value = "新增或更新分类", notes = "新增或更新分类")
-    public JsonResult addOrModifyCategory(@RequestBody @Valid CategoryBO categoryBO, BindingResult result);
+    public JsonResult addOrModifyCategory(@RequestBody @Valid NewCategoryBO newCategoryBO, BindingResult result);
 
     /**
      * 管理中心获取所有分类列表

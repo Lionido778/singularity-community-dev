@@ -10,7 +10,7 @@ import cn.codeprobe.validate.CheckUrl;
 /**
  * @author Lionido
  */
-public class FriendLinkBO {
+public class NewFriendLinkBO {
 
     private String id;
     @NotBlank(message = "链接名称不可以为空！")

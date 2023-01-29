@@ -2,7 +2,7 @@ package cn.codeprobe.admin.service.category;
 
 import java.util.List;
 
-import cn.codeprobe.pojo.bo.CategoryBO;
+import cn.codeprobe.pojo.bo.NewCategoryBO;
 import cn.codeprobe.pojo.po.Category;
 
 /**
@@ -14,9 +14,9 @@ public interface CategoryMngService {
     /**
      * 保存或更新 Category
      *
-     * @param categoryBO 友情链接
+     * @param newCategoryBO 友情链接
      */
-    void saveOrUpdateCategory(CategoryBO categoryBO);
+    void saveOrUpdateCategory(NewCategoryBO newCategoryBO);
 
     /**
      * 管理中心 获取 category List

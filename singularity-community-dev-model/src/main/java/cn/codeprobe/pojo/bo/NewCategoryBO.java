@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 /**
  * @author Lionido
  */
-public class CategoryBO {
+public class NewCategoryBO {
 
     private Integer id;
     @NotBlank(message = "分类名称不可以为空！")

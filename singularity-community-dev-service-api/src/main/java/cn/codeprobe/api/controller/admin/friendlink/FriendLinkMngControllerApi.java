@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import cn.codeprobe.pojo.bo.FriendLinkBO;
+import cn.codeprobe.pojo.bo.NewFriendLinkBO;
 import cn.codeprobe.result.JsonResult;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,13 +25,13 @@ public interface FriendLinkMngControllerApi {
     /**
      * 新增或更新友情链接
      *
-     * @param friendLinkBO 友情链接表单
+     * @param newFriendLinkBO 友情链接表单
      * @param result 表单验证结果
      * @return yes / no
      */
     @PostMapping("/addOrModifyFriendLink")
     @ApiOperation(value = "新增管理员", notes = "新增管理员")
-    public JsonResult addOrModifyFriendLink(@RequestBody @Valid FriendLinkBO friendLinkBO, BindingResult result);
+    public JsonResult addOrModifyFriendLink(@RequestBody @Valid NewFriendLinkBO newFriendLinkBO, BindingResult result);
 
     /**
      * 获取所有友情链接列表

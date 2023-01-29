@@ -32,7 +32,7 @@ public class UserPortalController extends ApiController implements UserPortalCon
     public JsonResult queryUserBasicInfo(String userId) {
         // 校验 userId
         if (CharSequenceUtil.isBlank(userId)) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.UN_LOGIN);
+            GlobalExceptionManage.internal(ResponseStatusEnum.USER_QUERY_ERROR);
         }
         // 调用service
         UserBasicInfoVO userBasicInfoVO = userPortalService.getBasicUserInfo(userId);
@@ -49,7 +49,6 @@ public class UserPortalController extends ApiController implements UserPortalCon
             map = userPortalService.getUserInfoMapByIdSet(idList);
         }
         String jsonString = JSON.toJSONString(map);
-        System.out.println(jsonString);
         return JsonResult.ok(jsonString);
     }
 }

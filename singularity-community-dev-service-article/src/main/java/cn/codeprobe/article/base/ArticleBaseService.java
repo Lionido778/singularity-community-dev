@@ -37,9 +37,10 @@ import tk.mybatis.mapper.entity.Example;
  */
 public class ArticleBaseService {
 
-    public static final String REDIS_ARTICLE_VIEWS = "article_views";
+    public static final String REDIS_ARTICLE_VIEWS_COUNT = "article_views_count";
     public static final String REDIS_ARTICLE_VIEWED = "article_viewed";
     public static final Long EXPIRED_TIME = (long)24 * 60 * 3600;
+
     @Resource
     public IdWorker idWorker;
     @Resource
@@ -62,7 +63,7 @@ public class ArticleBaseService {
      * @return Example.Criteria
      */
     @NotNull
-    public static Example.Criteria getPortalCriteria(Example example) {
+    public static Example.Criteria getPortalCommonCriteria(Example example) {
         Example.Criteria criteria = example.createCriteria();
         // 文章必须：非逻辑删除
         criteria.andEqualTo("isDelete", cn.codeprobe.enums.Article.UN_DELETED.type);
@@ -156,7 +157,7 @@ public class ArticleBaseService {
         for (Article article : articleList) {
             String publishUserId = article.getPublishUserId();
             String articleId = article.getId();
-            viewsKeyList.add(REDIS_ARTICLE_VIEWS + ":" + articleId);
+            viewsKeyList.add(REDIS_ARTICLE_VIEWS_COUNT + ":" + articleId);
             idSet.add(publishUserId);
         }
         // 批量获取各文章对应的浏览量
@@ -208,7 +209,7 @@ public class ArticleBaseService {
      */
     @NotNull
     public Integer getViewsOfArticle(String articleId) {
-        String value = redisUtil.get(REDIS_ARTICLE_VIEWS + ":" + articleId);
+        String value = redisUtil.get(REDIS_ARTICLE_VIEWS_COUNT + ":" + articleId);
         int views;
         if (CharSequenceUtil.isBlank(value)) {
             views = 0;

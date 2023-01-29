@@ -33,11 +33,11 @@ import tk.mybatis.mapper.entity.Example;
 public class ArticlePortalServiceImpl extends ArticleBaseService implements ArticlePortalService {
 
     @Override
-    public PagedGridResult pageListArticles(String keyword, Integer category, Integer page, Integer pageSize) {
+    public PagedGridResult pageListIndexArticles(String keyword, Integer category, Integer page, Integer pageSize) {
         Example example = new Example(Article.class);
         example.orderBy("createTime").desc();
         // 门户统一文章查询条件
-        Example.Criteria portalCriteria = getPortalCriteria(example);
+        Example.Criteria portalCriteria = getPortalCommonCriteria(example);
         // 关键词查询
         if (CharSequenceUtil.isNotBlank(keyword)) {
             portalCriteria.andLike("title", "%" + keyword + "%");
@@ -65,7 +65,7 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
         Example example = new Example(Article.class);
         example.orderBy("createTime").desc();
         // 门户统一文章查询条件
-        Example.Criteria portalCriteria = getPortalCriteria(example);
+        getPortalCommonCriteria(example);
         // 分页查询
         PageHelper.startPage(1, 5);
         List<Article> articleList = articleMapper.selectByExample(example);
@@ -77,7 +77,7 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
     public PagedGridResult pageListGoodArticlesOfWriter(String writerId, Integer page, Integer pageSize) {
         Example example = new Example(Article.class);
         example.orderBy("createTime").desc();
-        Example.Criteria criteria = getPortalCriteria(example);
+        Example.Criteria criteria = getPortalCommonCriteria(example);
         // 该用户下的所有文章
         criteria.andEqualTo("publishUserId", writerId);
         // 分页查询
@@ -91,9 +91,9 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
         Example example = new Example(Article.class);
         example.orderBy("createTime").desc();
         // 门户统一文章查询条件
-        Example.Criteria portalCriteria = getPortalCriteria(example);
+        Example.Criteria criteria = getPortalCommonCriteria(example);
         // 该用户下的所有文章
-        portalCriteria.andEqualTo("publishUserId", writerId);
+        criteria.andEqualTo("publishUserId", writerId);
         // 分页查询
         PageHelper.startPage(page, pageSize);
         List<Article> articleList = articleMapper.selectByExample(example);
@@ -108,8 +108,8 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
     public ArticleDetailVO getArticleDetail(String articleId) {
         Example example = new Example(Article.class);
         // 门户统一文章查询条件
-        Example.Criteria portalCriteria = getPortalCriteria(example);
-        portalCriteria.andEqualTo("id", articleId);
+        Example.Criteria criteria = getPortalCommonCriteria(example);
+        criteria.andEqualTo("id", articleId);
         Article article = articleMapper.selectOneByExample(example);
         if (article == null) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_VIEW_DETAIL_FAILED);
@@ -117,6 +117,7 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
         // po -> vo
         ArticleDetailVO articleDetailVO = new ArticleDetailVO();
         BeanUtils.copyProperties(article, articleDetailVO);
+        articleDetailVO.setCover(article.getArticleCover());
 
         // 远程调用 user service 通过id查询用户
         String publishUserId = article.getPublishUserId();
@@ -128,7 +129,7 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
             String jsonStr = JSONUtil.toJsonStr(data);
             userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
         } else {
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_PUBLISH_USER_ERROR);
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_VIEW_DETAIL_FAILED);
         }
         // articleDetailVO 拼接 publishUserName(发布者昵称) 和 ReadCounts(浏览量)
         String nickname = userBasicInfoVO.getNickname();
@@ -150,7 +151,7 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
             boolean isExist = redisUtil.keyIsExist(REDIS_ARTICLE_VIEWED + ":" + requestIp + ":" + articleId);
             if (!isExist) {
                 // view ++
-                redisUtil.increment(REDIS_ARTICLE_VIEWS + ":" + articleId, 1);
+                redisUtil.increment(REDIS_ARTICLE_VIEWS_COUNT + ":" + articleId, 1);
                 // 防刷限制时间为24小时
                 redisUtil.set(REDIS_ARTICLE_VIEWED + ":" + requestIp + ":" + articleId, articleId, EXPIRED_TIME);
             }

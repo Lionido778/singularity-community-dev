@@ -18,6 +18,7 @@ public class IndexArticleVO {
     private Integer articleStatus;
     private String publishUserId;
     private Date publishTime;
+    /** 从 redis 中获取 */
     private Integer readCounts;
     private Integer commentCounts;
     private String mongoFileId;
@@ -25,7 +26,6 @@ public class IndexArticleVO {
     private Date createTime;
     private Date updateTime;
     private String content;
-
     /** 前端 index.html 需要渲染 publishInfoVO */
     private UserBasicInfoVO publisherVO;
 

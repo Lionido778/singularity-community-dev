@@ -11,8 +11,9 @@ public class UserBasicInfoVO {
     private String nickname;
     private String face;
     private Integer activeStatus;
-
+    /** 关注数 */
     private String followCounts;
+    /** 粉丝数 */
     private String fansCounts;
 
     public UserBasicInfoVO() {}

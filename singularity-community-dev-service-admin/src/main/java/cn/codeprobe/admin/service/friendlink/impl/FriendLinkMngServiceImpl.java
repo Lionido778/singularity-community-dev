@@ -11,7 +11,7 @@ import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.admin.service.friendlink.FriendLinkMngService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.bo.FriendLinkBO;
+import cn.codeprobe.pojo.bo.NewFriendLinkBO;
 import cn.codeprobe.pojo.mo.FriendLink;
 
 /**
@@ -21,15 +21,15 @@ import cn.codeprobe.pojo.mo.FriendLink;
 public class FriendLinkMngServiceImpl extends AdminBaseService implements FriendLinkMngService {
 
     @Override
-    public void saveOrUpdateFriendLink(FriendLinkBO friendLinkBO) {
+    public void saveOrUpdateFriendLink(NewFriendLinkBO newFriendLinkBO) {
         // 检查友情链接是否存在
-        String linkName = friendLinkBO.getLinkName();
+        String linkName = newFriendLinkBO.getLinkName();
         Boolean isExist = checkFriendLinkIsExist(linkName);
         if (Boolean.TRUE.equals(isExist)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_FRIEND_LINK_IS_EXISTED);
         }
         FriendLink friendLink = new FriendLink();
-        BeanUtils.copyProperties(friendLinkBO, friendLink);
+        BeanUtils.copyProperties(newFriendLinkBO, friendLink);
         // 保存或更新
         friendLinkRepository.save(friendLink);
     }

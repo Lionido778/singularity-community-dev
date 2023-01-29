@@ -9,7 +9,7 @@ import cn.codeprobe.admin.service.base.AdminBaseService;
 import cn.codeprobe.admin.service.category.CategoryMngService;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
-import cn.codeprobe.pojo.bo.CategoryBO;
+import cn.codeprobe.pojo.bo.NewCategoryBO;
 import cn.codeprobe.pojo.po.Category;
 import tk.mybatis.mapper.entity.Example;
 
@@ -20,17 +20,17 @@ import tk.mybatis.mapper.entity.Example;
 public class CategoryMngServiceImpl extends AdminBaseService implements CategoryMngService {
 
     @Override
-    public void saveOrUpdateCategory(CategoryBO categoryBO) {
+    public void saveOrUpdateCategory(NewCategoryBO newCategoryBO) {
         // 判断 分类名是否已存在
-        String name = categoryBO.getName();
+        String name = newCategoryBO.getName();
         Boolean isExist = checkCategoryIsExist(name);
         if (Boolean.TRUE.equals(isExist)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ADMIN_CATEGORY_IS_EXISTED);
         }
         // 判断 更新或者是新添加
-        Integer id = categoryBO.getId();
+        Integer id = newCategoryBO.getId();
         Category category = new Category();
-        BeanUtils.copyProperties(categoryBO, category);
+        BeanUtils.copyProperties(newCategoryBO, category);
         int result;
         if (id == null) {
             // 添加
