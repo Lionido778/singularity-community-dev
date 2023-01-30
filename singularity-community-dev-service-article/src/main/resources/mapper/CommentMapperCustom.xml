@@ -9,6 +9,7 @@
                c.article_id            AS articleId,
                c.comment_user_id       AS commentUserId,
                c.comment_user_nickname AS commentUserNickname,
+               c.comment_user_face     AS commentUserFace,
                c.content               AS content,
                c.create_time           AS createTime,
                f.comment_user_nickname AS quoteUserNickname,

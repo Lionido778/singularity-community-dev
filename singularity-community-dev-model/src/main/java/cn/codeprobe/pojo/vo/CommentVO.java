@@ -17,6 +17,8 @@ public class CommentVO {
     private String commentUserId;
     /** 评论者昵称 */
     private String commentUserNickname;
+    /** 评论者头像 */
+    private String commentUserFace;
     /** 评论内容 */
     private String content;
     /** 评论发表时间 */
@@ -66,6 +68,14 @@ public class CommentVO {
         this.commentUserNickname = commentUserNickname;
     }
 
+    public String getCommentUserFace() {
+        return commentUserFace;
+    }
+
+    public void setCommentUserFace(String commentUserFace) {
+        this.commentUserFace = commentUserFace;
+    }
+
     public String getContent() {
         return content;
     }
@@ -100,9 +110,17 @@ public class CommentVO {
 
     @Override
     public String toString() {
-        return "CommentVO{" + "commentId='" + commentId + '\'' + ", fatherId='" + fatherId + '\'' + ", articleId='"
-            + articleId + '\'' + ", commentUserId='" + commentUserId + '\'' + ", commentUserNickname='"
-            + commentUserNickname + '\'' + ", content='" + content + '\'' + ", createTime=" + createTime
-            + ", quoteUserNickname='" + quoteUserNickname + '\'' + ", quoteContent='" + quoteContent + '\'' + '}';
+        return "CommentVO{" +
+                "commentId='" + commentId + '\'' +
+                ", fatherId='" + fatherId + '\'' +
+                ", articleId='" + articleId + '\'' +
+                ", commentUserId='" + commentUserId + '\'' +
+                ", commentUserNickname='" + commentUserNickname + '\'' +
+                ", commentUserFace='" + commentUserFace + '\'' +
+                ", content='" + content + '\'' +
+                ", createTime=" + createTime +
+                ", quoteUserNickname='" + quoteUserNickname + '\'' +
+                ", quoteContent='" + quoteContent + '\'' +
+                '}';
     }
 }
