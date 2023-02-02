@@ -34,6 +34,12 @@ spring:
     mongodb:
       uri: mongodb://root:lionido778@192.168.80.3:27017
       database: singularity-community-dev
+  ## Freemarker
+  freemarker:
+    charset: UTF-8
+    content-type: text/html
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
 
 ## Dev 环境下打印 MyBatis SQL日志到控制台
 mybatis:
@@ -43,4 +49,7 @@ mybatis:
 ## 资源配置中设置域名，在java代码中获取，
 website:
   domain-name: codeprobe.cn
-
+## 资源配置中设置freemarker静态模板输出位置，在java代码中获取
+freemarker:
+  html:
+    target: D:\WorkTools\development_tools\apache-tomcat\webapps\singularity-community\portal\article

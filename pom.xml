@@ -60,7 +60,7 @@
 
         <slf4j.version>1.7.21</slf4j.version>
         <joda-time.version>2.10.6</joda-time.version>
-
+        <spring-boot-freemarker>2.2.5.RELEASE</spring-boot-freemarker>
         <junit.version>4.13.2</junit.version>
     </properties>
 
@@ -113,6 +113,7 @@
                 <version>${pagehelper-spring-boot-starter.version}</version>
             </dependency>
 
+            <!-- ok http -->
             <dependency>
                 <groupId>com.squareup.okhttp3</groupId>
                 <artifactId>okhttp</artifactId>
@@ -190,6 +191,14 @@
                 <artifactId>joda-time</artifactId>
                 <version>${joda-time.version}</version>
             </dependency>
+
+            <!-- freemarker -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-freemarker</artifactId>
+                <version>${spring-boot-freemarker}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>junit</groupId>

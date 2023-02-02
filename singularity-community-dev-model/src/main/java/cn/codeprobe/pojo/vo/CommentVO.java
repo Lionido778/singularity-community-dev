@@ -110,17 +110,10 @@ public class CommentVO {
 
     @Override
     public String toString() {
-        return "CommentVO{" +
-                "commentId='" + commentId + '\'' +
-                ", fatherId='" + fatherId + '\'' +
-                ", articleId='" + articleId + '\'' +
-                ", commentUserId='" + commentUserId + '\'' +
-                ", commentUserNickname='" + commentUserNickname + '\'' +
-                ", commentUserFace='" + commentUserFace + '\'' +
-                ", content='" + content + '\'' +
-                ", createTime=" + createTime +
-                ", quoteUserNickname='" + quoteUserNickname + '\'' +
-                ", quoteContent='" + quoteContent + '\'' +
-                '}';
+        return "CommentVO{" + "commentId='" + commentId + '\'' + ", fatherId='" + fatherId + '\'' + ", articleId='"
+            + articleId + '\'' + ", commentUserId='" + commentUserId + '\'' + ", commentUserNickname='"
+            + commentUserNickname + '\'' + ", commentUserFace='" + commentUserFace + '\'' + ", content='" + content
+            + '\'' + ", createTime=" + createTime + ", quoteUserNickname='" + quoteUserNickname + '\''
+            + ", quoteContent='" + quoteContent + '\'' + '}';
     }
 }

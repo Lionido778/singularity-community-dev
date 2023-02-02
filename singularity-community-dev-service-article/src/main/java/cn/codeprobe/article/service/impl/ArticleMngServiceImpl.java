@@ -13,6 +13,7 @@ import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.po.Article;
+import cn.codeprobe.pojo.vo.ArticleDetailVO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.hutool.core.text.CharSequenceUtil;
 import tk.mybatis.mapper.entity.Example;
@@ -37,6 +38,15 @@ public class ArticleMngServiceImpl extends ArticleBaseService implements Article
             int result = articleMapper.updateByPrimaryKeySelective(article);
             if (!MybatisResult.SUCCESS.result.equals(result)) {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
+            }
+            // 人工审核通过后生成静态模板
+            if (passOrNot.equals(cn.codeprobe.enums.Article.MANUAL_REVIEW_PASS.type)) {
+                ArticleDetailVO articleDetailVO = getArticleDetailVO(articleId);
+                if (articleDetailVO != null) {
+                    generateHtml(articleDetailVO);
+                } else {
+                    GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
+                }
             }
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);

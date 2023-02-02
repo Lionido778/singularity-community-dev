@@ -117,6 +117,7 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
         // po -> vo
         ArticleDetailVO articleDetailVO = new ArticleDetailVO();
         BeanUtils.copyProperties(article, articleDetailVO);
+        // 这里文章封面需要特殊处理
         articleDetailVO.setCover(article.getArticleCover());
 
         // 远程调用 user service 通过id查询用户

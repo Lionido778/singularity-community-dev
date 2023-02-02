@@ -1,5 +1,9 @@
 package cn.codeprobe.article.base;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.*;
 
 import javax.annotation.Resource;
@@ -7,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +26,7 @@ import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.po.Article;
+import cn.codeprobe.pojo.vo.ArticleDetailVO;
 import cn.codeprobe.pojo.vo.IndexArticleVO;
 import cn.codeprobe.pojo.vo.UserBasicInfoVO;
 import cn.codeprobe.result.JsonResult;
@@ -30,6 +36,9 @@ import cn.codeprobe.utils.RedisUtil;
 import cn.codeprobe.utils.ReviewTextUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -55,6 +64,8 @@ public class ArticleBaseService {
     public RedisUtil redisUtil;
     @Resource
     public HttpServletRequest request;
+    @Value("${freemarker.html.target}")
+    private String htmlTarget;
 
     /**
      * 门户文章列表 查询条件设置
@@ -94,20 +105,15 @@ public class ArticleBaseService {
     /**
      * 文章文本内容审核
      *
-     * @param articleId 文章ID
-     * @param content 文章内容
+     * @param article 文章
      */
-    public void scanText(String articleId, String content) {
-
+    public void scanText(Article article) {
+        String content = article.getContent();
         // 调用 阿里云 AI 文本内容审核工具 ()
         Map<String, String> map = reviewTextUtil.scanText(content);
         boolean block = map.containsValue(ContentSecurity.SUGGESTION_BLOCK.label);
         boolean pass = map.containsValue(ContentSecurity.SUGGESTION_PASS.label);
         boolean review = map.containsValue(ContentSecurity.SUGGESTION_REVIEW.label);
-        Article article = new Article();
-        Example example = new Example(Article.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("id", articleId);
         if (block) {
             article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_REJECTED.type);
         } else if (review) {
@@ -115,9 +121,21 @@ public class ArticleBaseService {
         } else if (pass) {
             article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_APPROVED.type);
         }
-        int result = articleMapper.updateByExampleSelective(article, example);
+        int result = articleMapper.updateByPrimaryKeySelective(article);
         if (result != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
+        }
+        // AI审核通过后生成静态模板
+        if (article.getArticleStatus().equals(cn.codeprobe.enums.Article.STATUS_APPROVED.type)) {
+            ArticleDetailVO articleDetailVO = new ArticleDetailVO();
+            UserBasicInfoVO userBasicInfoVO = getBasicUserInfoById(article.getPublishUserId());
+            if (userBasicInfoVO != null) {
+                BeanUtils.copyProperties(article, articleDetailVO);
+                articleDetailVO.setPublishUserName(userBasicInfoVO.getNickname());
+                Integer views = getViewsOfArticle(article.getId());
+                articleDetailVO.setReadCounts(views);
+            }
+            generateHtml(articleDetailVO);
         }
     }
 
@@ -238,6 +256,78 @@ public class ArticleBaseService {
             viewsIntList.add(readCount);
         }
         return viewsIntList;
+    }
+
+    /**
+     * 通过ID 获取文章详情VO
+     * 
+     * @param articleId 文章ID
+     * @return ArticleDetailVO
+     */
+    public ArticleDetailVO getArticleDetailVO(String articleId) {
+        String articleServiceUrl = "http://www.codeprobe.cn:8001/portal/article/detail?articleId=" + articleId;
+        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(articleServiceUrl, JsonResult.class);
+        JsonResult body = entity.getBody();
+        ArticleDetailVO articleDetailVO = null;
+        if (body != null && body.getStatus() == HttpStatus.OK.value() && body.getData() != null) {
+            Object data = body.getData();
+            String jsonStr = JSONUtil.toJsonStr(data);
+            articleDetailVO = JSONUtil.toBean(jsonStr, ArticleDetailVO.class);
+        }
+        return articleDetailVO;
+    }
+
+    /**
+     * 文章生成静态页面
+     * 
+     * @param articleDetailVO 文章详情VO
+     */
+    public void generateHtml(ArticleDetailVO articleDetailVO) {
+        // 获得动态数据 ArticleDetailVO
+        try {
+            // 配置freemarker基本环境
+            Configuration cfg = new Configuration(Configuration.getVersion());
+            // 声明freemarker模板所需要加载的目录的位置 (classpath:/templates)
+            String classpath = this.getClass().getResource("/").getPath();
+            System.out.println(classpath);
+            cfg.setDirectoryForTemplateLoading(new File(classpath + "templates"));
+            // eg:
+            // D:/WorkSpace/ideaProjects/singularity-community-dev/singularity-community-dev-service-article/target/classes/templates
+            // 获得现有的模板ftl文件
+            Template template = cfg.getTemplate("detail.ftl", "utf-8");
+            HashMap<String, Object> model = new HashMap<>(1);
+            model.put("articleDetail", articleDetailVO);
+            Writer out = new FileWriter(htmlTarget + File.separator + articleDetailVO.getId() + ".html");
+            // 融合动态数据和ftl，生成html
+            File tempDic = new File(htmlTarget);
+            if (!tempDic.exists()) {
+                tempDic.mkdirs();
+            }
+            template.process(model, out);
+            // close
+            out.close();
+        } catch (IOException | TemplateException e) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
+        }
+    }
+
+    /**
+     * 获取用户基本信息
+     * 
+     * @param userId 用户ID
+     * @return UserBasicInfoVO
+     */
+    public UserBasicInfoVO getBasicUserInfoById(String userId) {
+        String userServiceUrl = "http://www.codeprobe.cn:8003/writer/user/queryUserBasicInfo?userId=" + userId;
+        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServiceUrl, JsonResult.class);
+        JsonResult body = entity.getBody();
+        UserBasicInfoVO userBasicInfoVO = null;
+        if (body != null && body.getStatus() == HttpStatus.OK.value() && body.getData() != null) {
+            Object data = body.getData();
+            String jsonStr = JSONUtil.toJsonStr(data);
+            userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
+        }
+        return userBasicInfoVO;
     }
 
 }

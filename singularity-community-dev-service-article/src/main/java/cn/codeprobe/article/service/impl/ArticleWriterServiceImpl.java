@@ -139,7 +139,8 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_CREATE_ERROR);
         }
         // 阿里云 AI 文本审核
-        scanText(articleId, newArticleBO.getContent());
+        scanText(article);
+
     }
 
     @Override

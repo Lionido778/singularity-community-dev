@@ -61,7 +61,7 @@ public enum ResponseStatusEnum {
     ARTICLE_ALREADY_READ_ERROR(597, false, "文章重复阅读！"), FANS_PARAMENT_ERROR(598, false, "查看粉丝参数出错！"),
     ARTICLE_VIEW_DETAIL_FAILED(599, false, "查看文章详细内容失败！"), ARTICLE_COMMENT_FAILED(600, false, "用户发表评论失败！"),
     ARTICLE_COMMENT_LIST_QUERY_FAILED(600, false, "文章评论列表获取失败！"),
-    ARTICLE_COMMENT_DELETE_FAILED(601, false, "文章评论删除失败！"),
+    ARTICLE_COMMENT_DELETE_FAILED(601, false, "文章评论删除失败！"), ARTICLE_STATIC_FAILED(602, false, "文章静态化失败！"),
 
     /**
      * 人脸识别错误代码
