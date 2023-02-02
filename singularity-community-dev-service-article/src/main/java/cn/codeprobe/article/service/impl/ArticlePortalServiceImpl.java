@@ -158,4 +158,9 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
             }
         }
     }
+
+    @Override
+    public String getReadCountOfArticle(String articleId) {
+        return redisUtil.get(REDIS_ARTICLE_VIEWS_COUNT + ":" + articleId);
+    }
 }

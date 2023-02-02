@@ -71,7 +71,7 @@
             ${articleDetail.title}
         </div>
         <div class="read-counts">
-            阅读量：${articleDetail.readCounts}
+            阅读量：{{readCount}}
         </div>
 
         <div class="detail-really">
@@ -267,6 +267,8 @@
             pageSize: 10, // 分页每页显示数量
             maxPage: 1, // 总页数
             total: 1, // 总记录数
+
+            readCount: 0,   //文章浏览量
         },
         created() {
             var me = this;
@@ -275,7 +277,6 @@
 
             // 查询文章详情 (静态页面通过文章名来获取articleId）
             var articleId = app.getPageName();
-            console.log(articleId);
             this.articleId = articleId;
             this.getArticleDetail(articleId);
 
@@ -283,6 +284,10 @@
             this.getAllCategory();
             // 文章阅读数累加
             this.readArticle(articleId);
+
+            this.readCount()
+            // 获取文章浏览量
+            this.getReadCount(articleId);
 
             // 获得文章的评论列表
             this.getAllComments(this.initialPage, this.pageSize);
@@ -318,9 +323,25 @@
                 axios.post(articleServerUrl + "/portal/article/readArticle?articleId=" + articleId)
                     .then(res => {
                         // console.log(JSON.stringify(res.data));
-
                         if (res.data.status == 200) {
 
+                        } else {
+                            // console.log(res.data.msg);
+                            this.$message({
+                                message: res.data.msg,
+                                type: 'error'
+                            });
+                        }
+                    });
+            },
+            getReadCount(articleId) {
+                var me = this;
+                var articleServerUrl = app.articleServerUrl;
+                axios.defaults.withCredentials = true;
+                axios.get(articleServerUrl + "/portal/article/readCount?articleId=" + articleId)
+                    .then(res => {
+                        if (res.data.status == 200) {
+                            this.readCount = res.data.data;
                         } else {
                             // console.log(res.data.msg);
                             this.$message({

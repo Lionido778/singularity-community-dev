@@ -99,4 +99,10 @@ public class ArticlePortalController extends ApiController implements ArticlePor
         articlePortalService.countArticleView(articleId);
         return JsonResult.ok();
     }
+
+    @Override
+    public JsonResult readCount(String articleId) {
+        String readCountOfArticle = articlePortalService.getReadCountOfArticle(articleId);
+        return JsonResult.ok(readCountOfArticle);
+    }
 }

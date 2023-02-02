@@ -82,4 +82,14 @@ public interface ArticlePortalControllerApi {
     @PostMapping("/readArticle")
     JsonResult readArticle(@RequestParam String articleId);
 
+    /**
+     * 文章静态页面获取文章阅读数量
+     *
+     * @param articleId 作者ID
+     * @return JsonResult
+     */
+    @ApiOperation(value = "文章静态页面获取文章阅读数量", notes = "文章静态页面获取文章阅读数量", httpMethod = "GET")
+    @GetMapping("/readCount")
+    JsonResult readCount(@RequestParam String articleId);
+
 }

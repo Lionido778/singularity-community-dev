@@ -65,4 +65,12 @@ public interface ArticlePortalService {
      * @param articleId 文章ID
      */
     void countArticleView(String articleId);
+
+    /**
+     * 获取文章浏览量
+     *
+     * @param articleId 文章ID
+     * @return readCount
+     */
+    String getReadCountOfArticle(String articleId);
 }
