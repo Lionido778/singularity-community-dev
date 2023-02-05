@@ -1,23 +1,24 @@
 package cn.codeprobe.article.base;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Writer;
+import java.io.*;
 import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
+import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageInfo;
+import com.mongodb.client.gridfs.GridFSBucket;
 
 import cn.codeprobe.article.mapper.ArticleMapper;
 import cn.codeprobe.article.mapper.ArticleMapperCustom;
@@ -64,6 +65,8 @@ public class ArticleBaseService {
     public RedisUtil redisUtil;
     @Resource
     public HttpServletRequest request;
+    @Resource
+    public GridFSBucket gridFsBucket;
     @Value("${freemarker.html.target}")
     private String htmlTarget;
 
@@ -221,7 +224,7 @@ public class ArticleBaseService {
 
     /**
      * redis中获取文章浏览量
-     * 
+     *
      * @param articleId 文章ID
      * @return views
      */
@@ -239,7 +242,7 @@ public class ArticleBaseService {
 
     /**
      * 批量获取文章浏览量
-     * 
+     *
      * @param keys redis key
      * @return viewsIntList
      */
@@ -260,7 +263,7 @@ public class ArticleBaseService {
 
     /**
      * 通过ID 获取文章详情VO
-     * 
+     *
      * @param articleId 文章ID
      * @return ArticleDetailVO
      */
@@ -279,7 +282,7 @@ public class ArticleBaseService {
 
     /**
      * 文章生成静态页面
-     * 
+     *
      * @param articleDetailVO 文章详情VO
      */
     public void generateHtml(ArticleDetailVO articleDetailVO) {
@@ -307,6 +310,45 @@ public class ArticleBaseService {
             // close
             out.close();
         } catch (IOException | TemplateException e) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
+        }
+    }
+
+    /**
+     * 生成的静态文章页面上传至GridFS
+     *
+     * @param articleDetailVO 文章详情VO
+     */
+    public void generateHtmlToGridFs(ArticleDetailVO articleDetailVO) {
+        // 获得动态数据 ArticleDetailVO
+        try {
+            // 配置freemarker基本环境
+            Configuration cfg = new Configuration(Configuration.getVersion());
+            // 声明freemarker模板所需要加载的目录的位置 (classpath:/templates)
+            String classpath = this.getClass().getResource("/").getPath();
+            System.out.println(classpath);
+            cfg.setDirectoryForTemplateLoading(new File(classpath + "templates"));
+            // eg:
+            // D:/WorkSpace/ideaProjects/singularity-community-dev/singularity-community-dev-service-article/target/classes/templates
+            // 获得现有的模板ftl文件
+            Template template = cfg.getTemplate("detail.ftl", "utf-8");
+            // 动态数据
+            HashMap<String, Object> model = new HashMap<>(1);
+            model.put("articleDetail", articleDetailVO);
+            // 静态页面HTML,上传至GridFS
+            String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
+            InputStream inputStream = IOUtils.toInputStream(htmlContent);
+            ObjectId objectId = gridFsBucket.uploadFromStream(articleDetailVO.getId() + ".html", inputStream);
+            // 关联至文章
+            Article article = new Article();
+            article.setId(articleDetailVO.getId());
+            article.setMongoFileId(objectId.toString());
+            int result = articleMapper.updateByPrimaryKeySelective(article);
+            if (result != MybatisResult.SUCCESS.result) {
+                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
+            }
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
         }
     }

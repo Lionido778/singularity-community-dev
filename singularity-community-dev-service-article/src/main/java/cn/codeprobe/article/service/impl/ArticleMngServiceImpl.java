@@ -43,7 +43,8 @@ public class ArticleMngServiceImpl extends ArticleBaseService implements Article
             if (passOrNot.equals(cn.codeprobe.enums.Article.MANUAL_REVIEW_PASS.type)) {
                 ArticleDetailVO articleDetailVO = getArticleDetailVO(articleId);
                 if (articleDetailVO != null) {
-                    generateHtml(articleDetailVO);
+                    // generateHtml(articleDetailVO);
+                    generateHtmlToGridFs(articleDetailVO);
                 } else {
                     GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
                 }

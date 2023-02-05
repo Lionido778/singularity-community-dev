@@ -34,4 +34,5 @@ public interface FileUploadService {
      * @return fileId 上传文件到GridFS后返回的ID
      */
     String uploadToGridFs(NewAdminBO newAdminBO);
+
 }
