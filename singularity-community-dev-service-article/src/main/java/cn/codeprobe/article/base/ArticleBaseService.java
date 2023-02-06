@@ -340,13 +340,17 @@ public class ArticleBaseService {
             InputStream inputStream = IOUtils.toInputStream(htmlContent);
             ObjectId objectId = gridFsBucket.uploadFromStream(articleDetailVO.getId() + ".html", inputStream);
             // 关联至文章
+            String mongoId = objectId.toString();
             Article article = new Article();
             article.setId(articleDetailVO.getId());
-            article.setMongoFileId(objectId.toString());
+            article.setMongoFileId(mongoId);
             int result = articleMapper.updateByPrimaryKeySelective(article);
             if (result != MybatisResult.SUCCESS.result) {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
             }
+
+            // 静态文章消费端发布
+            publishHtml(articleDetailVO.getId(), mongoId);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
@@ -370,6 +374,17 @@ public class ArticleBaseService {
             userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
         }
         return userBasicInfoVO;
+    }
+
+    public void publishHtml(String articleId, String mongoId) {
+        String markerServiceUrl =
+            "http://www.codeprobe.cn:8002/marker/file/publishHtml?articleId=" + articleId + "&mongoId=" + mongoId;
+        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(markerServiceUrl, JsonResult.class);
+        JsonResult body = entity.getBody();
+        if (body == null || body.getStatus() != HttpStatus.OK.value()
+            || !Objects.equals(body.getData().toString(), HttpStatus.OK.toString())) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_PUBLISH_FAILED);
+        }
     }
 
 }

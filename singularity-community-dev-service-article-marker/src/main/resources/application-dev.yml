@@ -1,0 +1,35 @@
+server:
+  port: 8002
+
+spring:
+  application:
+    name: service-article-marker
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  ## Redis
+  redis:
+    database: 0
+    host: 192.168.80.3
+    port: 6379
+    password: lionido778
+  ## MongoDB
+  data:
+    mongodb:
+      uri: mongodb://root:lionido778@192.168.80.3:27017
+      database: singularity-community-dev
+  ## Freemarker
+  freemarker:
+    charset: UTF-8
+    content-type: text/html
+    suffix: .ftl
+    template-loader-path: classpath:/templates/
+
+## 资源配置中设置域名，在java代码中获取，
+website:
+  domain-name: codeprobe.cn
+
+## 资源配置中设置freemarker静态模板输出位置，在java代码中获取
+freemarker:
+  html:
+    target: D:\WorkTools\development_tools\apache-tomcat\webapps\singularity-community\portal\article

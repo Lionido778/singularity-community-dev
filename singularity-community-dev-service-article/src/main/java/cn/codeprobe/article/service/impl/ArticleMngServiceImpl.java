@@ -45,6 +45,7 @@ public class ArticleMngServiceImpl extends ArticleBaseService implements Article
                 if (articleDetailVO != null) {
                     // generateHtml(articleDetailVO);
                     generateHtmlToGridFs(articleDetailVO);
+
                 } else {
                     GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
                 }
