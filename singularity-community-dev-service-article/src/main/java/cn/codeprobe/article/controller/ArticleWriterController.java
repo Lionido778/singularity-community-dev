@@ -49,7 +49,7 @@ public class ArticleWriterController extends ApiController implements ArticleWri
         if (CharSequenceUtil.isBlank(articleId) || CharSequenceUtil.isBlank(userId)) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
         }
-        // 调用service 进行人工审核
+        // 调用service 执行撤回操作
         articleWriterService.withdrawArticle(articleId, userId);
         return JsonResult.ok();
     }

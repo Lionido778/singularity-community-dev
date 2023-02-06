@@ -3,6 +3,7 @@ package cn.codeprobe.article.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,20 +27,26 @@ import tk.mybatis.mapper.entity.Example;
 @Service
 public class ArticleWriterServiceImpl extends ArticleBaseService implements ArticleWriterService {
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void withdrawArticle(String articleId, String userId) {
         Example example = new Example(Article.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("publishUserId", userId);
         criteria.andEqualTo("id", articleId);
-        int count = articleMapper.selectCountByExample(example);
-        if (count >= 1) {
-            Article article = new Article();
-            article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_RECALLED.type);
-            int res = articleMapper.updateByExampleSelective(article, example);
-            if (!MybatisResult.SUCCESS.result.equals(res)) {
-                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
-            }
+        Article pendingArticle = new Article();
+        pendingArticle.setArticleStatus(cn.codeprobe.enums.Article.STATUS_RECALLED.type);
+        int res = articleMapper.updateByExampleSelective(pendingArticle, example);
+        if (!MybatisResult.SUCCESS.result.equals(res)) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
+        }
+        // 删除对应GridFS中已发布静态文章
+        Article article = articleMapper.selectByPrimaryKey(articleId);
+        String mongoFileId = article.getMongoFileId();
+        if (CharSequenceUtil.isNotBlank(mongoFileId)) {
+            gridFsBucket.delete(new ObjectId(mongoFileId));
+            // 调用静态文章消费端删除静态文章
+            deleteHtml(articleId);
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
         }
@@ -143,17 +150,29 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
 
     }
 
+    @Transactional(rollbackFor = Exception.class)
     @Override
     public void removeArticleByArticleId(String userId, String articleId) {
         Example example = new Example(Article.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("publishUserId", userId).andEqualTo("id", articleId).andEqualTo("isDelete",
             cn.codeprobe.enums.Article.UN_DELETED.type);
-        Article article = new Article();
-        article.setIsDelete(cn.codeprobe.enums.Article.DELETED.type);
-        int result = articleMapper.updateByExampleSelective(article, example);
+        Article pendingArticle = new Article();
+        pendingArticle.setIsDelete(cn.codeprobe.enums.Article.DELETED.type);
+        int result = articleMapper.updateByExampleSelective(pendingArticle, example);
         if (result != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
+        }
+        // 删除对应的已发布静态文章
+        Article article = articleMapper.selectByPrimaryKey(articleId);
+        String mongoFileId = article.getMongoFileId();
+        if (CharSequenceUtil.isNotBlank(mongoFileId)) {
+            gridFsBucket.delete(new ObjectId(mongoFileId));
+            // 调用静态文章消费端删除静态文章
+            deleteHtml(articleId);
+        } else {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
+
         }
     }
 }

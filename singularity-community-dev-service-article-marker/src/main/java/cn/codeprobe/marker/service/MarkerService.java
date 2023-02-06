@@ -12,6 +12,13 @@ public interface MarkerService {
      * @param mongoId mongoId
      * @return ok
      */
-    public String publishHtml(String articleId, String mongoId);
+    String publishHtml(String articleId, String mongoId);
 
+    /**
+     * 删除已发布静态页面
+     *
+     * @param articleId 文章ID
+     * @return ok
+     */
+    String deleteHtml(String articleId);
 }

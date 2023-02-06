@@ -16,14 +16,24 @@ import io.swagger.annotations.ApiOperation;
 public interface MarkerControllerApi {
 
     /**
-     * 将静态文章写入到指定位置
+     * 将静态文章写入到指定位置（发布静态文章)
      *
      * @param articleId 文章ID
      * @param mongoId mongoId
      * @return ok
      */
-    @ApiOperation(value = "静态文章生成", notes = "静态文章生成", httpMethod = "POST")
+    @ApiOperation(value = "静态文章生成", notes = "静态文章生成", httpMethod = "GET")
     @GetMapping("/publishHtml")
     JsonResult publishHtml(@RequestParam String articleId, String mongoId);
+
+    /**
+     * 删除发布静态文章
+     *
+     * @param articleId 文章ID
+     * @return ok
+     */
+    @ApiOperation(value = "删除发布静态文章", notes = "删除发布静态文章", httpMethod = "GET")
+    @GetMapping("/deleteHtml")
+    JsonResult deleteHtml(@RequestParam String articleId);
 
 }

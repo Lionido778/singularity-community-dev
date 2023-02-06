@@ -67,6 +67,8 @@ public class ArticleBaseService {
     public HttpServletRequest request;
     @Resource
     public GridFSBucket gridFsBucket;
+    @Resource
+    public GridFSBucket gridFsBucket;
     @Value("${freemarker.html.target}")
     private String htmlTarget;
 
@@ -128,17 +130,16 @@ public class ArticleBaseService {
         if (result != MybatisResult.SUCCESS.result) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
         }
-        // AI审核通过后生成静态模板
+        // AI审核通过后生成静态模板并保存至GridFS
         if (article.getArticleStatus().equals(cn.codeprobe.enums.Article.STATUS_APPROVED.type)) {
             ArticleDetailVO articleDetailVO = new ArticleDetailVO();
             UserBasicInfoVO userBasicInfoVO = getBasicUserInfoById(article.getPublishUserId());
             if (userBasicInfoVO != null) {
                 BeanUtils.copyProperties(article, articleDetailVO);
                 articleDetailVO.setPublishUserName(userBasicInfoVO.getNickname());
-                Integer views = getViewsOfArticle(article.getId());
-                articleDetailVO.setReadCounts(views);
             }
-            generateHtml(articleDetailVO);
+            // generateHtml(articleDetailVO);
+            generateHtmlToGridFs(articleDetailVO);
         }
     }
 
@@ -339,7 +340,7 @@ public class ArticleBaseService {
             String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
             InputStream inputStream = IOUtils.toInputStream(htmlContent);
             ObjectId objectId = gridFsBucket.uploadFromStream(articleDetailVO.getId() + ".html", inputStream);
-            // 关联至文章
+            // 关联至数据库文章表
             String mongoId = objectId.toString();
             Article article = new Article();
             article.setId(articleDetailVO.getId());
@@ -348,7 +349,6 @@ public class ArticleBaseService {
             if (result != MybatisResult.SUCCESS.result) {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
             }
-
             // 静态文章消费端发布
             publishHtml(articleDetailVO.getId(), mongoId);
         } catch (IOException | TemplateException e) {
@@ -381,9 +381,19 @@ public class ArticleBaseService {
             "http://www.codeprobe.cn:8002/marker/file/publishHtml?articleId=" + articleId + "&mongoId=" + mongoId;
         ResponseEntity<JsonResult> entity = restTemplate.getForEntity(markerServiceUrl, JsonResult.class);
         JsonResult body = entity.getBody();
-        if (body == null || body.getStatus() != HttpStatus.OK.value()
+        if (body == null || body.getStatus() != HttpStatus.OK.value() || body.getData() == null
             || !Objects.equals(body.getData().toString(), HttpStatus.OK.toString())) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_PUBLISH_FAILED);
+        }
+    }
+
+    public void deleteHtml(String articleId) {
+        String markerServiceUrl = "http://www.codeprobe.cn:8002/marker/file/deleteHtml?articleId=" + articleId;
+        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(markerServiceUrl, JsonResult.class);
+        JsonResult body = entity.getBody();
+        if (body == null || body.getStatus() != HttpStatus.OK.value() || body.getData() == null
+            || !Objects.equals(body.getData().toString(), HttpStatus.OK.toString())) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_DELETE_FAILED);
         }
     }
 

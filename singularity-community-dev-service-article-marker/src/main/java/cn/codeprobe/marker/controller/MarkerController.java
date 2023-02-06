@@ -31,4 +31,15 @@ public class MarkerController extends ApiController implements MarkerControllerA
         String result = markerService.publishHtml(articleId, mongoId);
         return JsonResult.ok(result);
     }
+
+    @Override
+    public JsonResult deleteHtml(String articleId) {
+        // 参数校验
+        if (CharSequenceUtil.isBlank(articleId)) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_DELETE_FAILED);
+        }
+        // 调用service
+        String result = markerService.deleteHtml(articleId);
+        return JsonResult.ok(result);
+    }
 }

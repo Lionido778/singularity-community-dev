@@ -28,16 +28,14 @@ public class MarkerServiceImpl implements MarkerService {
 
     @Override
     public String publishHtml(String articleId, String mongoId) {
-
         try {
             String path = htmlTargetPath + File.separator + articleId + ".html";
-            File file = new File(path);
-            if (!file.exists()) {
-                file.mkdirs();
+            File tempDic = new File(htmlTargetPath);
+            if (!tempDic.exists()) {
+                tempDic.mkdirs();
             }
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            FileOutputStream fileOutputStream = new FileOutputStream(path);
             gridFsBucket.downloadToStream(new ObjectId(mongoId), fileOutputStream);
-            System.out.println(articleId);
             // close
             fileOutputStream.close();
         } catch (IOException e) {
@@ -45,5 +43,16 @@ public class MarkerServiceImpl implements MarkerService {
             throw new RuntimeException(e);
         }
         return HttpStatus.OK.toString();
+    }
+
+    @Override
+    public String deleteHtml(String articleId) {
+        String path = htmlTargetPath + File.separator + articleId + ".html";
+        File file = new File(path);
+        boolean result = file.delete();
+        if (result) {
+            return HttpStatus.OK.toString();
+        }
+        return null;
     }
 }
