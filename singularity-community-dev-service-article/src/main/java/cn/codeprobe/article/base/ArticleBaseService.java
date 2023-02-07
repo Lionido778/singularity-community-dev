@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageInfo;
 import com.mongodb.client.gridfs.GridFSBucket;
 
+import cn.codeprobe.api.config.RabbitMq;
 import cn.codeprobe.article.mapper.ArticleMapper;
 import cn.codeprobe.article.mapper.ArticleMapperCustom;
 import cn.codeprobe.enums.ContentSecurity;
@@ -70,6 +72,8 @@ public class ArticleBaseService {
     public GridFSBucket gridFsBucket;
     @Value("${freemarker.html.target}")
     private String htmlTarget;
+    @Resource
+    private RabbitTemplate rabbitTemplate;
 
     /**
      * 门户文章列表 查询条件设置
@@ -320,6 +324,7 @@ public class ArticleBaseService {
      *
      * @param articleDetailVO 文章详情VO
      */
+    @Transactional(rollbackFor = Exception.class)
     public void generateHtmlToGridFs(ArticleDetailVO articleDetailVO) {
         // 获得动态数据 ArticleDetailVO
         try {
@@ -349,8 +354,9 @@ public class ArticleBaseService {
             if (result != MybatisResult.SUCCESS.result) {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
             }
-            // 静态文章消费端发布
-            publishHtml(articleDetailVO.getId(), mongoId);
+            // 通过 rest 调用让静态文章消费端下载HTML（不利于并行 publishHtml(articleDetailVO.getId(), mongoId);
+            // 使用 RabbitMQ 发送下载消息让静态文章消费端下载HTML
+            publishHtmlByMq(articleDetailVO.getId(), mongoId);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
@@ -376,6 +382,12 @@ public class ArticleBaseService {
         return userBasicInfoVO;
     }
 
+    /**
+     * 通过 rest 让消费端下载HTML
+     * 
+     * @param articleId 文章ID
+     * @param mongoId mongoId
+     */
     public void publishHtml(String articleId, String mongoId) {
         String markerServiceUrl =
             "http://www.codeprobe.cn:8002/marker/file/publishHtml?articleId=" + articleId + "&mongoId=" + mongoId;
@@ -387,6 +399,25 @@ public class ArticleBaseService {
         }
     }
 
+    /**
+     * 通过RabbitMQ 发送消息 让消费端下载HTML
+     * 
+     * @param articleId 文章ID
+     * @param mongoId mongoId
+     */
+    public void publishHtmlByMq(String articleId, String mongoId) {
+        HashMap<String, String> map = new HashMap<>(5);
+        map.put("articleId", articleId);
+        map.put("mongoId", mongoId);
+        String jsonStr = JSONUtil.toJsonStr(map);
+        rabbitTemplate.convertAndSend(RabbitMq.EXCHANGE_ARTICLE, "article.download.do", jsonStr);
+    }
+
+    /**
+     * 通过 rest 让消费端删除HTML
+     * 
+     * @param articleId 文章ID
+     */
     public void deleteHtml(String articleId) {
         String markerServiceUrl = "http://www.codeprobe.cn:8002/marker/file/deleteHtml?articleId=" + articleId;
         ResponseEntity<JsonResult> entity = restTemplate.getForEntity(markerServiceUrl, JsonResult.class);
@@ -395,6 +426,18 @@ public class ArticleBaseService {
             || !Objects.equals(body.getData().toString(), HttpStatus.OK.toString())) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_DELETE_FAILED);
         }
+    }
+
+    /**
+     * 通过RabbitMQ 发送消息 让消费端删除HTML
+     *
+     * @param articleId 文章ID
+     */
+    public void deleteHtmlByMq(String articleId) {
+        HashMap<String, String> map = new HashMap<>(5);
+        map.put("articleId", articleId);
+        String jsonStr = JSONUtil.toJsonStr(map);
+        rabbitTemplate.convertAndSend(RabbitMq.EXCHANGE_ARTICLE, "article.delete.do", jsonStr);
     }
 
 }

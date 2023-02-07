@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import com.mongodb.client.gridfs.GridFSBucket;
 
+import cn.codeprobe.enums.ResponseStatusEnum;
+import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.marker.service.MarkerService;
 
 /**
@@ -46,6 +48,24 @@ public class MarkerServiceImpl implements MarkerService {
     }
 
     @Override
+    public void publishHtmlByMq(String articleId, String mongoId) {
+        try {
+            String path = htmlTargetPath + File.separator + articleId + ".html";
+            File tempDic = new File(htmlTargetPath);
+            if (!tempDic.exists()) {
+                tempDic.mkdirs();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(path);
+            gridFsBucket.downloadToStream(new ObjectId(mongoId), fileOutputStream);
+            // close
+            fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            GlobalExceptionManage.internal(ResponseStatusEnum.RABBITMQ_CONSUMER_DOWNLOAD_ERROR);
+        }
+    }
+
+    @Override
     public String deleteHtml(String articleId) {
         String path = htmlTargetPath + File.separator + articleId + ".html";
         File file = new File(path);
@@ -54,5 +74,15 @@ public class MarkerServiceImpl implements MarkerService {
             return HttpStatus.OK.toString();
         }
         return null;
+    }
+
+    @Override
+    public void deleteHtmlByMq(String articleId) {
+        String path = htmlTargetPath + File.separator + articleId + ".html";
+        File file = new File(path);
+        boolean result = file.delete();
+        if (!result) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.RABBITMQ_CONSUMER_DELETE_ERROR);
+        }
     }
 }

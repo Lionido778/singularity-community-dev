@@ -14,10 +14,10 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMq {
 
     /** 定义交换机的名字 */
-    private static final String EXCHANGE_ARTICLE = "exchange_article";
+    public static final String EXCHANGE_ARTICLE = "exchange_article";
 
     /** 定义序列的名字 */
-    private static final String QUEUE_DOWNLOAD_HTML = "queue_download_html";
+    public static final String QUEUE_DOWNLOAD_HTML = "queue_download_html";
 
     /** 创建交换机 */
     @Bean(EXCHANGE_ARTICLE)
@@ -35,7 +35,7 @@ public class RabbitMq {
     @Bean
     public Binding binding(@Qualifier(EXCHANGE_ARTICLE) Exchange exchange,
         @Qualifier(QUEUE_DOWNLOAD_HTML) Queue queue) {
-        return BindingBuilder.bind(queue).to(exchange).with("article.*").noargs();
+        return BindingBuilder.bind(queue).to(exchange).with("article.*.do").noargs();
     }
 
 }

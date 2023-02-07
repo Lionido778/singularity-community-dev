@@ -45,8 +45,10 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
         String mongoFileId = article.getMongoFileId();
         if (CharSequenceUtil.isNotBlank(mongoFileId)) {
             gridFsBucket.delete(new ObjectId(mongoFileId));
-            // 调用静态文章消费端删除静态文章
-            deleteHtml(articleId);
+            // 通过rest 使静态文章消费端删除静态文章HTMl
+            // deleteHtml(articleId);
+            // 通过 RabbitMQ 使静态文章消费端删除静态文章HTML
+            deleteHtmlByMq(articleId);
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
         }
@@ -167,8 +169,10 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
         String mongoFileId = article.getMongoFileId();
         if (CharSequenceUtil.isNotBlank(mongoFileId)) {
             gridFsBucket.delete(new ObjectId(mongoFileId));
-            // 调用静态文章消费端删除静态文章
-            deleteHtml(articleId);
+            // 通过rest 使静态文章消费端删除静态文章HTMl
+            // deleteHtml(articleId);
+            // 通过 RabbitMQ 使静态文章消费端删除静态文章HTML
+            deleteHtmlByMq(articleId);
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
 
