@@ -39,7 +39,14 @@ spring:
     charset: UTF-8
     content-type: text/html
     suffix: .ftl
-    template-loader-path: classpath:/templates/
+    template-loader-path:
+  ## RabbitMQ
+  rabbitmq:
+    host: 192.168.80.3
+    port: 5672
+    username: admin
+    password: lionido778
+    virtual-host: singularity-community-dev
 
 ## Dev 环境下打印 MyBatis SQL日志到控制台
 mybatis:

@@ -24,6 +24,13 @@ spring:
     content-type: text/html
     suffix: .ftl
     template-loader-path: classpath:/templates/
+  ## RabbitMQ
+  rabbitmq:
+    host: 192.168.80.3
+    port: 5672
+    username: admin
+    password: lionido778
+    virtual-host: singularity-community-dev
 
 ## 资源配置中设置域名，在java代码中获取，
 website:

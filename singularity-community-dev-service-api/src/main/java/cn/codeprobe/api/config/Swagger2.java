@@ -34,13 +34,12 @@ public class Swagger2 {
     @Bean
     public Docket createRestApi() {
 
-        Predicate<RequestHandler> testPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.test.controller");
         Predicate<RequestHandler> userPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.user.controller");
         Predicate<RequestHandler> filePredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.file.controller");
         Predicate<RequestHandler> adminPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.admin.controller");
 
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-            .apis(Predicates.or(testPredicate, userPredicate, filePredicate, adminPredicate))
+            .apis(Predicates.or(userPredicate, filePredicate, adminPredicate))
             // .apis(Predicates.or(adminPredicate, articlePredicate, userPredicate, filesPredicate))
             .paths(PathSelectors.any()).build();
     }

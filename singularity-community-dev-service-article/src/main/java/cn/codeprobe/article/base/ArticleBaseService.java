@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -67,8 +68,6 @@ public class ArticleBaseService {
     public HttpServletRequest request;
     @Resource
     public GridFSBucket gridFsBucket;
-    @Resource
-    public GridFSBucket gridFsBucket;
     @Value("${freemarker.html.target}")
     private String htmlTarget;
 
@@ -112,6 +111,7 @@ public class ArticleBaseService {
      *
      * @param article 文章
      */
+    @Transactional(rollbackFor = Exception.class)
     public void scanText(Article article) {
         String content = article.getContent();
         // 调用 阿里云 AI 文本内容审核工具 ()

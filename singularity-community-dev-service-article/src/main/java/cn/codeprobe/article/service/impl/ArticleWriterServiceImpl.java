@@ -147,7 +147,6 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
         }
         // 阿里云 AI 文本审核
         scanText(article);
-
     }
 
     @Transactional(rollbackFor = Exception.class)
