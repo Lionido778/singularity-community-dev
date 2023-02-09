@@ -285,7 +285,6 @@
             // 文章阅读数累加
             this.readArticle(articleId);
 
-            this.readCount()
             // 获取文章浏览量
             this.getReadCount(articleId);
 

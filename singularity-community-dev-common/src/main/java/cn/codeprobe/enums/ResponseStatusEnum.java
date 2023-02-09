@@ -64,7 +64,7 @@ public enum ResponseStatusEnum {
     ARTICLE_COMMENT_DELETE_FAILED(601, false, "文章评论删除失败！"), ARTICLE_STATIC_FAILED(602, false, "文章静态化失败！"),
     ARTICLE_STATIC_PUBLISH_FAILED(603, false, "静态文章发布失败！"), ARTICLE_STATIC_DELETE_FAILED(604, false, "静态文章删除失败！"),
     RABBITMQ_ERROR(604, false, "消息队列消息出错！"), RABBITMQ_CONSUMER_DOWNLOAD_ERROR(605, false, "消费端下载失败！"),
-    RABBITMQ_CONSUMER_DELETE_ERROR(606, false, "消费端删除失败！"),
+    RABBITMQ_CONSUMER_DELETE_ERROR(606, false, "消费端删除失败！"), ARTICLE_APPOINT_PUBLISH_FAILED(607, false, "文章定时发布失败！"),
 
     /**
      * 人脸识别错误代码

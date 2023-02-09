@@ -27,39 +27,6 @@ import tk.mybatis.mapper.entity.Example;
 @Service
 public class ArticleWriterServiceImpl extends ArticleBaseService implements ArticleWriterService {
 
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void withdrawArticle(String articleId, String userId) {
-        Example example = new Example(Article.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("publishUserId", userId);
-        criteria.andEqualTo("id", articleId);
-        Article pendingArticle = new Article();
-        pendingArticle.setArticleStatus(cn.codeprobe.enums.Article.STATUS_RECALLED.type);
-        int res = articleMapper.updateByExampleSelective(pendingArticle, example);
-        if (!MybatisResult.SUCCESS.result.equals(res)) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
-        }
-        // 删除对应GridFS中已发布静态文章
-        Article article = articleMapper.selectByPrimaryKey(articleId);
-        String mongoFileId = article.getMongoFileId();
-        if (CharSequenceUtil.isNotBlank(mongoFileId)) {
-            gridFsBucket.delete(new ObjectId(mongoFileId));
-            // 通过rest 使静态文章消费端删除静态文章HTMl
-            // deleteHtml(articleId);
-            // 通过 RabbitMQ 使静态文章消费端删除静态文章HTML
-            deleteHtmlByMq(articleId);
-        } else {
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
-        }
-    }
-
-    @Transactional(rollbackFor = Exception.class)
-    @Override
-    public void publishAppointedArticle() {
-        articleMapperCustom.updateAppointToPublish();
-    }
-
     @Override
     public PagedGridResult pageListArticles(String userId, String keyword, Integer status, Date startDate, Date endDate,
         Integer page, Integer pageSize) {
@@ -96,6 +63,8 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
     @Transactional(rollbackFor = Exception.class)
     @Override
     public void saveArticle(@NotNull NewArticleBO newArticleBO) {
+        // 使用AI机器审核文章内容 => reviewedStatus 审核结果
+        Integer reviewedStatus = reviewContent(newArticleBO.getContent());
         Article article = new Article();
         Integer articleType = newArticleBO.getArticleType();
         // 设置文章图文类型
@@ -104,15 +73,16 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
             // 图文类型，设置文章分面
             article.setArticleCover(newArticleBO.getArticleCover());
         }
-        String articleId = idWorker.nextIdStr();
         // 生成文章主键
+        String articleId = idWorker.nextIdStr();
         article.setId(articleId);
         // 文章标题
         article.setTitle(newArticleBO.getTitle());
         // 文章内容
         article.setContent(newArticleBO.getContent());
-        // 文章状态 （文章状态，1：审核中（用户已提交），2：机审结束，等待人工审核，3：审核通过（已发布），4：审核未通过；5：文章撤回（已发布的情况下才能撤回和删除）
-        article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_MACHINE_VERIFYING.type);
+        /// 文章状态 （文章状态，1：审核中（用户已提交），2：机审结束，等待人工审核，3：审核通过（已发布），4：审核未通过；5：文章撤回（已发布的情况下才能撤回和删除）
+        // AI审核后的文章状态
+        article.setArticleStatus(reviewedStatus);
         // 所属分类
         article.setCategoryId(newArticleBO.getCategoryId());
         // 初始化评论数量
@@ -125,6 +95,8 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
         article.setPublishUserId(newArticleBO.getPublishUserId());
         // 是否预约发布 （是否是预约定时发布的文章，1：预约（定时）发布，0：即时发布 在预约时间到点的时候，把1改为0，则发布
         article.setIsAppoint(newArticleBO.getIsAppoint());
+        // 文章更新时间
+        article.setUpdateTime(new Date());
         // 及时发布
         if (newArticleBO.getIsAppoint().equals(cn.codeprobe.enums.Article.UN_APPOINTED.type)
             && newArticleBO.getPublishTime() == null) {
@@ -132,23 +104,35 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
             Date date = new Date();
             article.setPublishTime(date);
             article.setCreateTime(date);
+            // 保存文章到数据库
+            int result = articleMapper.insert(article);
+            if (result != MybatisResult.SUCCESS.result) {
+                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_CREATE_ERROR);
+            }
+            // 如果文章审核通过
+            if (reviewedStatus.equals(cn.codeprobe.enums.Article.STATUS_APPROVED.type)) {
+                // 生产端：生成静态页面HTML
+                createHtml(article);
+            }
+
             // 预约发布
         } else if (newArticleBO.getIsAppoint().equals(cn.codeprobe.enums.Article.APPOINTED.type)
             && newArticleBO.getPublishTime() != null) {
-            // 文章创建时间
+            // 文章发布时间
             article.setPublishTime(newArticleBO.getPublishTime());
-            article.setCreateTime(newArticleBO.getPublishTime());
+            // 文章创建时间
+            article.setCreateTime(new Date());
+            // 保存文章到数据库
+            int result = articleMapper.insert(article);
+            if (result != MybatisResult.SUCCESS.result) {
+                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_CREATE_ERROR);
+            }
+            // 如果文章审核通过
+            if (reviewedStatus.equals(cn.codeprobe.enums.Article.STATUS_APPROVED.type)) {
+                // 使用 延迟消息队列，创建定时发布任务
+                createPublishSchedule(article.getId(), article.getPublishTime());
+            }
         }
-        // 文章更新时间
-        article.setUpdateTime(new Date());
-
-        // 保存文章到数据库
-        int result = articleMapper.insert(article);
-        if (result != MybatisResult.SUCCESS.result) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_CREATE_ERROR);
-        }
-        // 阿里云 AI 文本审核
-        scanText(article);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -169,13 +153,37 @@ public class ArticleWriterServiceImpl extends ArticleBaseService implements Arti
         String mongoFileId = article.getMongoFileId();
         if (CharSequenceUtil.isNotBlank(mongoFileId)) {
             gridFsBucket.delete(new ObjectId(mongoFileId));
-            // 通过rest 使静态文章消费端删除静态文章HTMl
-            // deleteHtml(articleId);
             // 通过 RabbitMQ 使静态文章消费端删除静态文章HTML
-            deleteHtmlByMq(articleId);
+            scheduleService.produceDeleteHtml(articleId);
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_DELETE_ERROR);
 
         }
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void withdrawArticle(String articleId, String userId) {
+        Example example = new Example(Article.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("publishUserId", userId);
+        criteria.andEqualTo("id", articleId);
+        Article pendingArticle = new Article();
+        pendingArticle.setArticleStatus(cn.codeprobe.enums.Article.STATUS_RECALLED.type);
+        int res = articleMapper.updateByExampleSelective(pendingArticle, example);
+        if (!MybatisResult.SUCCESS.result.equals(res)) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
+        }
+        // 删除对应GridFS中已发布静态文章
+        Article article = articleMapper.selectByPrimaryKey(articleId);
+        String mongoFileId = article.getMongoFileId();
+        if (CharSequenceUtil.isNotBlank(mongoFileId)) {
+            gridFsBucket.delete(new ObjectId(mongoFileId));
+            // 通过 RabbitMQ 使静态文章消费端删除静态文章HTML
+            scheduleService.produceDeleteHtml(articleId);
+        } else {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_WITHDRAW_ERROR);
+        }
+    }
+
 }

@@ -40,9 +40,7 @@ public class NewArticleBO {
     @Max(value = 1, message = "文章发布类型不正确")
     private Integer isAppoint;
 
-    /**
-     * 前端日期字符串传到后端后，转换为Date类型
-     */
+    /** 前端日期字符串传到后端后，转换为Date类型 */
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date publishTime;
 

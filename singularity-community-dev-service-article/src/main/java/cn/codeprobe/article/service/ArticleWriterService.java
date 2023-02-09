@@ -35,17 +35,12 @@ public interface ArticleWriterService {
         Integer page, Integer pageSize);
 
     /**
-     * 创作中心：通过文章ID 逻辑删除
+     * 创作中心：逻辑删除文章（通过文章ID）
      *
      * @param userId 文章作者
      * @param articleId 文章ID
      */
     void removeArticleByArticleId(String userId, String articleId);
-
-    /**
-     * 创作中心：发布预约发布文章
-     */
-    void publishAppointedArticle();
 
     /**
      * 创作中心：撤回文章
@@ -54,4 +49,5 @@ public interface ArticleWriterService {
      * @param userId 用户ID
      */
     void withdrawArticle(String articleId, String userId);
+
 }

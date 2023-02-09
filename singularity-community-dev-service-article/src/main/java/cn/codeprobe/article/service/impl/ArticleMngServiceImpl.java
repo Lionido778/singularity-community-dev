@@ -13,7 +13,6 @@ import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.pojo.po.Article;
-import cn.codeprobe.pojo.vo.ArticleDetailVO;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.hutool.core.text.CharSequenceUtil;
 import tk.mybatis.mapper.entity.Example;
@@ -26,8 +25,11 @@ public class ArticleMngServiceImpl extends ArticleBaseService implements Article
 
     @Override
     public void manualReviewArticle(String articleId, Integer passOrNot) {
-        boolean isExist = articleMapper.existsWithPrimaryKey(articleId);
-        if (isExist) {
+        Example example = new Example(Article.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("id", articleId);
+        Article toReviewArticle = articleMapper.selectOneByExample(example);
+        if (toReviewArticle != null) {
             Article article = new Article();
             article.setId(articleId);
             if (passOrNot.equals(cn.codeprobe.enums.Article.MANUAL_REVIEW_PASS.type)) {
@@ -39,15 +41,23 @@ public class ArticleMngServiceImpl extends ArticleBaseService implements Article
             if (!MybatisResult.SUCCESS.result.equals(result)) {
                 GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
             }
-            // 人工审核通过后生成静态模板
+            // 人工审核通过
             if (passOrNot.equals(cn.codeprobe.enums.Article.MANUAL_REVIEW_PASS.type)) {
-                ArticleDetailVO articleDetailVO = getArticleDetailVO(articleId);
-                if (articleDetailVO != null) {
-                    // generateHtml(articleDetailVO);
-                    generateHtmlToGridFs(articleDetailVO);
-
-                } else {
-                    GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
+                // 如果是预约发布文章
+                if (toReviewArticle.getIsAppoint().equals(cn.codeprobe.enums.Article.APPOINTED.type)) {
+                    Date publishTime = toReviewArticle.getPublishTime();
+                    // 若审核时间未超过预约发布时间
+                    if (publishTime.getTime() - System.currentTimeMillis() > 0) {
+                        // 生产端: 创建定时发布预约文章任务
+                        createPublishSchedule(articleId, publishTime);
+                    } else {
+                        // 生产端: 生成静态页面HTML
+                        publishArticle(articleId);
+                    }
+                    // 及时发布
+                } else if (toReviewArticle.getIsAppoint().equals(cn.codeprobe.enums.Article.UN_APPOINTED.type)) {
+                    // 生产端：生成静态页面HTML
+                    createHtml(articleId);
                 }
             }
         } else {

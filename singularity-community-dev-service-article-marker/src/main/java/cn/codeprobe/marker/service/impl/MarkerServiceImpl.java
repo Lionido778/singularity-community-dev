@@ -8,7 +8,6 @@ import javax.annotation.Resource;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.mongodb.client.gridfs.GridFSBucket;
@@ -29,31 +28,12 @@ public class MarkerServiceImpl implements MarkerService {
     private String htmlTargetPath;
 
     @Override
-    public String publishHtml(String articleId, String mongoId) {
+    public void downloadHtml(String articleId, String mongoId) {
         try {
             String path = htmlTargetPath + File.separator + articleId + ".html";
             File tempDic = new File(htmlTargetPath);
             if (!tempDic.exists()) {
-                tempDic.mkdirs();
-            }
-            FileOutputStream fileOutputStream = new FileOutputStream(path);
-            gridFsBucket.downloadToStream(new ObjectId(mongoId), fileOutputStream);
-            // close
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-        return HttpStatus.OK.toString();
-    }
-
-    @Override
-    public void publishHtmlByMq(String articleId, String mongoId) {
-        try {
-            String path = htmlTargetPath + File.separator + articleId + ".html";
-            File tempDic = new File(htmlTargetPath);
-            if (!tempDic.exists()) {
-                tempDic.mkdirs();
+                boolean mkdirs = tempDic.mkdirs();
             }
             FileOutputStream fileOutputStream = new FileOutputStream(path);
             gridFsBucket.downloadToStream(new ObjectId(mongoId), fileOutputStream);
@@ -66,18 +46,7 @@ public class MarkerServiceImpl implements MarkerService {
     }
 
     @Override
-    public String deleteHtml(String articleId) {
-        String path = htmlTargetPath + File.separator + articleId + ".html";
-        File file = new File(path);
-        boolean result = file.delete();
-        if (result) {
-            return HttpStatus.OK.toString();
-        }
-        return null;
-    }
-
-    @Override
-    public void deleteHtmlByMq(String articleId) {
+    public void deleteHtml(String articleId) {
         String path = htmlTargetPath + File.separator + articleId + ".html";
         File file = new File(path);
         boolean result = file.delete();

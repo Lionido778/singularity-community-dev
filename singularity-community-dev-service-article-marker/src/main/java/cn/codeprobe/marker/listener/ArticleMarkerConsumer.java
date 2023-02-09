@@ -1,4 +1,4 @@
-package cn.codeprobe.marker.controller;
+package cn.codeprobe.marker.listener;
 
 import java.util.Map;
 
@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import cn.codeprobe.api.config.RabbitMq;
+import cn.codeprobe.enums.RabbitMQ;
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
 import cn.codeprobe.marker.service.MarkerService;
@@ -16,7 +17,7 @@ import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
 
 /**
- * MQ 文章消费端
+ * 文章消费端: 监听消息队列
  * 
  * @author Lionido
  */
@@ -31,15 +32,15 @@ public class ArticleMarkerConsumer {
         System.out.println(payload);
         String routingKey = message.getMessageProperties().getReceivedRoutingKey();
         if (CharSequenceUtil.isNotBlank(routingKey)) {
-            if ("article.download.do".equalsIgnoreCase(routingKey)) {
+            if (RabbitMQ.MQ_DOWNLOAD.value.equalsIgnoreCase(routingKey)) {
                 Map map = JSONUtil.toBean(payload, Map.class);
                 String articleId = (String)map.get("articleId");
                 String mongoId = (String)map.get("mongoId");
-                markerService.publishHtmlByMq(articleId, mongoId);
-            } else if ("article.delete.do".equalsIgnoreCase(routingKey)) {
+                markerService.downloadHtml(articleId, mongoId);
+            } else if (RabbitMQ.MQ_DELETE.value.equalsIgnoreCase(routingKey)) {
                 Map map = JSONUtil.toBean(payload, Map.class);
                 String articleId = (String)map.get("articleId");
-                markerService.deleteHtmlByMq(articleId);
+                markerService.deleteHtml(articleId);
             }
         } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.RABBITMQ_ERROR);

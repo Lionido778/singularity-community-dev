@@ -1,30 +1,19 @@
 package cn.codeprobe.article.base;
 
-import java.io.*;
 import java.util.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.io.IOUtils;
-import org.bson.types.ObjectId;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson2.JSON;
 import com.github.pagehelper.PageInfo;
-import com.mongodb.client.gridfs.GridFSBucket;
 
-import cn.codeprobe.api.config.RabbitMq;
-import cn.codeprobe.article.mapper.ArticleMapper;
-import cn.codeprobe.article.mapper.ArticleMapperCustom;
 import cn.codeprobe.enums.ContentSecurity;
 import cn.codeprobe.enums.MybatisResult;
 import cn.codeprobe.enums.ResponseStatusEnum;
@@ -40,15 +29,14 @@ import cn.codeprobe.utils.RedisUtil;
 import cn.codeprobe.utils.ReviewTextUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.json.JSONUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
 import tk.mybatis.mapper.entity.Example;
 
 /**
+ * 文章服务 共用方法
+ * 
  * @author Lionido
  */
-public class ArticleBaseService {
+public class ArticleBaseService extends CommonService {
 
     public static final String REDIS_ARTICLE_VIEWS_COUNT = "article_views_count";
     public static final String REDIS_ARTICLE_VIEWED = "article_viewed";
@@ -57,23 +45,11 @@ public class ArticleBaseService {
     @Resource
     public IdWorker idWorker;
     @Resource
-    public ArticleMapper articleMapper;
-    @Resource
-    public ArticleMapperCustom articleMapperCustom;
-    @Resource
     public ReviewTextUtil reviewTextUtil;
-    @Resource
-    public RestTemplate restTemplate;
     @Resource
     public RedisUtil redisUtil;
     @Resource
     public HttpServletRequest request;
-    @Resource
-    public GridFSBucket gridFsBucket;
-    @Value("${freemarker.html.target}")
-    private String htmlTarget;
-    @Resource
-    private RabbitTemplate rabbitTemplate;
 
     /**
      * 门户文章列表 查询条件设置
@@ -94,7 +70,7 @@ public class ArticleBaseService {
     }
 
     /**
-     * 查询分页配置
+     * 分业查询配置
      *
      * @param list 查询数据（每页）
      * @param page 当前页
@@ -111,39 +87,27 @@ public class ArticleBaseService {
     }
 
     /**
-     * 文章文本内容审核
-     *
-     * @param article 文章
+     * AI机器审核文本内容
+     * 
+     * @param content 文章内容
+     * @return 文章审核状态
      */
     @Transactional(rollbackFor = Exception.class)
-    public void scanText(Article article) {
-        String content = article.getContent();
-        // 调用 阿里云 AI 文本内容审核工具 ()
+    public Integer reviewContent(String content) {
+        // 调用 阿里云 AI 文本内容审核工具
         Map<String, String> map = reviewTextUtil.scanText(content);
         boolean block = map.containsValue(ContentSecurity.SUGGESTION_BLOCK.label);
         boolean pass = map.containsValue(ContentSecurity.SUGGESTION_PASS.label);
         boolean review = map.containsValue(ContentSecurity.SUGGESTION_REVIEW.label);
         if (block) {
-            article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_REJECTED.type);
+            return cn.codeprobe.enums.Article.STATUS_REJECTED.type;
         } else if (review) {
-            article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_MANUAL_VERIFYING.type);
+            return cn.codeprobe.enums.Article.STATUS_MANUAL_VERIFYING.type;
         } else if (pass) {
-            article.setArticleStatus(cn.codeprobe.enums.Article.STATUS_APPROVED.type);
-        }
-        int result = articleMapper.updateByPrimaryKeySelective(article);
-        if (result != MybatisResult.SUCCESS.result) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_REVIEW_ERROR);
-        }
-        // AI审核通过后生成静态模板并保存至GridFS
-        if (article.getArticleStatus().equals(cn.codeprobe.enums.Article.STATUS_APPROVED.type)) {
-            ArticleDetailVO articleDetailVO = new ArticleDetailVO();
-            UserBasicInfoVO userBasicInfoVO = getBasicUserInfoById(article.getPublishUserId());
-            if (userBasicInfoVO != null) {
-                BeanUtils.copyProperties(article, articleDetailVO);
-                articleDetailVO.setPublishUserName(userBasicInfoVO.getNickname());
-            }
-            // generateHtml(articleDetailVO);
-            generateHtmlToGridFs(articleDetailVO);
+            return cn.codeprobe.enums.Article.STATUS_APPROVED.type;
+        } else {
+            // 人工审核
+            return cn.codeprobe.enums.Article.STATUS_MANUAL_VERIFYING.type;
         }
     }
 
@@ -228,10 +192,10 @@ public class ArticleBaseService {
     }
 
     /**
-     * redis中获取文章浏览量
+     * 获取文章浏览量（redis）
      *
      * @param articleId 文章ID
-     * @return views
+     * @return viewCount
      */
     @NotNull
     public Integer getViewsOfArticle(String articleId) {
@@ -246,10 +210,10 @@ public class ArticleBaseService {
     }
 
     /**
-     * 批量获取文章浏览量
+     * 批量获取文章浏览量 (redis)
      *
-     * @param keys redis key
-     * @return viewsIntList
+     * @param keys redis keys
+     * @return viewsCountList
      */
     @NotNull
     public List<Integer> getViewsList(List<String> keys) {
@@ -267,7 +231,7 @@ public class ArticleBaseService {
     }
 
     /**
-     * 通过ID 获取文章详情VO
+     * 获取文章详情VO (通过ID)
      *
      * @param articleId 文章ID
      * @return ArticleDetailVO
@@ -286,158 +250,65 @@ public class ArticleBaseService {
     }
 
     /**
-     * 文章生成静态页面
-     *
-     * @param articleDetailVO 文章详情VO
+     * 发布预约文章 （审核时间超过了预约发布时间调用）
+     * 
+     * @param articleId 文章ID
      */
-    public void generateHtml(ArticleDetailVO articleDetailVO) {
-        // 获得动态数据 ArticleDetailVO
-        try {
-            // 配置freemarker基本环境
-            Configuration cfg = new Configuration(Configuration.getVersion());
-            // 声明freemarker模板所需要加载的目录的位置 (classpath:/templates)
-            String classpath = this.getClass().getResource("/").getPath();
-            System.out.println(classpath);
-            cfg.setDirectoryForTemplateLoading(new File(classpath + "templates"));
-            // eg:
-            // D:/WorkSpace/ideaProjects/singularity-community-dev/singularity-community-dev-service-article/target/classes/templates
-            // 获得现有的模板ftl文件
-            Template template = cfg.getTemplate("detail.ftl", "utf-8");
-            HashMap<String, Object> model = new HashMap<>(1);
-            model.put("articleDetail", articleDetailVO);
-            Writer out = new FileWriter(htmlTarget + File.separator + articleDetailVO.getId() + ".html");
-            // 融合动态数据和ftl，生成html
-            File tempDic = new File(htmlTarget);
-            if (!tempDic.exists()) {
-                tempDic.mkdirs();
-            }
-            template.process(model, out);
-            // close
-            out.close();
-        } catch (IOException | TemplateException e) {
+    public void publishArticle(String articleId) {
+        // 将文章从预约发布状态更新为及时发布
+        Article article = new Article();
+        article.setId(articleId);
+        article.setIsAppoint(cn.codeprobe.enums.Article.UN_APPOINTED.type);
+        int result = articleMapper.updateByPrimaryKeySelective(article);
+        if (MybatisResult.SUCCESS.result != result) {
+            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_APPOINT_PUBLISH_FAILED);
+        }
+        // 生成静态页面HTML
+        createHtml(articleId);
+    }
+
+    /**
+     * 创建静态页面HTML（人工审核通过时调用）
+     * 
+     * @param articleId 文章ID
+     */
+    public void createHtml(String articleId) {
+        ArticleDetailVO articleDetailVO = getArticleDetailVO(articleId);
+        if (articleDetailVO != null) {
+            // 生成HTML上传至GridFS
+            String mongoFileId = generateHtmlToGridFs(articleDetailVO);
+            // 使用 RabbitMQ 发送下载消息让消费端下载静态文章HTML
+            scheduleService.produceDownloadHtml(articleDetailVO.getId(), mongoFileId);
+        } else {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
         }
     }
 
     /**
-     * 生成的静态文章页面上传至GridFS
+     * 创建静态页面HTML （新建文章机审通过时调用）
      *
-     * @param articleDetailVO 文章详情VO
+     * @param article 文章
      */
-    @Transactional(rollbackFor = Exception.class)
-    public void generateHtmlToGridFs(ArticleDetailVO articleDetailVO) {
-        // 获得动态数据 ArticleDetailVO
-        try {
-            // 配置freemarker基本环境
-            Configuration cfg = new Configuration(Configuration.getVersion());
-            // 声明freemarker模板所需要加载的目录的位置 (classpath:/templates)
-            String classpath = this.getClass().getResource("/").getPath();
-            System.out.println(classpath);
-            cfg.setDirectoryForTemplateLoading(new File(classpath + "templates"));
-            // eg:
-            // D:/WorkSpace/ideaProjects/singularity-community-dev/singularity-community-dev-service-article/target/classes/templates
-            // 获得现有的模板ftl文件
-            Template template = cfg.getTemplate("detail.ftl", "utf-8");
-            // 动态数据
-            HashMap<String, Object> model = new HashMap<>(1);
-            model.put("articleDetail", articleDetailVO);
-            // 静态页面HTML,上传至GridFS
-            String htmlContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, model);
-            InputStream inputStream = IOUtils.toInputStream(htmlContent);
-            ObjectId objectId = gridFsBucket.uploadFromStream(articleDetailVO.getId() + ".html", inputStream);
-            // 关联至数据库文章表
-            String mongoId = objectId.toString();
-            Article article = new Article();
-            article.setId(articleDetailVO.getId());
-            article.setMongoFileId(mongoId);
-            int result = articleMapper.updateByPrimaryKeySelective(article);
-            if (result != MybatisResult.SUCCESS.result) {
-                GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
-            }
-            // 通过 rest 调用让静态文章消费端下载HTML（不利于并行 publishHtml(articleDetailVO.getId(), mongoId);
-            // 使用 RabbitMQ 发送下载消息让静态文章消费端下载HTML
-            publishHtmlByMq(articleDetailVO.getId(), mongoId);
-        } catch (IOException | TemplateException e) {
-            e.printStackTrace();
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_FAILED);
-        }
+    public void createHtml(Article article) {
+        ArticleDetailVO articleDetailVO = new ArticleDetailVO();
+        BeanUtils.copyProperties(article, articleDetailVO);
+        UserBasicInfoVO basicInfoVO = getBasicUserInfoById(article.getPublishUserId());
+        String nickname = basicInfoVO.getNickname();
+        articleDetailVO.setPublishUserName(nickname);
+        // 生成HTML上传至GridFS
+        String mongoFileId = generateHtmlToGridFs(articleDetailVO);
+        // 使用 RabbitMQ 发送下载消息让消费端下载静态文章HTML
+        scheduleService.produceDownloadHtml(articleDetailVO.getId(), mongoFileId);
     }
 
     /**
-     * 获取用户基本信息
-     * 
-     * @param userId 用户ID
-     * @return UserBasicInfoVO
-     */
-    public UserBasicInfoVO getBasicUserInfoById(String userId) {
-        String userServiceUrl = "http://www.codeprobe.cn:8003/writer/user/queryUserBasicInfo?userId=" + userId;
-        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServiceUrl, JsonResult.class);
-        JsonResult body = entity.getBody();
-        UserBasicInfoVO userBasicInfoVO = null;
-        if (body != null && body.getStatus() == HttpStatus.OK.value() && body.getData() != null) {
-            Object data = body.getData();
-            String jsonStr = JSONUtil.toJsonStr(data);
-            userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
-        }
-        return userBasicInfoVO;
-    }
-
-    /**
-     * 通过 rest 让消费端下载HTML
+     * 创建文章定时发布任务
      * 
      * @param articleId 文章ID
-     * @param mongoId mongoId
+     * @param publishTime 发布时间
      */
-    public void publishHtml(String articleId, String mongoId) {
-        String markerServiceUrl =
-            "http://www.codeprobe.cn:8002/marker/file/publishHtml?articleId=" + articleId + "&mongoId=" + mongoId;
-        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(markerServiceUrl, JsonResult.class);
-        JsonResult body = entity.getBody();
-        if (body == null || body.getStatus() != HttpStatus.OK.value() || body.getData() == null
-            || !Objects.equals(body.getData().toString(), HttpStatus.OK.toString())) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_PUBLISH_FAILED);
-        }
-    }
-
-    /**
-     * 通过RabbitMQ 发送消息 让消费端下载HTML
-     * 
-     * @param articleId 文章ID
-     * @param mongoId mongoId
-     */
-    public void publishHtmlByMq(String articleId, String mongoId) {
-        HashMap<String, String> map = new HashMap<>(5);
-        map.put("articleId", articleId);
-        map.put("mongoId", mongoId);
-        String jsonStr = JSONUtil.toJsonStr(map);
-        rabbitTemplate.convertAndSend(RabbitMq.EXCHANGE_ARTICLE, "article.download.do", jsonStr);
-    }
-
-    /**
-     * 通过 rest 让消费端删除HTML
-     * 
-     * @param articleId 文章ID
-     */
-    public void deleteHtml(String articleId) {
-        String markerServiceUrl = "http://www.codeprobe.cn:8002/marker/file/deleteHtml?articleId=" + articleId;
-        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(markerServiceUrl, JsonResult.class);
-        JsonResult body = entity.getBody();
-        if (body == null || body.getStatus() != HttpStatus.OK.value() || body.getData() == null
-            || !Objects.equals(body.getData().toString(), HttpStatus.OK.toString())) {
-            GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_STATIC_DELETE_FAILED);
-        }
-    }
-
-    /**
-     * 通过RabbitMQ 发送消息 让消费端删除HTML
-     *
-     * @param articleId 文章ID
-     */
-    public void deleteHtmlByMq(String articleId) {
-        HashMap<String, String> map = new HashMap<>(5);
-        map.put("articleId", articleId);
-        String jsonStr = JSONUtil.toJsonStr(map);
-        rabbitTemplate.convertAndSend(RabbitMq.EXCHANGE_ARTICLE, "article.delete.do", jsonStr);
+    public void createPublishSchedule(String articleId, Date publishTime) {
+        scheduleService.producePublishAppointedArticle(articleId, publishTime);
     }
 
 }
