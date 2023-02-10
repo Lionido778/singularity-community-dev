@@ -1,5 +1,5 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>cn.codeprobe</groupId>
@@ -7,12 +7,16 @@
         <version>1.0.0</version>
     </parent>
 
-    <!-- admin 微服务 -->
-    <artifactId>singularity-community-dev-service-admin</artifactId>
+    <artifactId>spring-cloud-eureka</artifactId>
     <packaging>jar</packaging>
 
-    <name>singularity-community-dev-service-admin</name>
-    <url>https://maven.apache.org</url>
+    <name>spring-cloud-eureka</name>
+    <url>http://maven.apache.org</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -21,6 +25,10 @@
             <version>1.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

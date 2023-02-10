@@ -9,9 +9,7 @@ public enum RabbitMQ {
     /**
      * routeKey
      */
-    DELAY_PUBLISH("delay.publish.do"),
-    MQ_DOWNLOAD("article.download.do"),
-    MQ_DELETE("article.delete.do");
+    DELAY_PUBLISH("delay.publish.do"), MQ_DOWNLOAD("article.download.do"), MQ_DELETE("article.delete.do");
 
     public final String value;
 

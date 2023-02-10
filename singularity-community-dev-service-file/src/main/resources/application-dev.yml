@@ -13,7 +13,7 @@ spring:
     host: 192.168.80.3
     port: 6379
     password: lionido778
-  ##
+  ## mongodb
   data:
     mongodb:
       uri: mongodb://root:lionido778@192.168.80.3:27017
