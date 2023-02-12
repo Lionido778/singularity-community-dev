@@ -9,6 +9,7 @@ import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,6 +46,8 @@ public class CommonService {
     public ScheduleService scheduleService;
     @Resource
     public RestTemplate restTemplate;
+    @Resource
+    public DiscoveryClient discoveryClient;
 
     /**
      * 生成的静态文章页面上传至GridFS

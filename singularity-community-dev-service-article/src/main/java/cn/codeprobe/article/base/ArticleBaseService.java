@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -155,8 +156,14 @@ public class ArticleBaseService extends CommonService {
 
         // 远程调用 user service 通过idSetStr查询用户list
         String idSetStr = JSONUtil.toJsonStr(idSet);
+
+        List<ServiceInstance> clientInstances = discoveryClient.getInstances("SERVICE-USER");
+        ServiceInstance serviceInstance = clientInstances.get(0);
+        String host = serviceInstance.getHost();
+        int port = serviceInstance.getPort();
+
         String userServerUrl =
-            "http://writer.codeprobe.cn:8003/portal/user/queryUserBasicInfoBySet?userIds=" + idSetStr;
+            "http://" + host + ":" + port + "/portal/user/queryUserBasicInfoBySet?userIds=" + idSetStr;
         ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServerUrl, JsonResult.class);
         JsonResult body = entity.getBody();
         if (body != null && body.getStatus() == HttpStatus.OK.value() && body.getData() != null) {

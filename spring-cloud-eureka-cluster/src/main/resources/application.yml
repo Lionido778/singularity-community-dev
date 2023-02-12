@@ -1,0 +1,31 @@
+############################################################
+# eureka 注册中心 集群
+# web访问端口号  约定：7001~7003
+############################################################
+server:
+  port: ${port:7001}
+  tomcat:
+    uri-encoding: UTF-8
+
+############################################################
+# 配置项目信息
+############################################################
+spring:
+  application:
+    name: spring-cloud-eureka-cluster
+
+############################################################
+# eureka cluster 配置信息
+############################################################
+eureka:
+  instance:
+    # 集群中每个eureka的名字唯一
+    hostname: eureka-cluster-${server.port}
+  other-node-port2: ${p2:7002}
+  other-node-port3: ${p3:7003}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    # 单实例配置当前的服务地址，高可用集群则配置多个地址（只需要添加其余和节点的服务地址）
+    service-url:
+      defaultZone: http://eureka-cluster-${eureka.other-node-port2}:${eureka.other-node-port2}/eureka/,http://eureka-cluster-${eureka.other-node-port3}:${eureka.other-node-port3}/eureka/

@@ -21,6 +21,7 @@
         <module>singularity-community-dev-service-article</module>
         <module>singularity-community-dev-service-article-marker</module>
         <module>spring-cloud-eureka</module>
+        <module>spring-cloud-eureka-cluster</module>
     </modules>
 
     <!--
