@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
-import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -105,12 +103,13 @@ public class CommonService {
      */
     public UserBasicInfoVO getBasicUserInfoById(String userId) {
 
-        List<ServiceInstance> clientInstances = discoveryClient.getInstances("SERVICE-USER");
-        ServiceInstance serviceInstance = clientInstances.get(0);
-        String host = serviceInstance.getHost();
-        int port = serviceInstance.getPort();
+        // List<ServiceInstance> clientInstances = discoveryClient.getInstances("SERVICE-USER");
+        // ServiceInstance serviceInstance = clientInstances.get(0);
+        // String host = serviceInstance.getHost();
+        // int port = serviceInstance.getPort();
 
-        String userServiceUrl = "http://" + host + ":" + port + "/writer/user/queryUserBasicInfo?userId=" + userId;
+        String serviceId = "SERVICE-USER";
+        String userServiceUrl = "http://" + serviceId + "/writer/user/queryUserBasicInfo?userId=" + userId;
         ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServiceUrl, JsonResult.class);
         JsonResult body = entity.getBody();
         UserBasicInfoVO userBasicInfoVO = null;

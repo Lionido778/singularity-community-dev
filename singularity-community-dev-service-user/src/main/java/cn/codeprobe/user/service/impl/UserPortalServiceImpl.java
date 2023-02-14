@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import cn.codeprobe.pojo.po.User;
@@ -19,8 +20,12 @@ import cn.hutool.core.text.CharSequenceUtil;
 @Service
 public class UserPortalServiceImpl extends UserBaseService implements UserPortalService {
 
+    @Value("${server.port}")
+    private String port;
+
     @Override
     public UserBasicInfoVO getBasicUserInfo(String userId) {
+        System.out.println("port: " + port);
         // 执行查询操作
         User user = getUser(userId);
         UserBasicInfoVO userBasicInfoVO = new UserBasicInfoVO();

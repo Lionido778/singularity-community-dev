@@ -3,6 +3,7 @@ package cn.codeprobe.user.service.impl;
 import java.util.Date;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -80,7 +81,11 @@ public class UserWriterServiceImpl extends UserBaseService implements UserWriter
         }
     }
 
+    @Value("${server.port}")
+    private String port;
+
     public UserBasicInfoVO getUserBasicInfo(String userId) {
+        System.out.println("port: " + port);
         User user = getUser(userId);
         UserBasicInfoVO userBasicInfoVO = new UserBasicInfoVO();
         // po -> vo
