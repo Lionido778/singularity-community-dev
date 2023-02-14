@@ -1,11 +1,8 @@
 package cn.codeprobe.article.service.impl;
 
 import java.util.List;
-import java.util.Objects;
 
 import org.springframework.beans.BeanUtils;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
@@ -18,12 +15,10 @@ import cn.codeprobe.pojo.po.Article;
 import cn.codeprobe.pojo.vo.ArticleDetailVO;
 import cn.codeprobe.pojo.vo.IndexArticleVO;
 import cn.codeprobe.pojo.vo.UserBasicInfoVO;
-import cn.codeprobe.result.JsonResult;
 import cn.codeprobe.result.page.PagedGridResult;
 import cn.codeprobe.utils.IpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.text.CharSequenceUtil;
-import cn.hutool.json.JSONUtil;
 import tk.mybatis.mapper.entity.Example;
 
 /**
@@ -119,17 +114,10 @@ public class ArticlePortalServiceImpl extends ArticleBaseService implements Arti
         BeanUtils.copyProperties(article, articleDetailVO);
         // 这里文章封面需要特殊处理
         articleDetailVO.setCover(article.getArticleCover());
-
         // 远程调用 user service 通过id查询用户
         String publishUserId = article.getPublishUserId();
-        UserBasicInfoVO userBasicInfoVO = null;
-        String userServerUrl = "http://writer.codeprobe.cn:8003/writer/user/queryUserBasicInfo?userId=" + publishUserId;
-        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServerUrl, JsonResult.class);
-        if (entity.getStatusCode() == HttpStatus.OK) {
-            Object data = Objects.requireNonNull(entity.getBody()).getData();
-            String jsonStr = JSONUtil.toJsonStr(data);
-            userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
-        } else {
+        UserBasicInfoVO userBasicInfoVO = getBasicUserInfoById(publishUserId);
+        if (userBasicInfoVO == null) {
             GlobalExceptionManage.internal(ResponseStatusEnum.ARTICLE_VIEW_DETAIL_FAILED);
         }
         // articleDetailVO 拼接 publishUserName(发布者昵称) 和 ReadCounts(浏览量)

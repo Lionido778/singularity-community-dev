@@ -37,10 +37,11 @@ public class Swagger2 {
         Predicate<RequestHandler> userPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.user.controller");
         Predicate<RequestHandler> filePredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.file.controller");
         Predicate<RequestHandler> adminPredicate = RequestHandlerSelectors.basePackage("cn.codeprobe.admin.controller");
+        Predicate<RequestHandler> articlePredicate =
+            RequestHandlerSelectors.basePackage("cn.codeprobe.article.controller");
 
         return new Docket(DocumentationType.SWAGGER_2).apiInfo(apiInfo()).select()
-            .apis(Predicates.or(userPredicate, filePredicate, adminPredicate))
-            // .apis(Predicates.or(adminPredicate, articlePredicate, userPredicate, filesPredicate))
+            .apis(Predicates.or(adminPredicate, articlePredicate, userPredicate, filePredicate))
             .paths(PathSelectors.any()).build();
     }
 
