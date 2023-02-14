@@ -103,10 +103,10 @@ public class CommonService {
      */
     public UserBasicInfoVO getBasicUserInfoById(String userId) {
 
-        // List<ServiceInstance> clientInstances = discoveryClient.getInstances("SERVICE-USER");
-        // ServiceInstance serviceInstance = clientInstances.get(0);
-        // String host = serviceInstance.getHost();
-        // int port = serviceInstance.getPort();
+        /// List<ServiceInstance> clientInstances = discoveryClient.getInstances("SERVICE-USER");
+        /// ServiceInstance serviceInstance = clientInstances.get(0);
+        /// String host = serviceInstance.getHost();
+        /// int port = serviceInstance.getPort();
 
         String serviceId = "SERVICE-USER";
         String userServiceUrl = "http://" + serviceId + "/writer/user/queryUserBasicInfo?userId=" + userId;
