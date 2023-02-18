@@ -10,14 +10,13 @@ import javax.annotation.Resource;
 import org.apache.commons.io.IOUtils;
 import org.bson.types.ObjectId;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.web.client.RestTemplate;
 
 import com.mongodb.client.gridfs.GridFSBucket;
 
+import cn.codeprobe.api.controller.user.UserWriterControllerApi;
 import cn.codeprobe.article.mapper.ArticleMapper;
 import cn.codeprobe.article.schedule.produceor.ScheduleService;
 import cn.codeprobe.enums.MybatisResult;
@@ -48,6 +47,8 @@ public class CommonService {
     public RestTemplate restTemplate;
     @Resource
     public DiscoveryClient discoveryClient;
+    @Resource
+    private UserWriterControllerApi userWriterControllerApi;
 
     /**
      * 生成的静态文章页面上传至GridFS
@@ -102,19 +103,29 @@ public class CommonService {
      * @return UserBasicInfoVO
      */
     public UserBasicInfoVO getBasicUserInfoById(String userId) {
-
+        /// 1.原始RestTemplate调用
         /// List<ServiceInstance> clientInstances = discoveryClient.getInstances("SERVICE-USER");
         /// ServiceInstance serviceInstance = clientInstances.get(0);
         /// String host = serviceInstance.getHost();
         /// int port = serviceInstance.getPort();
 
-        String serviceId = "SERVICE-USER";
-        String userServiceUrl = "http://" + serviceId + "/writer/user/queryUserBasicInfo?userId=" + userId;
-        ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServiceUrl, JsonResult.class);
-        JsonResult body = entity.getBody();
+        /// 2.Ribbon (restTemplate + 负载均衡)
+        /// String serviceId = "SERVICE-USER";
+        /// String userServiceUrl = "http://" + serviceId + "/writer/user/queryUserBasicInfo?userId=" + userId;
+        /// ResponseEntity<JsonResult> entity = restTemplate.getForEntity(userServiceUrl, JsonResult.class);
+        /// JsonResult body = entity.getBody();
+        /// UserBasicInfoVO userBasicInfoVO = null;
+        /// if (body != null && body.getStatus() == HttpStatus.OK.value() && body.getData() != null) {
+        /// Object data = body.getData();
+        /// String jsonStr = JSONUtil.toJsonStr(data);
+        /// userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
+        /// }
+
+        // 2. Feign 简化远程调用
+        JsonResult result = userWriterControllerApi.queryUserBasicInfo(userId);
         UserBasicInfoVO userBasicInfoVO = null;
-        if (body != null && body.getStatus() == HttpStatus.OK.value() && body.getData() != null) {
-            Object data = body.getData();
+        if (result != null && result.getData() != null) {
+            Object data = result.getData();
             String jsonStr = JSONUtil.toJsonStr(data);
             userBasicInfoVO = JSONUtil.toBean(jsonStr, UserBasicInfoVO.class);
         }

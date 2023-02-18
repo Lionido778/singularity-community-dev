@@ -1,12 +1,8 @@
 package cn.codeprobe.admin.controller;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.codeprobe.admin.service.AdminService;
@@ -38,12 +34,7 @@ public class AdminMngController extends ApiController implements AdminMngControl
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public JsonResult addNewAdmin(NewAdminBO newAdminBO, @NotNull BindingResult result) {
-        // 校验BO数据
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = getErrors(result);
-            return JsonResult.errorMap(errorMap);
-        }
+    public JsonResult addNewAdmin(NewAdminBO newAdminBO) {
         // 校验两次密码是否一致
         if (!newAdminBO.getPassword().equalsIgnoreCase(newAdminBO.getConfirmPassword())) {
             JsonResult.errorCustom(ResponseStatusEnum.ADMIN_PASSWORD_ERROR);

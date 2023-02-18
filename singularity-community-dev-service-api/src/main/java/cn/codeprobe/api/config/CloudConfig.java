@@ -14,7 +14,8 @@ public class CloudConfig {
 
     /**
      * 基于OKHttp3配置RestTemplate
-     * @deprecated  @LoadBalanced 开启负载均衡
+     * 
+     * @deprecated @LoadBalanced 开启负载均衡
      * @return restTemplate
      */
     @Bean

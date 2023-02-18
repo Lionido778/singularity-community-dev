@@ -1,10 +1,7 @@
 package cn.codeprobe.article.controller;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.codeprobe.api.controller.article.CommentPortalControllerApi;
@@ -27,12 +24,7 @@ public class CommentPortalController extends ApiController implements CommentPor
     private CommentPortalService commentPortalService;
 
     @Override
-    public JsonResult addNewComment(NewCommentBO newCommentBO, BindingResult result) {
-        // 校验前端数据
-        if (result.hasErrors()) {
-            Map<String, String> errors = getErrors(result);
-            JsonResult.errorMap(errors);
-        }
+    public JsonResult addNewComment(NewCommentBO newCommentBO) {
         // 调用service 新增评论
         commentPortalService.saveComment(newCommentBO);
         return JsonResult.ok();

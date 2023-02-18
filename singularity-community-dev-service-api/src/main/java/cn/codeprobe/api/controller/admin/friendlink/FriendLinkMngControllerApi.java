@@ -2,7 +2,6 @@ package cn.codeprobe.api.controller.admin.friendlink;
 
 import javax.validation.Valid;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +30,7 @@ public interface FriendLinkMngControllerApi {
      */
     @PostMapping("/addOrModifyFriendLink")
     @ApiOperation(value = "新增管理员", notes = "新增管理员")
-    public JsonResult addOrModifyFriendLink(@RequestBody @Valid NewFriendLinkBO newFriendLinkBO, BindingResult result);
+    public JsonResult addOrModifyFriendLink(@RequestBody @Valid NewFriendLinkBO newFriendLinkBO);
 
     /**
      * 获取所有友情链接列表

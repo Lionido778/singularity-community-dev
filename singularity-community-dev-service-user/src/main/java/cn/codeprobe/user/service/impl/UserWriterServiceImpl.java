@@ -25,6 +25,9 @@ import cn.hutool.json.JSONUtil;
 @Service
 public class UserWriterServiceImpl extends UserBaseService implements UserWriterService {
 
+    @Value("${server.port}")
+    private String port;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public User saveAppUser(String mobile) {
@@ -80,9 +83,6 @@ public class UserWriterServiceImpl extends UserBaseService implements UserWriter
             throw new RuntimeException(e);
         }
     }
-
-    @Value("${server.port}")
-    private String port;
 
     public UserBasicInfoVO getUserBasicInfo(String userId) {
         System.out.println("port: " + port);

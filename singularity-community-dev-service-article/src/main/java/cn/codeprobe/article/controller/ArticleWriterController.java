@@ -1,11 +1,9 @@
 package cn.codeprobe.article.controller;
 
 import java.util.Date;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.codeprobe.api.controller.article.ArticleWriterControllerApi;
@@ -32,12 +30,7 @@ public class ArticleWriterController extends ApiController implements ArticleWri
     private ArticleWriterService articleWriterService;
 
     @Override
-    public JsonResult addNewArticle(NewArticleBO newArticleBO, BindingResult result) {
-        // 校验BO数据
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = getErrors(result);
-            return JsonResult.errorMap(errorMap);
-        }
+    public JsonResult addNewArticle(NewArticleBO newArticleBO) {
         // 调用 service 执行发文
         articleWriterService.saveArticle(newArticleBO);
         return JsonResult.ok();

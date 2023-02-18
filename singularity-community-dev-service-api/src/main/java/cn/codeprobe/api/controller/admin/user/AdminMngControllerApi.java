@@ -2,7 +2,6 @@ package cn.codeprobe.api.controller.admin.user;
 
 import javax.validation.Valid;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,12 +35,11 @@ public interface AdminMngControllerApi {
      * 新增管理员用户
      *
      * @param newAdminBO 表单数据
-     * @param result 表单验证结果
      * @return ok/no
      */
     @PostMapping("/addNewAdmin")
     @ApiOperation(value = "添加管理员", notes = "添加管理员")
-    public JsonResult addNewAdmin(@RequestBody @Valid NewAdminBO newAdminBO, BindingResult result);
+    public JsonResult addNewAdmin(@RequestBody @Valid NewAdminBO newAdminBO);
 
     /**
      * 获取管理员分页列表

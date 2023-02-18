@@ -4,7 +4,6 @@ import java.util.Date;
 
 import javax.validation.Valid;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,12 +27,11 @@ public interface ArticleWriterControllerApi {
      * 创作中心 创建新文章
      *
      * @param newArticleBO 新增文章 BO
-     * @param result 校验结果
      * @return result
      */
     @ApiOperation(value = "用户新增文章", notes = "用户新增文章", httpMethod = "POST")
     @PostMapping("/addNewArticle")
-    JsonResult addNewArticle(@RequestBody @Valid NewArticleBO newArticleBO, BindingResult result);
+    JsonResult addNewArticle(@RequestBody @Valid NewArticleBO newArticleBO);
 
     /**
      * 创作中心：查询某用户文章分页列表

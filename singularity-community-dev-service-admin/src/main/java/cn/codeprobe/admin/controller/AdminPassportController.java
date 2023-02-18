@@ -1,10 +1,7 @@
 package cn.codeprobe.admin.controller;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.codeprobe.admin.service.AdminPassportService;
@@ -27,12 +24,7 @@ public class AdminPassportController extends ApiController implements AdminPassp
     private AdminPassportService adminPassportService;
 
     @Override
-    public JsonResult adminLogin(AdminLoginBO adminLoginBO, BindingResult result) {
-        // 校验 BO 数据
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = getErrors(result);
-            return JsonResult.errorMap(errorMap);
-        }
+    public JsonResult adminLogin(AdminLoginBO adminLoginBO) {
         // 校验登陆参数用户名密码 不可以为空
         String username = adminLoginBO.getUsername();
         String password = adminLoginBO.getPassword();
@@ -45,12 +37,7 @@ public class AdminPassportController extends ApiController implements AdminPassp
     }
 
     @Override
-    public JsonResult adminFaceLogin(AdminLoginBO adminLoginBO, BindingResult result) {
-        // 校验BO数据
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = getErrors(result);
-            return JsonResult.errorMap(errorMap);
-        }
+    public JsonResult adminFaceLogin(AdminLoginBO adminLoginBO) {
         // 校验登陆参数,人脸图像(img64) 不可以为空
         String img64Face = adminLoginBO.getImg64();
         if (CharSequenceUtil.isBlank(img64Face)) {

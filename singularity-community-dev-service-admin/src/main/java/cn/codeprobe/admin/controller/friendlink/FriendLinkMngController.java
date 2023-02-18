@@ -1,12 +1,8 @@
 package cn.codeprobe.admin.controller.friendlink;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
-import org.jetbrains.annotations.NotNull;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.codeprobe.admin.service.friendlink.FriendLinkMngService;
@@ -26,12 +22,7 @@ public class FriendLinkMngController extends ApiController implements FriendLink
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public JsonResult addOrModifyFriendLink(NewFriendLinkBO newFriendLinkBO, @NotNull BindingResult result) {
-        // 校验 BO 数据
-        if (result.hasErrors()) {
-            Map<String, String> map = getErrors(result);
-            return JsonResult.errorMap(map);
-        }
+    public JsonResult addOrModifyFriendLink(NewFriendLinkBO newFriendLinkBO) {
         // 调用 service 保存或更新
         friendLinkMngService.saveOrUpdateFriendLink(newFriendLinkBO);
         return JsonResult.ok();

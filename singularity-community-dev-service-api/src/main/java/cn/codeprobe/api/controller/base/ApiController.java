@@ -2,17 +2,11 @@ package cn.codeprobe.api.controller.base;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 
 import cn.codeprobe.enums.ResponseStatusEnum;
 import cn.codeprobe.exception.GlobalExceptionManage;
@@ -37,20 +31,6 @@ public class ApiController {
     // request.getHeader()
     // return null;
     // }
-
-    /**
-     * 获取前端数据校验的错误信息
-     */
-    public Map<String, String> getErrors(BindingResult result) {
-        Map<String, String> map = new HashMap<>(0);
-        List<FieldError> errorList = result.getFieldErrors();
-        for (FieldError error : errorList) {
-            String field = error.getField();
-            String message = error.getDefaultMessage();
-            map.put(field, message);
-        }
-        return map;
-    }
 
     /**
      * 登录成功后设置 cookie

@@ -2,7 +2,6 @@ package cn.codeprobe.api.controller.user;
 
 import javax.validation.Valid;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import cn.codeprobe.pojo.bo.RegisterLoginBO;
@@ -33,12 +32,11 @@ public interface UserPassportControllerApi {
      * 一键注册登录
      *
      * @param registerLoginBO 注册登陆表单
-     * @param result 表单验证结果
      * @return yes / no
      */
     @ApiOperation(value = "用户一键注册登录接口", notes = "用户一键注册登录", httpMethod = "POST")
     @PostMapping("/doLogin")
-    JsonResult registerLogin(@RequestBody @Valid RegisterLoginBO registerLoginBO, BindingResult result);
+    JsonResult registerLogin(@RequestBody @Valid RegisterLoginBO registerLoginBO);
 
     /**
      * 用户退出登录

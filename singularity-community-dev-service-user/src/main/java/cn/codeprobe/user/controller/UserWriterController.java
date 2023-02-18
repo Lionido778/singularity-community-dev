@@ -1,10 +1,7 @@
 package cn.codeprobe.user.controller;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.codeprobe.api.controller.base.ApiController;
@@ -51,12 +48,7 @@ public class UserWriterController extends ApiController implements UserWriterCon
     }
 
     @Override
-    public JsonResult modifyUserAccountInfo(UpdateUserInfoBO updateUserInfoBO, BindingResult result) {
-        // 校验BO数据
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = getErrors(result);
-            return JsonResult.errorMap(errorMap);
-        }
+    public JsonResult modifyUserAccountInfo(UpdateUserInfoBO updateUserInfoBO) {
         // 执行更新操作
         userWriterService.updateUserAccountInfo(updateUserInfoBO);
         return JsonResult.ok();

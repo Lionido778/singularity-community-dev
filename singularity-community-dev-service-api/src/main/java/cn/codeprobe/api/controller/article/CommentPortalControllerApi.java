@@ -2,7 +2,6 @@ package cn.codeprobe.api.controller.article;
 
 import javax.validation.Valid;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import cn.codeprobe.pojo.bo.NewCommentBO;
@@ -21,12 +20,11 @@ public interface CommentPortalControllerApi {
      * 门户：新增评论
      *
      * @param newCommentBO 新增文章 BO
-     * @param result 校验结果
      * @return JsonResult
      */
     @ApiOperation(value = "用户发表文章评论", notes = "用户发表文章评论", httpMethod = "POST")
     @PostMapping("/addComment")
-    JsonResult addNewComment(@RequestBody @Valid NewCommentBO newCommentBO, BindingResult result);
+    JsonResult addNewComment(@RequestBody @Valid NewCommentBO newCommentBO);
 
     /**
      * 门户：获取文章评论总数

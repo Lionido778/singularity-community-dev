@@ -1,10 +1,7 @@
 package cn.codeprobe.user.controller;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RestController;
 
 import cn.codeprobe.api.controller.base.ApiController;
@@ -42,12 +39,7 @@ public class UserPassportController extends ApiController implements UserPasspor
     }
 
     @Override
-    public JsonResult registerLogin(RegisterLoginBO registerLoginBO, BindingResult result) {
-        // 校验BO数据
-        if (result.hasErrors()) {
-            Map<String, String> errorMap = getErrors(result);
-            return JsonResult.errorMap(errorMap);
-        }
+    public JsonResult registerLogin(RegisterLoginBO registerLoginBO) {
         // 调用 service 执行注册登陆
         User user = userPassportService.registerLogin(registerLoginBO);
         // 保存 Subject 到 ThreadLocal 异步线程

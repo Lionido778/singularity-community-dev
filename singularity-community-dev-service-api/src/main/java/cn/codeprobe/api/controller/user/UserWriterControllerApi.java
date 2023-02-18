@@ -2,9 +2,10 @@ package cn.codeprobe.api.controller.user;
 
 import javax.validation.Valid;
 
-import org.springframework.validation.BindingResult;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
+import cn.codeprobe.enums.MicroServiceList;
 import cn.codeprobe.pojo.bo.UpdateUserInfoBO;
 import cn.codeprobe.result.JsonResult;
 import io.swagger.annotations.Api;
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "创作中心:用户信息相关接口", tags = "用户信息相关接口")
 @RequestMapping("/writer/user")
+@FeignClient(value = MicroServiceList.SERVICE_USER_WRITER)
 public interface UserWriterControllerApi {
 
     /**
@@ -43,11 +45,10 @@ public interface UserWriterControllerApi {
      * 更新用户账户信息
      *
      * @param updateUserInfoBO 用户更新表单
-     * @param result 表单验证结果
      * @return yes / no
      */
     @ApiOperation(value = "更新用户账户信息", notes = "更新用户账户信息", httpMethod = "POST")
     @PostMapping("/modifyUserInfo")
-    JsonResult modifyUserAccountInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO, BindingResult result);
+    JsonResult modifyUserAccountInfo(@RequestBody @Valid UpdateUserInfoBO updateUserInfoBO);
 
 }
