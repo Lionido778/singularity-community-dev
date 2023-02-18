@@ -60,3 +60,20 @@ ribbon:
   MaxAutoRetriesNextServer: 2   # 切换到下个微服务实例的重试次数
   # 当请求到某个微服务5s，超时后会进行重试，先重试连接自己当前的这个实例
   # 如果当前重试失败1次，则会切换到访问集群中的下一个微服务实例，切换最大为2次
+
+ # 请求feign包下的所有feignClent时，都会打印日志
+
+logging:
+  level:
+    cn.codeprobe.api.controller: debug  # 请求此包下的所有 FeignClient 时，都会打印日志
+#    root: debug
+
+# 配置 feign
+feign:
+  client:
+    config:
+      # 服务提供方的名称
+      service-user:
+        logger-level: full
+
+
