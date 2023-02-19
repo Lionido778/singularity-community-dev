@@ -13,6 +13,13 @@ server:
 spring:
   application:
     name: spring-cloud-config
+  cloud:
+    ## 配置中心 远程的配置信息 Git 仓库
+    config:
+      server:
+        git:
+          uri: https://github.com/Lionido778/config.git
+          default-label: main  # 解决错误404或者是No such label: master问题
 
 ############################################################
 # eureka client 配置信息

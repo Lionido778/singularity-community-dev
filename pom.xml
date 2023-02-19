@@ -77,7 +77,7 @@
     -->
     <dependencyManagement>
         <dependencies>
-            <!-- SpringCloud 依赖 -->
+            <!-- Spring Cloud 依赖 -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
