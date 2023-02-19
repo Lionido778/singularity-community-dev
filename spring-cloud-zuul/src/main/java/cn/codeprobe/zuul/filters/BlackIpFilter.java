@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,11 @@ import cn.codeprobe.utils.IpUtil;
 import cn.codeprobe.utils.RedisUtil;
 import cn.hutool.json.JSONUtil;
 
+/**
+ * @author Lionido
+ */
 @Component
+@RefreshScope
 public class BlackIpFilter extends ZuulFilter {
 
     @Value("${blackIp.continueCounts}")
