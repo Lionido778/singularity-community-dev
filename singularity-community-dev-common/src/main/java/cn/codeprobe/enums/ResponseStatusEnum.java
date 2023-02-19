@@ -80,6 +80,7 @@ public enum ResponseStatusEnum {
      */
     SYSTEM_ERROR(555, false, "系统繁忙，请稍后再试！"), SYSTEM_OPERATION_ERROR(556, false, "操作失败，请重试或联系管理员"),
     SYSTEM_RESPONSE_NO_INFO(557, false, ""), SYSTEM_INTERNAL_ERROR(558, false, "系统内部错误，请联系管理员！"),
+    SYSTEM_ERROR_ZUUL(559, false, "请求发送过于频繁，请稍后再试！"),
 
     /**
      * file system

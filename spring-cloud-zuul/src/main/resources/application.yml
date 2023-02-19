@@ -12,7 +12,13 @@ server:
 ############################################################
 spring:
   application:
-    name: spring-cloud-zuul-server
+    name: spring-cloud-zuul
+  ## Redis
+  redis:
+    database: 0
+    host: 192.168.80.3
+    port: 6379
+    password: lionido778
 
 ############################################################
 # eureka 配置信息
@@ -47,4 +53,11 @@ zuul:
     service-file:
       path: /service-file/**
       service-id: service-file
+
+
+# ip请求限制的参数配置
+blackIp:
+  continueCounts: ${counts:10}    # ip连续请求的次数
+  timeInterval: ${interval:10}    # ip判断的事件间隔，单位：秒
+  limitTimes: ${times:15}         # 限制的事件，单位：秒
 

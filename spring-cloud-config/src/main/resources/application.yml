@@ -1,0 +1,29 @@
+############################################################
+# config 服务配置中心
+# web访问端口号  约定：7080
+############################################################
+server:
+  port: 7080
+  tomcat:
+    uri-encoding: UTF-8
+
+############################################################
+# 项目配置信息
+############################################################
+spring:
+  application:
+    name: spring-cloud-config
+
+############################################################
+# eureka client 配置信息
+############################################################
+eureka:
+  server:
+    hostname: eureka
+    port: 7000
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      #defaultZone: http://${eureka.server.hostname}:${eureka.server.port}/eureka/
+      defaultZone: http://eureka-cluster-7001:7001/eureka/,http://eureka-cluster-7002:7002/eureka/,http://eureka-cluster-7003:7003/eureka/
