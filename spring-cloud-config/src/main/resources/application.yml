@@ -18,8 +18,10 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/Lionido778/config.git
+          uri: https://gitee.com/codeprobe/singularity-community-config.git
           default-label: main  # 解决错误404或者是No such label: master问题
+          username: codeprobe         # 仓库若是私有 private 需要用户名密码
+          password: lionido778@gitee
 
 ############################################################
 # eureka client 配置信息

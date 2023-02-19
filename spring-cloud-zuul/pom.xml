@@ -24,6 +24,11 @@
             <artifactId>singularity-community-dev-service-api</artifactId>
             <version>1.0.0</version>
         </dependency>
+        <!-- spring cloud config -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-config-client</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
