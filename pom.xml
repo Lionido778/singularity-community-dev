@@ -22,6 +22,7 @@
         <module>singularity-community-dev-service-article-marker</module>
         <module>spring-cloud-eureka</module>
         <module>spring-cloud-eureka-cluster</module>
+        <module>spring-cloud-zuul-server</module>
     </modules>
 
     <!--
