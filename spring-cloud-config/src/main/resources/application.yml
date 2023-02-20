@@ -20,8 +20,15 @@ spring:
         git:
           uri: https://gitee.com/codeprobe/singularity-community-config.git
           default-label: main  # 解决错误404或者是No such label: master问题
-          username: codeprobe         # 仓库若是私有 private 需要用户名密码
+          username: codeprobe         # 仓库若是私有 private 需要用户名和密码
           password: lionido778@gitee
+  ## RabbitMQ
+  rabbitmq:
+    host: 192.168.80.3
+    port: 5672
+    username: admin
+    password: lionido778
+    virtual-host: singularity-community-dev
 
 ############################################################
 # eureka client 配置信息
@@ -36,3 +43,12 @@ eureka:
     service-url:
       #defaultZone: http://${eureka.server.hostname}:${eureka.server.port}/eureka/
       defaultZone: http://eureka-cluster-7001:7001/eureka/,http://eureka-cluster-7002:7002/eureka/,http://eureka-cluster-7003:7003/eureka/
+
+
+  # 配置动态刷新git配置的路径终端请求地址  eg: http://{微服务ip}:{微服务port}/actuator/bus-refresh (批量无差别)
+  #                                    http://{微服务ip}:{微服务port}/actuator/bus-refresh/{微服务实例ID}:{微服务Port} (精准打击)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
